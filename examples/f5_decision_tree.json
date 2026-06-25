@@ -1,0 +1,31 @@
+{
+  "workflow": {
+    "name": "f5_query_router",
+    "description": "F5: a switch node routes a query to one of three search strategies (decision tree).",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "router", "type": "switch", "config": {
+        "input": "$.inputs.query_type",
+        "cases": [
+          { "label": "question", "when": { "left": "$.inputs.query_type", "op": "==", "right": "question" } },
+          { "label": "keyword",  "when": { "left": "$.inputs.query_type", "op": "==", "right": "keyword" } }
+        ],
+        "default": "entity"
+      } },
+      { "id": "semantic", "type": "processing", "config": { "operation": "set", "value": "ran semantic search" } },
+      { "id": "lexical",  "type": "processing", "config": { "operation": "set", "value": "ran keyword search" } },
+      { "id": "entity",   "type": "processing", "config": { "operation": "set", "value": "ran entity search" } },
+      { "id": "out", "type": "output" }
+    ],
+    "edges": [
+      { "source": "in", "target": "router" },
+      { "source": "router", "target": "semantic", "condition": { "left": "$.router.case", "op": "==", "right": "question" } },
+      { "source": "router", "target": "lexical",  "condition": { "left": "$.router.case", "op": "==", "right": "keyword" } },
+      { "source": "router", "target": "entity",   "condition": { "left": "$.router.case", "op": "==", "right": "entity" } },
+      { "source": "semantic", "target": "out" },
+      { "source": "lexical", "target": "out" },
+      { "source": "entity", "target": "out" }
+    ]
+  },
+  "inputs": { "query_type": "keyword" }
+}

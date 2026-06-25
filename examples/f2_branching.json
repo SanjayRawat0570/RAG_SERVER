@@ -1,0 +1,28 @@
+{
+  "workflow": {
+    "name": "f2_confidence_branching",
+    "description": "F2/F5: branch on confidence. >0.8 returns immediately, else adds context.",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "classify", "type": "decision",
+        "config": { "input": "$.inputs.confidence" } },
+      { "id": "fast_path", "type": "processing",
+        "config": { "operation": "set", "value": "HIGH_CONFIDENCE: returned directly" } },
+      { "id": "augment", "type": "processing",
+        "config": { "operation": "set", "value": "LOW_CONFIDENCE: added more context" } },
+      { "id": "out", "type": "output" }
+    ],
+    "edges": [
+      { "source": "in", "target": "classify" },
+      { "source": "classify", "target": "fast_path",
+        "condition": { "left": "$.inputs.confidence", "op": ">", "right": 0.8 },
+        "label": "high" },
+      { "source": "classify", "target": "augment",
+        "condition": { "left": "$.inputs.confidence", "op": "<=", "right": 0.8 },
+        "label": "low" },
+      { "source": "fast_path", "target": "out" },
+      { "source": "augment", "target": "out" }
+    ]
+  },
+  "inputs": { "confidence": 0.62 }
+}

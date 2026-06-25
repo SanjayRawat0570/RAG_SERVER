@@ -1,0 +1,40 @@
+{
+  "workflow": {
+    "name": "f16_full_rag_answer",
+    "description": "F9->F16 full RAG: query -> hybrid search -> RRF -> rerank -> augment -> generate. Run after f11_f12_index. Default provider is the offline stub; set provider 'gemini' with GEMINI_API_KEY for real generation.",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "qp", "type": "query_process", "config": { "query": "$.inputs.question" } },
+      { "id": "dense", "type": "vector_search", "config": {
+        "store": "kb", "namespace": "$.inputs.tenant", "query": "$.qp.normalized", "dimension": 256, "top_k": 5 } },
+      { "id": "sparse", "type": "keyword_search", "config": {
+        "store": "kb", "namespace": "$.inputs.tenant", "query": "$.qp.expanded_query", "dimension": 256, "top_k": 5 } },
+      { "id": "fuse", "type": "merge", "config": { "strategy": "rrf", "top_n": 5 } },
+      { "id": "rerank", "type": "rerank", "config": {
+        "method": "cross_encoder", "query": "$.qp.normalized", "top_n": 3 } },
+      { "id": "augment", "type": "augment", "config": {
+        "query": "$.qp.normalized", "max_context_tokens": 300 } },
+      { "id": "generate", "type": "generate", "config": { "provider": "stub" },
+        "retry": { "max_attempts": 2 },
+        "fallback": { "answer": "Generation is temporarily unavailable.", "citations": [] } },
+      { "id": "out", "type": "output", "config": { "value": {
+        "question": "$.inputs.question",
+        "intent": "$.qp.intent",
+        "answer": "$.generate.answer",
+        "citations": "$.generate.citations",
+        "provider": "$.generate.provider" } } }
+    ],
+    "edges": [
+      { "source": "in", "target": "qp" },
+      { "source": "qp", "target": "dense" },
+      { "source": "qp", "target": "sparse" },
+      { "source": "dense", "target": "fuse" },
+      { "source": "sparse", "target": "fuse" },
+      { "source": "fuse", "target": "rerank" },
+      { "source": "rerank", "target": "augment" },
+      { "source": "augment", "target": "generate" },
+      { "source": "generate", "target": "out" }
+    ]
+  },
+  "inputs": { "tenant": "acme", "question": "How is data encrypted?" }
+}

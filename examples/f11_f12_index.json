@@ -1,0 +1,28 @@
+{
+  "workflow": {
+    "name": "f11_f12_index_pipeline",
+    "description": "F9->F12: ingest -> chunk -> embed -> upsert into the vector store.",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "ingest", "type": "ingest", "config": {
+        "text": "$.inputs.body", "filename": "kb.md", "document_id": "kb1" } },
+      { "id": "chunk", "type": "chunk", "config": {
+        "strategy": "structure", "chunk_size": 120, "size_unit": "chars" } },
+      { "id": "embed", "type": "embed", "config": { "model": "local-hash", "dimension": 256 } },
+      { "id": "upsert", "type": "upsert", "config": {
+        "store": "kb", "namespace": "$.inputs.tenant", "dimension": 256 } },
+      { "id": "out", "type": "output", "config": { "value": "$.upsert" } }
+    ],
+    "edges": [
+      { "source": "in", "target": "ingest" },
+      { "source": "ingest", "target": "chunk" },
+      { "source": "chunk", "target": "embed" },
+      { "source": "embed", "target": "upsert" },
+      { "source": "upsert", "target": "out" }
+    ]
+  },
+  "inputs": {
+    "tenant": "acme",
+    "body": "# Billing\nInvoices are issued monthly and payment is due in 30 days.\n\n# Security\nData is encrypted at rest and in transit using AES-256.\n\n# Support\nContact support 24/7 via the help portal for any issues."
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "workflow": {
+    "name": "f1_linear_chain",
+    "description": "F1/F3: linear A->B->C->D chain with context passing.",
+    "nodes": [
+      { "id": "in", "type": "input", "config": { "key": "text" } },
+      { "id": "trim", "type": "processing", "config": { "operation": "strip" } },
+      { "id": "upper", "type": "processing", "config": { "operation": "uppercase" } },
+      { "id": "out", "type": "output" }
+    ],
+    "edges": [
+      { "source": "in", "target": "trim" },
+      { "source": "trim", "target": "upper" },
+      { "source": "upper", "target": "out" }
+    ]
+  },
+  "inputs": { "text": "  hello enterprise rag  " }
+}

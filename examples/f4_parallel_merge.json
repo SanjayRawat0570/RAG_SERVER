@@ -1,0 +1,31 @@
+{
+  "workflow": {
+    "name": "f4_parallel_search_merge",
+    "description": "F3/F4: fan out to 3 search strategies in parallel, then rank-merge top results.",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "semantic", "type": "processing",
+        "config": { "operation": "set",
+          "value": [ { "doc": "A", "score": 0.91 }, { "doc": "B", "score": 0.70 } ] } },
+      { "id": "keyword", "type": "processing",
+        "config": { "operation": "set",
+          "value": [ { "doc": "C", "score": 0.85 }, { "doc": "A", "score": 0.60 } ] } },
+      { "id": "entity", "type": "processing",
+        "config": { "operation": "set",
+          "value": [ { "doc": "D", "score": 0.88 } ] } },
+      { "id": "merge", "type": "merge",
+        "config": { "strategy": "ranking", "score_key": "score", "top_n": 3 } },
+      { "id": "out", "type": "output", "config": { "value": "$.merge" } }
+    ],
+    "edges": [
+      { "source": "in", "target": "semantic" },
+      { "source": "in", "target": "keyword" },
+      { "source": "in", "target": "entity" },
+      { "source": "semantic", "target": "merge" },
+      { "source": "keyword", "target": "merge" },
+      { "source": "entity", "target": "merge" },
+      { "source": "merge", "target": "out" }
+    ]
+  },
+  "inputs": {}
+}

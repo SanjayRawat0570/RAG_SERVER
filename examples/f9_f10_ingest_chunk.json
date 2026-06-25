@@ -1,0 +1,23 @@
+{
+  "workflow": {
+    "name": "f9_f10_ingest_and_chunk",
+    "description": "F9/F10: ingest a markdown doc, then structure-aware chunk it.",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "ingest", "type": "ingest", "config": {
+        "text": "$.inputs.body", "filename": "guide.md",
+        "metadata": { "tenant": "acme" } } },
+      { "id": "chunk", "type": "chunk", "config": {
+        "strategy": "structure", "chunk_size": 80, "size_unit": "chars" } },
+      { "id": "out", "type": "output", "config": { "value": "$.chunk" } }
+    ],
+    "edges": [
+      { "source": "in", "target": "ingest" },
+      { "source": "ingest", "target": "chunk" },
+      { "source": "chunk", "target": "out" }
+    ]
+  },
+  "inputs": {
+    "body": "# Introduction\nEnterprise RAG combines retrieval with generation.\n\n## Ingestion\nDocuments arrive in many formats and are normalized.\n\n## Chunking\nText is split into retrieval-ready pieces with provenance."
+  }
+}

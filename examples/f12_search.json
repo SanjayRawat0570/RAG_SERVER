@@ -1,0 +1,24 @@
+{
+  "workflow": {
+    "name": "f12_semantic_search",
+    "description": "F12: embed a query and retrieve top-k chunks from the store (run after indexing).",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "search", "type": "vector_search", "config": {
+        "store": "kb",
+        "namespace": "$.inputs.tenant",
+        "query": "$.inputs.question",
+        "dimension": 256,
+        "top_k": 2 } },
+      { "id": "out", "type": "output", "config": { "value": "$.search" } }
+    ],
+    "edges": [
+      { "source": "in", "target": "search" },
+      { "source": "search", "target": "out" }
+    ]
+  },
+  "inputs": {
+    "tenant": "acme",
+    "question": "how is my data protected and encrypted?"
+  }
+}

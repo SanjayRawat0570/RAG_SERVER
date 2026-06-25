@@ -1,0 +1,31 @@
+{
+  "workflow": {
+    "name": "f13_hybrid_search",
+    "description": "F13: query understanding -> parallel dense + BM25 search -> RRF fusion. Run after f11_f12_index.",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "qp", "type": "query_process", "config": { "query": "$.inputs.question" } },
+      { "id": "dense", "type": "vector_search", "config": {
+        "store": "kb", "namespace": "$.inputs.tenant",
+        "query": "$.qp.normalized", "dimension": 256, "top_k": 5 } },
+      { "id": "sparse", "type": "keyword_search", "config": {
+        "store": "kb", "namespace": "$.inputs.tenant",
+        "query": "$.qp.expanded_query", "dimension": 256, "top_k": 5 } },
+      { "id": "fuse", "type": "merge", "config": { "strategy": "rrf", "top_n": 3 } },
+      { "id": "out", "type": "output", "config": { "value": {
+        "intent": "$.qp.intent", "results": "$.fuse" } } }
+    ],
+    "edges": [
+      { "source": "in", "target": "qp" },
+      { "source": "qp", "target": "dense" },
+      { "source": "qp", "target": "sparse" },
+      { "source": "dense", "target": "fuse" },
+      { "source": "sparse", "target": "fuse" },
+      { "source": "fuse", "target": "out" }
+    ]
+  },
+  "inputs": {
+    "tenant": "acme",
+    "question": "How is data encrypted?"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "workflow": {
+    "name": "f14_f15_retrieve_rerank_augment",
+    "description": "F13->F15: query -> hybrid search -> RRF -> rerank -> build prompt+context. Run after f11_f12_index.",
+    "nodes": [
+      { "id": "in", "type": "input" },
+      { "id": "qp", "type": "query_process", "config": { "query": "$.inputs.question" } },
+      { "id": "dense", "type": "vector_search", "config": {
+        "store": "kb", "namespace": "$.inputs.tenant", "query": "$.qp.normalized", "dimension": 256, "top_k": 5 } },
+      { "id": "sparse", "type": "keyword_search", "config": {
+        "store": "kb", "namespace": "$.inputs.tenant", "query": "$.qp.expanded_query", "dimension": 256, "top_k": 5 } },
+      { "id": "fuse", "type": "merge", "config": { "strategy": "rrf", "top_n": 5 } },
+      { "id": "rerank", "type": "rerank", "config": {
+        "method": "cross_encoder", "query": "$.qp.normalized", "semantic_weight": 0.6, "top_n": 3 } },
+      { "id": "augment", "type": "augment", "config": {
+        "query": "$.qp.normalized", "max_context_tokens": 200, "chain_of_thought": true,
+        "answer_format": "One sentence with a citation." } },
+      { "id": "out", "type": "output", "config": { "value": {
+        "intent": "$.qp.intent",
+        "citations": "$.augment.citations",
+        "context": "$.augment.context",
+        "prompt": "$.augment.prompt" } } }
+    ],
+    "edges": [
+      { "source": "in", "target": "qp" },
+      { "source": "qp", "target": "dense" },
+      { "source": "qp", "target": "sparse" },
+      { "source": "dense", "target": "fuse" },
+      { "source": "sparse", "target": "fuse" },
+      { "source": "fuse", "target": "rerank" },
+      { "source": "rerank", "target": "augment" },
+      { "source": "augment", "target": "out" }
+    ]
+  },
+  "inputs": { "tenant": "acme", "question": "How is data encrypted?" }
+}
