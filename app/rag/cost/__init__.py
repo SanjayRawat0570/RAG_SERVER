@@ -2,6 +2,7 @@
 from app.rag.cost.budget import (
     BudgetExceededError,
     budget_stats,
+    get_budget,
     record_spend,
     reserve,
     reset_budgets,
@@ -18,6 +19,7 @@ __all__ = [
     # budget
     "BudgetExceededError",
     "budget_stats",
+    "get_budget",
     "record_spend",
     "reserve",
     "reset_budgets",

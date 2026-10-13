@@ -37,6 +37,11 @@ def _get(key: str, limit: float) -> Budget:
     return budget
 
 
+def get_budget(key: str) -> Budget | None:
+    """The budget registered for *key*, if any (no side effects)."""
+    return _budgets.get(key)
+
+
 def reserve(key: str, limit: float, estimated_cost: float) -> None:
     """Raise if booking ``estimated_cost`` would exceed the budget limit."""
     budget = _get(key, limit)

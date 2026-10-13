@@ -8,7 +8,9 @@ Event protocol (same shape for SSE data and WebSocket messages)
 {"event": "step",     "step": "query_process",  "status": "start", "message": "..."}
 {"event": "step",     "step": "search",         "status": "done",  "hit_count": N}
 {"event": "progress", "step": "search",         "pct": 50,         "message": "..."}
-{"event": "token",    "token": "word "}
+{"event": "token",    "token": "word "}             (text of the JSON "answer" field)
+{"event": "sources",  "answer": "...", "replaced": bool, "citations": [...cited],
+                      "confidence": "high|medium|low", "answerable": bool}
 {"event": "complete", "answer": "...", "citations": [...], "duration_ms": N}
 {"event": "error",    "detail": "..."}
 {"event": "cancelled"}
@@ -36,7 +38,14 @@ from app.engine.context import ExecutionContext
 from app.engine.merging import rrf
 from app.engine.nodes import get_node
 from app.models.workflow import NodeDef, NodeType
-from app.rag.llm import get_llm
+from app.rag.cost import BudgetExceededError
+from app.rag.llm.gateway import stream_llm
+from app.rag.llm.structured import (
+    AnswerStreamExtractor,
+    generate_structured,
+    structured_config,
+    with_instructions,
+)
 
 router = APIRouter(prefix="/rag/stream", tags=["streaming"])
 
@@ -151,7 +160,6 @@ async def _rag_pipeline_events(
     yield {"event": "step", "step": "generate", "status": "start",
            "message": "Generating response..."}
 
-    llm = get_llm(provider_name)
     if isinstance(augment_out, dict) and "messages" in augment_out:
         llm_request = {
             "messages":  augment_out["messages"],
@@ -165,37 +173,75 @@ async def _rag_pipeline_events(
             "query": question, "documents": [], "citations": [],
         }
 
+    # Structured output, streamed: the model emits the JSON answer object and
+    # only its "answer" string is forwarded as tokens. Citations and confidence
+    # arrive afterwards in a single "sources" event.
     llm_config = {"provider": provider_name, "max_tokens": 2048}
-    full_answer = ""
+    stream_request = {**llm_request, "messages": with_instructions(llm_request["messages"])}
+    extractor = AnswerStreamExtractor()
+    raw_reply = ""
+    streamed = ""
     token_count = 0
+    stream_error: str | None = None
 
-    if hasattr(llm, "generate_stream"):
-        async for token in llm.generate_stream(llm_request, llm_config):
+    try:
+        async for chunk in stream_llm(provider_name, stream_request, structured_config(llm_config),
+                                      tenant=tenant):
             if cancelled():
                 break
-            full_answer += token
-            token_count += 1
-            yield {"event": "token", "token": token}
-    else:
-        # Fallback: non-streaming provider → yield full text as one token
-        response = await llm.generate(llm_request, llm_config)
-        full_answer = response.text
-        yield {"event": "token", "token": full_answer}
-        token_count = 1
+            raw_reply += chunk
+            delta = extractor.feed(chunk)
+            if delta:
+                streamed += delta
+                token_count += 1
+                yield {"event": "token", "token": delta}
+    except BudgetExceededError:
+        raise
+    except Exception as exc:  # provider down / unconfigured / circuit open
+        stream_error = str(exc)
+
+    if cancelled():
+        yield {"event": "cancelled"}
+        return
+
+    # Validate the streamed JSON; repair once or fall back to extractive.
+    result = await generate_structured(
+        provider_name, llm_request, llm_config, tenant=tenant,
+        first_reply=None if stream_error else raw_reply,
+    )
+    if stream_error:
+        result["structured"]["errors"].insert(0, f"stream error: {stream_error}")
+    result.pop("response", None)
+    answer = result["answer"]
 
     yield {"event": "step", "step": "generate", "status": "done",
            "token_count": token_count}
 
-    # ── Complete ───────────────────────────────────────────────────────────────
     citations = augment_out.get("citations", []) if isinstance(augment_out, dict) else []
+    cited = [c for c in citations if c.get("marker") in result["cited_markers"]]
     yield {
-        "event":       "complete",
-        "answer":      full_answer,
-        "citations":   citations,
-        "intent":      qp_out.get("intent"),
-        "hit_count":   len(merged),
-        "duration_ms": round((time.perf_counter() - t0) * 1000, 1),
-        "run_id":      run_id,
+        "event":         "sources",
+        "answer":        answer,
+        "replaced":      answer != streamed,  # client should swap in the validated text
+        "citations":     cited,
+        "cited_markers": result["cited_markers"],
+        "confidence":    result["confidence"],
+        "answerable":    result["answerable"],
+        "structured":    result["structured"],
+    }
+
+    # ── Complete ───────────────────────────────────────────────────────────────
+    yield {
+        "event":         "complete",
+        "answer":        answer,
+        "citations":     citations,
+        "cited_markers": result["cited_markers"],
+        "confidence":    result["confidence"],
+        "answerable":    result["answerable"],
+        "intent":        qp_out.get("intent"),
+        "hit_count":     len(merged),
+        "duration_ms":   round((time.perf_counter() - t0) * 1000, 1),
+        "run_id":        run_id,
     }
 
 

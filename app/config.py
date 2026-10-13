@@ -33,6 +33,11 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
     llm_timeout: int = 30
+    # LLM gateway guards: per-provider circuit breaker and the default per-tenant
+    # spend limit applied when a tenant has no explicit budget (F7/F24).
+    llm_breaker_threshold: int = 5
+    llm_breaker_recovery: float = 30.0
+    default_tenant_budget_usd: float = 10.0
 
     # Embedding API keys (F11).  Leave empty to use free local models only.
     openai_api_key: str = ""

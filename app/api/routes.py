@@ -23,6 +23,9 @@ from app.rag.vectorstore import store_stats
 
 router = APIRouter()
 
+# Structured-output confidence labels → numeric score for the F8 query log.
+_CONFIDENCE_SCORE = {"high": 0.9, "medium": 0.6, "low": 0.3}
+
 
 class IndexRequest(BaseModel):
     tenant: str = "default"
@@ -114,7 +117,7 @@ async def rag_ask(
             user_id=user["id"],
             question=request.question,
             answer=out.get("answer", ""),
-            confidence=float(out.get("confidence", 0.0)),
+            confidence=_CONFIDENCE_SCORE.get(out.get("confidence"), 0.0),
             sources_count=len(out.get("sources", [])),
             duration_ms=result.duration_ms,
             trace_id=current_trace_id(),

@@ -184,6 +184,29 @@ export GEMINI_API_KEY=your_key          # or set in docker-compose env
 Add other providers (Claude/OpenAI/Ollama) by registering a factory in
 `app/rag/llm/registry.py` — the `generate` node is provider-agnostic.
 
+Every model call goes through the **LLM gateway** (`app/rag/llm/gateway.py`):
+per-provider circuit breaker, per-tenant budget guard, cost ledger, Prometheus
+usage and an OpenTelemetry `llm.call` span. A provider without an API key is
+rejected up front and the pipeline degrades to the extractive answer.
+
+## Concepts demonstrated
+
+| Concept | Feature | Where |
+|---|---|---|
+| **Structured output** | The answer is JSON `{answer, citations, confidence, answerable}` validated by Pydantic. Gemini runs in JSON-schema mode; invalid replies are retried once with the validation error, then fall back to the extractive answer. SSE streams the `answer` field and finishes with a `sources` event. | `app/rag/llm/structured.py`, `app/rag/llm/gemini.py` (`build_payload`), `app/engine/nodes/generate.py`, `app/api/stream.py`, `tests/test_structured_output.py` |
+
+## Evaluation
+
+```bash
+python eval/run_eval.py --label my_run            # offline stub, deterministic
+python eval/run_eval.py --provider gemini --delay 7  # real model, free-tier friendly
+```
+
+Indexes `eval/corpus/` into an isolated tenant, asks the 28 questions in
+`eval/questions.jsonl` (answerable, multi-hop, unanswerable) and reports citation
+rate/precision, answer accuracy, "I don't know" accuracy and latency. Results are
+saved under `eval/results/`.
+
 ## Roadmap
 
 **Done:** orchestration **F1–F8** + complete RAG pipeline **F9–F16**

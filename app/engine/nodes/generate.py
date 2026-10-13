@@ -4,19 +4,23 @@ Consumes an ``augment`` output (messages + documents + citations) and produces
 an answer via the configured provider. Default provider is the offline stub; set
 ``provider: "gemini"`` (with GEMINI_API_KEY) for real generation.
 
-Performance & cost layers (all opt-in):
+Performance & cost layers:
 * exact response cache — identical messages return the cached answer (F17)
 * semantic cache — a near-duplicate query reuses a prior answer (F17)
-* token counting + cost estimation per call (F24)
-* per-tenant budget enforcement before spending (F24)
+* every call goes through the LLM gateway: circuit breaker, per-tenant budget
+  guard, token counting + cost ledger, and an OTel span (F7/F24/F8)
+* ``structured: true`` — validated JSON answer {answer, citations, confidence,
+  answerable} with one repair retry and an extractive fallback
 
 Config::
 
     {
       "provider": "stub", "model": "gpt-4o", "temperature": 0.2, "max_tokens": 512,
+      "structured": true,
       "cache": true, "cache_ttl": 300,
       "semantic_cache": {"enabled": true, "threshold": 0.95, "dimension": 256},
-      "budget_key": "$.inputs.tenant", "budget_limit": 1.0
+      "tenant": "$.inputs.tenant",          # budget key; tenant default limit applies
+      "budget_key": "$.inputs.tenant", "budget_limit": 1.0   # explicit limit
     }
 """
 from __future__ import annotations
@@ -30,12 +34,13 @@ from app.engine.context import ExecutionContext
 from app.engine.nodes.base import Node
 from app.engine.nodes.processing import _single_upstream
 from app.engine.nodes.registry import register
-from app.observability.metrics import record_cache, record_llm_usage
+from app.observability.metrics import record_cache
 from app.rag.cache import SemanticCache, get_cache
 from app.rag.cache.cache import MISS
-from app.rag.cost import count_tokens, estimate_cost, record_spend, reserve
+from app.rag.cost import get_budget
 from app.rag.embeddings import DEFAULT_DIMENSION, embed_texts
-from app.rag.llm import get_llm
+from app.rag.llm.gateway import call_llm
+from app.rag.llm.structured import generate_structured
 
 
 @register
@@ -54,7 +59,7 @@ class GenerateNode(Node):
         # 1) Exact response cache (F17).
         cache_name = self.config.get("cache_name", "llm-response")
         cache = get_cache(cache_name, ttl=float(self.config.get("cache_ttl", 300)))
-        cache_key = self._cache_key(provider_name, request)
+        cache_key = self._cache_key(provider_name, request, bool(self.config.get("structured")))
         if self.config.get("cache"):
             cached = cache.get(cache_key)
             record_cache(cache_name, cached is not MISS)
@@ -76,45 +81,24 @@ class GenerateNode(Node):
             if hit is not None:
                 return {**hit, "cache_hit": True, "cache_type": "semantic"}
 
-        # 3) Budget pre-check (F24): reject before spending if over limit.
-        model = self.config.get("model") or self._provider_model(provider_name)
-        prompt_text = "\n".join(m["content"] for m in request["messages"])
-        in_tokens_est = count_tokens(prompt_text)
-        budget_key = ctx.resolve(self.config.get("budget_key")) if "budget_key" in self.config else None
-        budget_limit = float(self.config.get("budget_limit", 0.0))
-        if budget_key and budget_limit > 0:
-            est = estimate_cost(model, in_tokens_est, int(self.config.get("max_tokens", 512)))
-            reserve(str(budget_key), budget_limit, est)
+        # 3) Generate through the LLM gateway: circuit breaker, budget guard,
+        #    cost ledger, metrics and an OTel span all apply (F7/F24/F8).
+        tenant, budget_limit = self._budget(ctx)
+        if self.config.get("structured"):
+            result = await self._generate_structured(provider_name, request, tenant, budget_limit)
+        else:
+            response = await call_llm(provider_name, request, self.config,
+                                      tenant=tenant, budget_limit=budget_limit)
+            result = self._plain_result(response, request)
 
-        # 4) Generate.
-        llm = get_llm(provider_name)
-        response = await llm.generate(request, self.config)
-
-        # 5) Token counting + cost (F24).
-        usage = response.usage or {}
-        in_tokens = int(usage.get("input_tokens") or in_tokens_est)
-        out_tokens = int(usage.get("output_tokens") or count_tokens(response.text))
-        cost = estimate_cost(model, in_tokens, out_tokens)
-        record_llm_usage(response.provider, model, in_tokens, out_tokens, cost)
-
-        budget_info = None
-        if budget_key and budget_limit > 0:
-            b = record_spend(str(budget_key), budget_limit, cost)
-            budget_info = {"key": b.key, "spent": b.spent, "limit": b.limit,
-                           "remaining": round(b.limit - b.spent, 6)}
-
-        result = {
-            "answer": response.text,
-            "provider": response.provider,
-            "model": model,
-            "finish_reason": response.finish_reason,
-            "tokens": {"input": in_tokens, "output": out_tokens},
-            "cost_usd": cost,
-            "budget": budget_info,
-            "citations": response.citations or [c["marker"] for c in request.get("citations", [])],
-            "cache_hit": False,
-            "cache_type": None,
-        }
+        budget = get_budget(tenant) if tenant else None
+        result["budget"] = (
+            {"key": budget.key, "spent": budget.spent, "limit": budget.limit,
+             "remaining": round(budget.limit - budget.spent, 6)}
+            if budget else None
+        )
+        result["cache_hit"] = False
+        result["cache_type"] = None
 
         # 6) Populate caches for next time.
         if self.config.get("cache"):
@@ -125,14 +109,48 @@ class GenerateNode(Node):
 
     # -- helpers -----------------------------------------------------------
 
-    @staticmethod
-    def _cache_key(provider: str, request: dict[str, Any]) -> str:
-        payload = json.dumps({"p": provider, "m": request["messages"]}, sort_keys=True)
-        return hashlib.sha1(payload.encode("utf-8")).hexdigest()
+    def _budget(self, ctx: ExecutionContext) -> tuple[str | None, float | None]:
+        """Budget key (the tenant) and explicit limit; no key → no budget guard."""
+        key = None
+        for field in ("tenant", "budget_key"):
+            if field in self.config:
+                key = ctx.resolve(self.config[field]) or key
+        limit = float(self.config["budget_limit"]) if "budget_limit" in self.config else None
+        return (str(key) if key else None), limit
+
+    def _plain_result(self, response, request: dict[str, Any]) -> dict[str, Any]:
+        usage = response.usage or {}
+        return {
+            "answer": response.text,
+            "provider": response.provider,
+            "model": response.model,
+            "finish_reason": response.finish_reason,
+            "tokens": {"input": usage.get("input_tokens", 0), "output": usage.get("output_tokens", 0)},
+            "cost_usd": usage.get("cost_usd", 0.0),
+            "citations": response.citations or [c["marker"] for c in request.get("citations", [])],
+        }
+
+    async def _generate_structured(self, provider: str, request: dict[str, Any],
+                                   tenant: str | None, budget_limit: float | None) -> dict[str, Any]:
+        out = await generate_structured(provider, request, self.config,
+                                        tenant=tenant, budget_limit=budget_limit)
+        response = out.pop("response")
+        usage = (response.usage or {}) if response else {}
+        return {
+            **out,
+            "citations": out["cited_markers"],
+            "provider": response.provider if response else "extractive-fallback",
+            "model": response.model if response else "extractive-stub",
+            "finish_reason": response.finish_reason if response else "fallback",
+            "tokens": {"input": usage.get("input_tokens", 0), "output": usage.get("output_tokens", 0)},
+            "cost_usd": usage.get("cost_usd", 0.0),
+        }
 
     @staticmethod
-    def _provider_model(provider: str) -> str:
-        return settings.gemini_model if provider == "gemini" else "extractive-stub"
+    def _cache_key(provider: str, request: dict[str, Any], structured: bool = False) -> str:
+        payload = json.dumps({"p": provider, "m": request["messages"], "s": structured},
+                             sort_keys=True)
+        return hashlib.sha1(payload.encode("utf-8")).hexdigest()
 
     def _build_request(self, ctx: ExecutionContext, source: Any) -> dict[str, Any]:
         if isinstance(source, dict) and "messages" in source:

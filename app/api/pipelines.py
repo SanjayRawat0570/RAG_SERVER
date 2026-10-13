@@ -15,6 +15,21 @@ from app.models.workflow import WorkflowDef
 STORE = "kb"
 DIM = 256
 
+# Response shape of the ask workflows. ``citations`` lists every context source
+# shown to the model; ``cited_markers`` are the ones the answer actually uses.
+ASK_OUTPUT: dict[str, Any] = {
+    "intent": "$.qp.intent",
+    "answer": "$.generate.answer",
+    "citations": "$.augment.citations",
+    "cited_markers": "$.generate.cited_markers",
+    "confidence": "$.generate.confidence",
+    "answerable": "$.generate.answerable",
+    "structured": "$.generate.structured",
+    "provider": "$.generate.provider",
+    "cost_usd": "$.generate.cost_usd",
+    "cache_hit": "$.generate.cache_hit",
+}
+
 
 def build_index_workflow() -> WorkflowDef:
     return WorkflowDef(
@@ -60,17 +75,13 @@ def build_ask_workflow(provider: str) -> WorkflowDef:
             {"id": "augment", "type": "augment",
              "config": {"query": "$.qp.normalized", "max_context_tokens": 600}},
             {"id": "generate", "type": "generate",
-             "config": {"provider": provider, "query": "$.qp.normalized", "cache": True, "max_tokens": 2048},
+             "config": {"provider": provider, "query": "$.qp.normalized", "cache": True,
+                        "max_tokens": 2048, "structured": True, "tenant": "$.inputs.tenant"},
              "retry": {"max_attempts": 2},
              "fallback": {"answer": "Generation is temporarily unavailable.",
-                          "citations": [], "provider": provider, "cache_hit": False}},
-            {"id": "out", "type": "output", "config": {"value": {
-                "intent": "$.qp.intent",
-                "answer": "$.generate.answer",
-                "citations": "$.augment.citations",
-                "provider": "$.generate.provider",
-                "cost_usd": "$.generate.cost_usd",
-                "cache_hit": "$.generate.cache_hit"}}},
+                          "citations": [], "cited_markers": [], "confidence": "low",
+                          "answerable": False, "provider": provider, "cache_hit": False}},
+            {"id": "out", "type": "output", "config": {"value": ASK_OUTPUT}},
         ],
         edges=[
             {"source": "in", "target": "qp"},

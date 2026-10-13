@@ -29,7 +29,8 @@ from app.rag.context import (
     organize_context,
 )
 from app.rag.cost.pricing import estimate_cost
-from app.rag.llm import LLMResponse, get_llm
+from app.rag.llm import LLMResponse
+from app.rag.llm.gateway import call_llm, stream_llm
 from app.rag.llm.selector import model_catalogue, select_model
 from app.rag.models import estimate_tokens
 from app.rag.vectorstore import lookup_store
@@ -172,15 +173,16 @@ async def _run_pipeline(req: AskRequest) -> dict[str, Any]:
     messages = prompt_obj["messages"]
 
     # 5. LLM generate
-    llm     = get_llm(provider_name)
     config  = {
         "model":       model_hint or None,
         "max_tokens":  req.max_tokens,
         "temperature": req.temperature,
     }
-    response: LLMResponse = await llm.generate(
+    response: LLMResponse = await call_llm(
+        provider_name,
         {"messages": messages, "documents": docs, "query": req.query},
         config,
+        tenant=req.namespace,
     )
 
     # 6. Post-process
@@ -342,7 +344,6 @@ async def ask_stream(req: AskRequest, _: CurrentUser) -> StreamingResponse:
                                       "chain_of_thought": req.chain_of_thought})
     messages   = prompt_obj["messages"]
 
-    llm    = get_llm(provider_name)
     config = {"model": model_hint or None, "max_tokens": req.max_tokens,
               "temperature": req.temperature}
 
@@ -356,8 +357,10 @@ async def ask_stream(req: AskRequest, _: CurrentUser) -> StreamingResponse:
         yield f"data: {meta}\n\n"
 
         try:
-            async for token in llm.generate_stream(
-                {"messages": messages, "documents": docs, "query": req.query}, config
+            async for token in stream_llm(
+                provider_name,
+                {"messages": messages, "documents": docs, "query": req.query}, config,
+                tenant=req.namespace,
             ):
                 chunk = json.dumps({"event": "token", "text": token})
                 yield f"data: {chunk}\n\n"
@@ -377,17 +380,17 @@ async def ask_stream(req: AskRequest, _: CurrentUser) -> StreamingResponse:
 
 
 @router.post("/generate")
-async def generate(req: GenerateRequest, _: CurrentUser) -> dict[str, Any]:
+async def generate(req: GenerateRequest, user: CurrentUser) -> dict[str, Any]:
     """Raw LLM call — supply your own messages, skip RAG retrieval."""
     provider_name = req.provider or settings.llm_provider
-    llm    = get_llm(provider_name)
     config = {
         "model":       req.model,
         "max_tokens":  req.max_tokens,
         "temperature": req.temperature,
     }
     try:
-        response: LLMResponse = await llm.generate({"messages": req.messages}, config)
+        response: LLMResponse = await call_llm(provider_name, {"messages": req.messages}, config,
+                                               user_id=user["id"])
     except RuntimeError as exc:
         raise HTTPException(503, str(exc))
 

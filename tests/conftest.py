@@ -23,6 +23,15 @@ def _anyio_backend():
     return "asyncio"
 
 
+@pytest.fixture(autouse=True)
+def _reset_llm_breakers():
+    """LLM gateway breakers are process-wide; isolate them per test."""
+    from app.engine.circuit_breaker import registry
+    for provider in ("stub", "gemini", "openai", "claude"):
+        registry.reset(f"llm:{provider}")
+    yield
+
+
 @pytest.fixture(autouse=True, scope="session")
 def _init_tracing():
     """Ensure OTel tracing (and the in-memory span store) is initialised once

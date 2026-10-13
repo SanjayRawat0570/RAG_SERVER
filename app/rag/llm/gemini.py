@@ -2,7 +2,11 @@
 
 Used only when a key is configured (``GEMINI_API_KEY``). No SDK dependency: a
 single ``httpx`` POST to the Generative Language API. Chat ``messages`` are
-mapped to Gemini's ``system_instruction`` + ``contents`` shape.
+mapped to Gemini's ``system_instruction`` + multi-turn ``contents`` shape
+(``assistant`` → ``model``).
+
+Structured output: ``config["response_schema"]`` switches on Gemini's JSON mode
+(``responseMimeType: application/json`` + ``responseSchema``).
 """
 from __future__ import annotations
 
@@ -18,6 +22,31 @@ _ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:gen
 _STREAM_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:streamGenerateContent"
 
 
+def build_payload(request: dict[str, Any], config: dict[str, Any]) -> dict[str, Any]:
+    messages = request.get("messages", [])
+    system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
+    contents: list[dict[str, Any]] = []
+    for m in messages:
+        if m["role"] == "system":
+            continue
+        role = "model" if m["role"] in ("assistant", "model") else "user"
+        parts = m.get("parts") or [{"text": m["content"]}]
+        contents.append({"role": role, "parts": parts})
+
+    generation: dict[str, Any] = {
+        "temperature": config.get("temperature", 0.2),
+        "maxOutputTokens": config.get("max_tokens", 512),
+    }
+    if config.get("response_schema"):
+        generation["responseMimeType"] = "application/json"
+        generation["responseSchema"] = config["response_schema"]
+
+    payload: dict[str, Any] = {"contents": contents, "generationConfig": generation}
+    if system:
+        payload["system_instruction"] = {"parts": [{"text": system}]}
+    return payload
+
+
 class GeminiLLM:
     name = "gemini"
 
@@ -27,20 +56,8 @@ class GeminiLLM:
             raise RuntimeError(
                 "Gemini provider requires GEMINI_API_KEY (set it or use provider 'stub')"
             )
-        model = config.get("model", settings.gemini_model)
-        messages = request.get("messages", [])
-        system = next((m["content"] for m in messages if m["role"] == "system"), None)
-        user = "\n\n".join(m["content"] for m in messages if m["role"] == "user")
-
-        payload: dict[str, Any] = {
-            "contents": [{"role": "user", "parts": [{"text": user}]}],
-            "generationConfig": {
-                "temperature": config.get("temperature", 0.2),
-                "maxOutputTokens": config.get("max_tokens", 512),
-            },
-        }
-        if system:
-            payload["system_instruction"] = {"parts": [{"text": system}]}
+        model = config.get("model") or settings.gemini_model
+        payload = build_payload(request, config)
 
         url = _ENDPOINT.format(model=model)
         async with httpx.AsyncClient(timeout=config.get("timeout", settings.llm_timeout)) as client:
@@ -50,7 +67,7 @@ class GeminiLLM:
 
         candidate = (data.get("candidates") or [{}])[0]
         parts = candidate.get("content", {}).get("parts", [])
-        text = "".join(p.get("text", "") for p in parts).strip()
+        text = "".join(p.get("text", "") for p in parts if not p.get("thought")).strip()
         usage = data.get("usageMetadata", {})
         return LLMResponse(
             text=text,
@@ -75,20 +92,8 @@ class GeminiLLM:
             yield response.text
             return
 
-        model = config.get("model", settings.gemini_model)
-        messages = request.get("messages", [])
-        system = next((m["content"] for m in messages if m["role"] == "system"), None)
-        user = "\n\n".join(m["content"] for m in messages if m["role"] == "user")
-
-        payload: dict[str, Any] = {
-            "contents": [{"role": "user", "parts": [{"text": user}]}],
-            "generationConfig": {
-                "temperature": config.get("temperature", 0.2),
-                "maxOutputTokens": config.get("max_tokens", 512),
-            },
-        }
-        if system:
-            payload["system_instruction"] = {"parts": [{"text": system}]}
+        model = config.get("model") or settings.gemini_model
+        payload = build_payload(request, config)
 
         url = _STREAM_ENDPOINT.format(model=model)
         try:
@@ -112,7 +117,7 @@ class GeminiLLM:
                                 .get("parts", [])
                             )
                             for part in parts:
-                                if text := part.get("text"):
+                                if (text := part.get("text")) and not part.get("thought"):
                                     yield text
                         except (json.JSONDecodeError, IndexError):
                             continue
