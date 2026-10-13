@@ -16,6 +16,7 @@ from app.engine.nodes import (  # noqa: F401
     loop,
     merge,
     output,
+    personalize,
     processing,
     query_process,
     rerank,

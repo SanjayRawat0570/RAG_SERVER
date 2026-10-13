@@ -40,6 +40,7 @@ from app.engine.merging import rrf
 from app.engine.nodes import get_node
 from app.models.workflow import NodeDef, NodeType
 from app.rag.cost import BudgetExceededError
+from app.rag.memory import service as memory
 from app.rag.tenants.ai_settings import effective_examples
 from app.rag.llm.gateway import redact, stream_llm
 from app.rag.llm.structured import (
@@ -60,6 +61,7 @@ class StreamAskRequest(BaseModel):
     provider: str | None = None
     few_shot: bool | None = None   # None → tenant setting
     mode: Literal["fast", "agentic"] = "fast"
+    conversation_id: str | None = None
 
 
 # ── Pipeline helpers ───────────────────────────────────────────────────────────
@@ -130,6 +132,9 @@ async def _fast_retrieval(
         "method": "cross_encoder", "query": "$.qp.normalized", "top_n": 3,
     })
     reranked = await rerank_node.run(ctx, {"fuse": merged})
+    # Profile + long-term memory interests (no-op for anonymous users).
+    reranked = await _nd(NodeType.PERSONALIZE, "personalize",
+                         {"user_id": "$.inputs.user_id"}).run(ctx, {"rerank": reranked})
     ctx.set_output("rerank", reranked)
     yield {"event": "step", "step": "rerank", "status": "done",
            "result_count": len(reranked) if isinstance(reranked, list) else 0}
@@ -196,6 +201,7 @@ async def _rag_pipeline_events(
     cancel: asyncio.Event | None = None,
     few_shot: bool | None = None,
     mode: str = "fast",
+    user_id: str | None = None,
 ) -> AsyncIterator[dict[str, Any]]:
     """Run the full RAG pipeline step-by-step, yielding event dicts.
 
@@ -205,7 +211,8 @@ async def _rag_pipeline_events(
     then structured generation streams the answer for both.
     """
     run_id = str(uuid.uuid4())
-    ctx = ExecutionContext(run_id=run_id, inputs={"question": question, "tenant": tenant})
+    ctx = ExecutionContext(run_id=run_id,
+                           inputs={"question": question, "tenant": tenant, "user_id": user_id})
     t0 = time.perf_counter()
 
     def cancelled() -> bool:
@@ -331,19 +338,34 @@ async def stream_rag_ask(
     one-by-one as the answer is generated. Stops immediately if the client
     disconnects (cancel on HTTP close).
 
-    Event types: ``step`` · ``progress`` · ``token`` · ``complete`` · ``error`` · ``cancelled``
+    Event types: ``memory`` · ``step`` · ``progress`` · ``agent_steps`` · ``token`` ·
+    ``sources`` · ``complete`` · ``error`` · ``cancelled``
+
+    With ``conversation_id`` (or a new conversation), a follow-up is first
+    rewritten into a standalone question, announced in a ``memory`` event.
     """
     provider = body.provider or default_provider()
 
     async def event_source() -> AsyncIterator[str]:
         try:
-            async for ev in _rag_pipeline_events(body.question, body.tenant, provider,
-                                                 few_shot=body.few_shot, mode=body.mode):
+            mem = await memory.before(tenant=body.tenant, user_id=user["id"],
+                                      conversation_id=body.conversation_id,
+                                      question=body.question, provider=provider)
+            first = {"event": "memory", "conversation_id": mem.conversation_id,
+                     "standalone_question": mem.standalone, "steps": mem.steps}
+            yield f"event: memory\ndata: {json.dumps(first)}\n\n"
+            async for ev in _rag_pipeline_events(mem.standalone, body.tenant, provider,
+                                                 few_shot=body.few_shot, mode=body.mode,
+                                                 user_id=user["id"]):
                 if await http_request.is_disconnected():
                     break
+                if ev["event"] == "complete":
+                    memory.after(mem, tenant=body.tenant, user_id=user["id"], out=ev,
+                                 provider=provider)
+                    ev = memory.present(mem, ev)
                 yield f"event: {ev['event']}\ndata: {json.dumps(ev)}\n\n"
         except Exception as exc:  # noqa: BLE001
-            err_ev = {"event": "error", "detail": str(exc)}
+            err_ev = {"event": "error", "detail": redact(str(exc))}
             yield f"event: error\ndata: {json.dumps(err_ev)}\n\n"
 
     return StreamingResponse(

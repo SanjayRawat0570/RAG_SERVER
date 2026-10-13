@@ -38,6 +38,7 @@ class NodeType(str, Enum):
     AGENT_SEARCH = "agent_search"
     AGENT_EVALUATE = "agent_evaluate"
     GRAPH_INDEX = "graph_index"
+    PERSONALIZE = "personalize"
     OUTPUT = "output"
 
 

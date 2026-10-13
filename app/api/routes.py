@@ -24,6 +24,7 @@ from app.observability.query_log import log_query
 from app.observability.tracing import current_trace_id
 from app.rag.cache import cache_stats
 from app.rag.cost import budget_stats
+from app.rag.memory import service as memory
 from app.rag.tenants.ai_settings import effective_examples
 from app.rag.vectorstore import store_stats
 
@@ -49,6 +50,10 @@ class AskRequest(BaseModel):
         default="fast",
         description="fast = fixed retrieval pipeline; agentic = tool-calling agent "
                     "(plan → search → evaluate → rewrite, max 3 rounds)")
+    conversation_id: str | None = Field(
+        default=None,
+        description="Continue a conversation (last 5 turns are used to rewrite follow-ups); "
+                    "omit to start a new one. Requires an authenticated user.")
 
 
 @router.post("/workflows/run", response_model=RunResponse, tags=["workflows"])
@@ -122,17 +127,24 @@ async def rag_ask(
       again; the response includes the ``steps`` trace.
     """
     provider = request.provider or default_provider()
+    # Conversation memory: rewrite a follow-up into a standalone question first.
+    memory_ctx = await memory.before(tenant=request.tenant, user_id=user["id"],
+                                     conversation_id=request.conversation_id,
+                                     question=request.question, provider=provider)
     build = build_agentic_workflow if request.mode == "agentic" else build_ask_workflow
     executor = WorkflowExecutor(build(provider))
     examples = effective_examples(request.tenant, request.few_shot)
     result = await executor.run({
         "tenant": request.tenant,
-        "question": request.question,
+        "question": memory_ctx.standalone,
+        "user_id": user["id"],
         "few_shot": [e.model_dump() for e in examples],
     })
     if result.status != "success":
         raise HTTPException(status_code=500, detail="answering failed")
     out = result.outputs.get("out", {})
+    memory.after(memory_ctx, tenant=request.tenant, user_id=user["id"], out=out, provider=provider)
+    out = memory.present(memory_ctx, out)
     # Log query for F8 monitoring (best-effort, never fails the request).
     try:
         log_query(

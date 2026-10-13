@@ -76,6 +76,8 @@ def build_ask_workflow(provider: str, model: str | None = None) -> WorkflowDef:
             {"id": "fuse", "type": "merge", "config": {"strategy": "rrf", "top_n": 5}},
             {"id": "rerank", "type": "rerank",
              "config": {"method": "cross_encoder", "query": "$.qp.normalized", "top_n": 3}},
+            # Profile + long-term memory interests re-rank (no-op without a profile).
+            {"id": "personalize", "type": "personalize", "config": {"user_id": "$.inputs.user_id"}},
             {"id": "augment", "type": "augment",
              "config": {"query": "$.qp.normalized", "max_context_tokens": 600,
                         "examples": "$.inputs.few_shot", "example_format": "json"}},
@@ -96,7 +98,8 @@ def build_ask_workflow(provider: str, model: str | None = None) -> WorkflowDef:
             {"source": "dense", "target": "fuse"},
             {"source": "sparse", "target": "fuse"},
             {"source": "fuse", "target": "rerank"},
-            {"source": "rerank", "target": "augment"},
+            {"source": "rerank", "target": "personalize"},
+            {"source": "personalize", "target": "augment"},
             {"source": "augment", "target": "generate"},
             {"source": "generate", "target": "out"},
         ],
