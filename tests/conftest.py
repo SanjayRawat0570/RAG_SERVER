@@ -1,4 +1,21 @@
-import pytest
+import os
+
+# Tests run offline and never touch real services, even when backend/.env holds
+# live keys. Real env vars take precedence over the .env file in pydantic-settings,
+# so set them before any app module (and therefore Settings) is imported.
+os.environ.update({
+    "APP_ENV": "test",
+    "LLM_PROVIDER": "stub",
+    "GEMINI_API_KEY": "",
+    "OPENAI_API_KEY": "",
+    "COHERE_API_KEY": "",
+    "ANTHROPIC_API_KEY": "",
+    "SUPABASE_URL": "",
+    "SUPABASE_KEY": "",
+    "OTEL_EXPORTER_ENDPOINT": "",
+})
+
+import pytest  # noqa: E402
 
 
 @pytest.fixture(autouse=True)

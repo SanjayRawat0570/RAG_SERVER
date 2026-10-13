@@ -1,0 +1,28 @@
+{"id": "a01", "type": "answerable", "question": "How many days of annual leave do full-time employees get?", "expected_sources": ["hr_leave_policy.md"], "expected_keywords": ["25"]}
+{"id": "a02", "type": "answerable", "question": "How is annual leave calculated for part-time staff?", "expected_sources": ["hr_leave_policy.md"], "expected_keywords": ["pro rata"]}
+{"id": "a03", "type": "answerable", "question": "How many unused leave days can be carried over?", "expected_sources": ["hr_leave_policy.md"], "expected_keywords": ["5"]}
+{"id": "a04", "type": "answerable", "question": "How many days of paid sick leave do employees receive?", "expected_sources": ["hr_leave_policy.md"], "expected_keywords": ["10"]}
+{"id": "a05", "type": "answerable", "question": "How long is parental leave for primary caregivers?", "expected_sources": ["hr_leave_policy.md"], "expected_keywords": ["16 weeks"]}
+{"id": "a06", "type": "answerable", "question": "How is customer data encrypted at rest?", "expected_sources": ["security_policy.md"], "expected_keywords": ["AES-256"]}
+{"id": "a07", "type": "answerable", "question": "How often are encryption keys rotated?", "expected_sources": ["security_policy.md"], "expected_keywords": ["90"]}
+{"id": "a08", "type": "answerable", "question": "What is the minimum password length?", "expected_sources": ["security_policy.md"], "expected_keywords": ["14"]}
+{"id": "a09", "type": "answerable", "question": "Within how many hours must a security incident be reported?", "expected_sources": ["security_policy.md"], "expected_keywords": ["24"]}
+{"id": "a10", "type": "answerable", "question": "What is the daily meal allowance when travelling?", "expected_sources": ["expenses_policy.md"], "expected_keywords": ["60"]}
+{"id": "a11", "type": "answerable", "question": "Above what amount are receipts required for expenses?", "expected_sources": ["expenses_policy.md"], "expected_keywords": ["25"]}
+{"id": "a12", "type": "answerable", "question": "Which expenses need approval from the Chief Financial Officer?", "expected_sources": ["expenses_policy.md"], "expected_keywords": ["5,000"]}
+{"id": "a13", "type": "answerable", "question": "How many days per week can employees work remotely?", "expected_sources": ["remote_work.md"], "expected_keywords": ["3"]}
+{"id": "a14", "type": "answerable", "question": "How much is the home office stipend?", "expected_sources": ["remote_work.md"], "expected_keywords": ["500"]}
+{"id": "a15", "type": "answerable", "question": "How often are company laptops refreshed?", "expected_sources": ["remote_work.md"], "expected_keywords": ["3 years"]}
+{"id": "a16", "type": "answerable", "question": "Which team owns Project Atlas?", "expected_sources": ["projects.md"], "expected_keywords": ["Data Platform"]}
+{"id": "a17", "type": "answerable", "question": "Who leads the Mobile team?", "expected_sources": ["teams.md"], "expected_keywords": ["Tom Becker"]}
+{"id": "m01", "type": "multihop", "question": "Who leads the team that owns Project Atlas?", "expected_sources": ["projects.md", "teams.md"], "expected_keywords": ["Priya Shah"]}
+{"id": "m02", "type": "multihop", "question": "In which office is the team that owns Project Beacon based?", "expected_sources": ["projects.md", "teams.md"], "expected_keywords": ["Lisbon"]}
+{"id": "m03", "type": "multihop", "question": "Who leads the team responsible for Project Cedar?", "expected_sources": ["projects.md", "teams.md"], "expected_keywords": ["Amara Okafor"]}
+{"id": "u01", "type": "unanswerable", "question": "What is the parking fee at the Berlin office?", "expected_sources": [], "expected_keywords": []}
+{"id": "u02", "type": "unanswerable", "question": "Which company provides our dental insurance?", "expected_sources": [], "expected_keywords": []}
+{"id": "u03", "type": "unanswerable", "question": "Are pets allowed in the office?", "expected_sources": [], "expected_keywords": []}
+{"id": "u04", "type": "unanswerable", "question": "How large is the annual performance bonus?", "expected_sources": [], "expected_keywords": []}
+{"id": "u05", "type": "unanswerable", "question": "What is on the cafeteria menu on Fridays?", "expected_sources": [], "expected_keywords": []}
+{"id": "u06", "type": "unanswerable", "question": "Who won the 2022 company hackathon?", "expected_sources": [], "expected_keywords": []}
+{"id": "u07", "type": "unanswerable", "question": "What is the company's stock ticker symbol?", "expected_sources": [], "expected_keywords": []}
+{"id": "u08", "type": "unanswerable", "question": "How many vacation days do contractors in Japan receive?", "expected_sources": [], "expected_keywords": []}
