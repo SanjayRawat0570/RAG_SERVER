@@ -17,6 +17,7 @@ import httpx
 
 from app.config import settings
 from app.rag.llm.base import LLMResponse
+from app.rag.llm.http import tls_verify
 
 _ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 _STREAM_ENDPOINT = "https://generativelanguage.googleapis.com/v1beta/models/{model}:streamGenerateContent"
@@ -60,7 +61,7 @@ class GeminiLLM:
         payload = build_payload(request, config)
 
         url = _ENDPOINT.format(model=model)
-        async with httpx.AsyncClient(timeout=config.get("timeout", settings.llm_timeout)) as client:
+        async with httpx.AsyncClient(verify=tls_verify(), timeout=config.get("timeout", settings.llm_timeout)) as client:
             resp = await client.post(url, params={"key": api_key}, json=payload)
             resp.raise_for_status()
             data = resp.json()
@@ -97,8 +98,7 @@ class GeminiLLM:
 
         url = _STREAM_ENDPOINT.format(model=model)
         try:
-            async with httpx.AsyncClient(
-                timeout=config.get("timeout", settings.llm_timeout)
+            async with httpx.AsyncClient(verify=tls_verify(), timeout=config.get("timeout", settings.llm_timeout)
             ) as client:
                 async with client.stream(
                     "POST", url,

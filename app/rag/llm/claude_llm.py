@@ -12,6 +12,7 @@ import httpx
 
 from app.config import settings
 from app.rag.llm.base import LLMResponse
+from app.rag.llm.http import tls_verify
 
 _ENDPOINT       = "https://api.anthropic.com/v1/messages"
 _API_VERSION    = "2023-06-01"
@@ -71,7 +72,7 @@ class ClaudeLLM:
         model   = _resolve_model(config.get("model", _DEFAULT_MODEL))
         payload = self._payload(request, config)
 
-        async with httpx.AsyncClient(timeout=config.get("timeout", 30)) as client:
+        async with httpx.AsyncClient(verify=tls_verify(), timeout=config.get("timeout", 30)) as client:
             resp = await client.post(
                 _ENDPOINT,
                 headers={
@@ -107,7 +108,7 @@ class ClaudeLLM:
         payload = {**self._payload(request, config), "stream": True}
 
         try:
-            async with httpx.AsyncClient(timeout=config.get("timeout", 30)) as client:
+            async with httpx.AsyncClient(verify=tls_verify(), timeout=config.get("timeout", 30)) as client:
                 async with client.stream(
                     "POST", _ENDPOINT,
                     headers={
