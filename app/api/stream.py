@@ -39,6 +39,7 @@ from app.engine.merging import rrf
 from app.engine.nodes import get_node
 from app.models.workflow import NodeDef, NodeType
 from app.rag.cost import BudgetExceededError
+from app.rag.tenants.ai_settings import effective_examples
 from app.rag.llm.gateway import stream_llm
 from app.rag.llm.structured import (
     AnswerStreamExtractor,
@@ -56,6 +57,7 @@ class StreamAskRequest(BaseModel):
     question: str
     tenant: str = "default"
     provider: str | None = None
+    few_shot: bool | None = None   # None → tenant setting
 
 
 # ── Pipeline helpers ───────────────────────────────────────────────────────────
@@ -70,6 +72,7 @@ async def _rag_pipeline_events(
     tenant: str,
     provider_name: str,
     cancel: asyncio.Event | None = None,
+    few_shot: bool | None = None,
 ) -> AsyncIterator[dict[str, Any]]:
     """Run the full RAG pipeline step-by-step, yielding event dicts.
 
@@ -144,6 +147,8 @@ async def _rag_pipeline_events(
            "message": "Building context window..."}
     augment_node = _nd(NodeType.AUGMENT, "augment", {
         "query": "$.qp.normalized", "max_context_tokens": 600,
+        "examples": [e.model_dump() for e in effective_examples(tenant, few_shot)],
+        "example_format": "json",
     })
     augment_out = await augment_node.run(ctx, {"rerank": reranked})
     ctx.set_output("augment", augment_out)
@@ -266,7 +271,8 @@ async def stream_rag_ask(
 
     async def event_source() -> AsyncIterator[str]:
         try:
-            async for ev in _rag_pipeline_events(body.question, body.tenant, provider):
+            async for ev in _rag_pipeline_events(body.question, body.tenant, provider,
+                                                 few_shot=body.few_shot):
                 if await http_request.is_disconnected():
                     break
                 yield f"event: {ev['event']}\ndata: {json.dumps(ev)}\n\n"
@@ -334,7 +340,8 @@ async def ws_rag_ask(ws: WebSocket) -> None:
 
             monitor_task = asyncio.create_task(_monitor_cancel())
             try:
-                async for ev in _rag_pipeline_events(question, tenant, provider, cancel):
+                async for ev in _rag_pipeline_events(question, tenant, provider, cancel,
+                                                     few_shot=data.get("few_shot")):
                     await ws.send_json(ev)
                     if ev.get("event") in ("complete", "cancelled", "error"):
                         break

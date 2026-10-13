@@ -11,6 +11,8 @@ Config::
       "max_context_tokens": 1024,
       "chain_of_thought": false,
       "answer_format": "A short paragraph with citations.",
+      "examples": "$.inputs.few_shot",   # few-shot pairs (list or reference)
+      "example_format": "json",          # render answers as structured JSON
       "system": "..."          # optional system prompt override
       "template": "..."        # optional custom user template ({context}/{question})
     }
@@ -41,7 +43,8 @@ class AugmentNode(Node):
 
         query = self._resolve_query(ctx)
         ctx_block = build_context(hits, self.config)
-        prompt = build_prompt(query, ctx_block["context"], self.config)
+        prompt_config = {**self.config, "examples": ctx.resolve(self.config.get("examples")) or []}
+        prompt = build_prompt(query, ctx_block["context"], prompt_config)
 
         return {
             "query": query,

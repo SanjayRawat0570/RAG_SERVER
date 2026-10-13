@@ -193,6 +193,7 @@ rejected up front and the pipeline degrades to the extractive answer.
 
 | Concept | Feature | Where |
 |---|---|---|
+| **Few-shot prompting** | Two example question → cited-answer pairs (one answerable, one "I don't know") are rendered into the system prompt in the exact JSON shape the model must return. Examples are configurable per tenant (`GET/PUT /api/v1/tenant-settings/{tenant}`) and can be toggled per request (`few_shot: false`). `eval/run_eval.py --compare-fewshot` measures their effect. | `app/rag/tenants/ai_settings.py`, `app/rag/context/prompt.py` (`render_examples`), `app/api/tenant_settings.py`, `eval/results/fewshot_comparison_*.json`, `tests/test_few_shot.py` |
 | **Structured output** | The answer is JSON `{answer, citations, confidence, answerable}` validated by Pydantic. Gemini runs in JSON-schema mode; invalid replies are retried once with the validation error, then fall back to the extractive answer. SSE streams the `answer` field and finishes with a `sources` event. | `app/rag/llm/structured.py`, `app/rag/llm/gemini.py` (`build_payload`), `app/engine/nodes/generate.py`, `app/api/stream.py`, `tests/test_structured_output.py` |
 
 ## Evaluation
@@ -205,7 +206,30 @@ python eval/run_eval.py --provider gemini --delay 7  # real model, free-tier fri
 Indexes `eval/corpus/` into an isolated tenant, asks the 28 questions in
 `eval/questions.jsonl` (answerable, multi-hop, unanswerable) and reports citation
 rate/precision, answer accuracy, "I don't know" accuracy and latency. Results are
-saved under `eval/results/`.
+saved under `eval/results/`. `fallback_rate` counts answers that came from the
+extractive fallback because the provider failed; a real-provider run aborts after
+three consecutive fallbacks rather than saving stub numbers as model results.
+
+**Few-shot comparison** (`eval/results/fewshot_comparison_gemini.json`,
+`gemini-3.1-flash-lite`, 28 questions):
+
+| metric | without examples | with examples |
+|---|---|---|
+| citation rate | 0.85 | 0.80 |
+| citation precision | 1.00 | 1.00 |
+| answer accuracy | 0.80 | 0.80 |
+| "I don't know" accuracy | 1.00 | 1.00 |
+| false "I don't know" | 0.20 | 0.20 |
+| fallback rate | 0.07 | 0.00 |
+
+On this small set the examples made no measurable difference: the model already
+declines all unanswerable questions. The one behavioural change is format: without
+examples it once answered "I don't know" while still listing a citation (m03);
+with examples it returned `citations: []`, which is the whole citation-rate
+difference. The false "I don't know" answers are the multi-hop questions, which
+the single-pass fast mode cannot retrieve — see agentic mode. The free tier
+allows only 20 `gemini-2.5-flash` requests per day, so run comparisons on a lite
+model (`--model`).
 
 ## Roadmap
 

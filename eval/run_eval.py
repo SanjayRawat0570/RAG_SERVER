@@ -15,6 +15,9 @@ Usage (from backend/)::
     python eval/run_eval.py                       # stub provider, deterministic
     python eval/run_eval.py --provider gemini     # real model (needs GEMINI_API_KEY)
     python eval/run_eval.py --label baseline      # results -> eval/results/baseline.json
+    python eval/run_eval.py --few-shot off        # disable few-shot examples
+    python eval/run_eval.py --compare-fewshot --provider gemini --model gemini-3.1-flash-lite --delay 7
+        # runs with and without examples -> eval/results/fewshot_comparison_<provider>.json
 """
 from __future__ import annotations
 
@@ -33,6 +36,7 @@ sys.path.insert(0, str(EVAL_DIR.parent))
 
 from app.api.pipelines import build_ask_workflow, build_index_workflow  # noqa: E402
 from app.engine.executor import WorkflowExecutor  # noqa: E402
+from app.rag.tenants.ai_settings import effective_examples  # noqa: E402
 
 TENANT = "eval"
 _MARKER = re.compile(r"\[(\d+)\]")
@@ -57,9 +61,11 @@ async def index_corpus(tenant: str = TENANT) -> int:
     return total
 
 
-async def ask(question: str, provider: str, tenant: str = TENANT) -> dict[str, Any]:
-    result = await WorkflowExecutor(build_ask_workflow(provider)).run(
-        {"tenant": tenant, "question": question}
+async def ask(question: str, provider: str, tenant: str = TENANT,
+              few_shot: bool | None = None, model: str | None = None) -> dict[str, Any]:
+    examples = [e.model_dump() for e in effective_examples(tenant, few_shot)]
+    result = await WorkflowExecutor(build_ask_workflow(provider, model)).run(
+        {"tenant": tenant, "question": question, "few_shot": examples}
     )
     return result.outputs.get("out", {}) or {}
 
@@ -101,13 +107,17 @@ def score(rows: list[dict[str, Any]]) -> dict[str, Any]:
         ),
         "idk_accuracy": ratio(sum(1 for r in unanswerable if r["idk"]), len(unanswerable)),
         "false_idk_rate": ratio(sum(1 for r in answerable if r["idk"]), len(answerable)),
+        # Answers that came from the extractive fallback because the provider failed.
+        "fallback_rate": ratio(sum(1 for r in rows if r["provider"] == "extractive-fallback"), len(rows)),
         "latency_ms_mean": round(statistics.mean(latencies), 1) if latencies else 0.0,
         "latency_ms_p95": round(latencies[int(0.95 * (len(latencies) - 1))], 1) if latencies else 0.0,
     }
 
 
-async def evaluate(provider: str, *, delay: float = 0.0, ask_fn=None) -> dict[str, Any]:
-    ask_fn = ask_fn or (lambda q: ask(q, provider))
+async def evaluate(provider: str, *, delay: float = 0.0, few_shot: bool | None = None,
+                   model: str | None = None, ask_fn=None) -> dict[str, Any]:
+    ask_fn = ask_fn or (lambda q: ask(q, provider, few_shot=few_shot, model=model))
+    consecutive_fallbacks = 0
     questions = load_questions(EVAL_DIR / "questions.jsonl")
     chunks = await index_corpus()
     rows: list[dict[str, Any]] = []
@@ -129,31 +139,79 @@ async def evaluate(provider: str, *, delay: float = 0.0, ask_fn=None) -> dict[st
             "idk": is_idk(out),
             "latency_ms": round(latency, 1),
         })
+        # A real provider that keeps failing (quota, network) would silently turn the
+        # run into an extractive-stub run — stop instead of saving misleading numbers.
+        consecutive_fallbacks = consecutive_fallbacks + 1 if out.get("provider") == "extractive-fallback" else 0
+        if provider != "stub" and consecutive_fallbacks >= 3:
+            raise SystemExit(f"aborted: {provider} failed 3 times in a row (quota or network); "
+                             "answers would come from the extractive fallback")
         if delay:
             await asyncio.sleep(delay)  # stay under free-tier rate limits
-    return {"provider": provider, "chunks_indexed": chunks, "metrics": score(rows), "rows": rows}
+    return {"provider": provider, "model": model, "few_shot": few_shot, "chunks_indexed": chunks,
+            "metrics": score(rows), "rows": rows}
+
+
+async def compare_fewshot(provider: str, delay: float, model: str | None = None) -> dict[str, Any]:
+    """Same questions with and without few-shot examples; report the deltas."""
+    without = await evaluate(provider, delay=delay, few_shot=False, model=model)
+    with_ = await evaluate(provider, delay=delay, few_shot=True, model=model)
+    metrics = ("citation_rate", "citation_precision", "answer_accuracy",
+               "idk_accuracy", "false_idk_rate", "fallback_rate")
+    return {
+        "provider": provider,
+        "summary": {
+            m: {"without": without["metrics"][m], "with": with_["metrics"][m],
+                "delta": round(with_["metrics"][m] - without["metrics"][m], 3)}
+            for m in metrics
+        },
+        "without_examples": without,
+        "with_examples": with_,
+    }
 
 
 def print_report(report: dict[str, Any]) -> None:
-    print(f"\nprovider={report['provider']}  chunks={report['chunks_indexed']}")
+    print(f"\nprovider={report['provider']}  few_shot={report.get('few_shot')}  "
+          f"chunks={report['chunks_indexed']}")
     for k, v in report["metrics"].items():
         print(f"  {k:<20} {v}")
+    if report["provider"] != "stub" and report["metrics"]["fallback_rate"] > 0:
+        print(f"  WARNING: {report['metrics']['fallback_rate']:.0%} of answers used the "
+              "extractive fallback — the provider failed; these are not model results.")
 
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--provider", default="stub")
+    parser.add_argument("--model", default=None, help="provider model override, e.g. gemini-3.1-flash-lite")
     parser.add_argument("--delay", type=float, default=0.0, help="seconds between questions")
     parser.add_argument("--label", default=None, help="save to eval/results/<label>.json")
+    parser.add_argument("--few-shot", choices=["on", "off"], default=None,
+                        help="force few-shot examples (default: tenant setting = on)")
+    parser.add_argument("--compare-fewshot", action="store_true",
+                        help="run with and without few-shot examples and save the comparison")
     args = parser.parse_args()
 
-    report = asyncio.run(evaluate(args.provider, delay=args.delay))
+    if args.compare_fewshot:
+        report = asyncio.run(compare_fewshot(args.provider, args.delay, args.model))
+        print(f"\nfew-shot comparison  provider={args.provider}")
+        print(f"  {'metric':<20} {'without':>8} {'with':>8} {'delta':>8}")
+        for m, v in report["summary"].items():
+            print(f"  {m:<20} {v['without']:>8} {v['with']:>8} {v['delta']:>+8}")
+        _save(report, args.label or f"fewshot_comparison_{args.provider}")
+        return
+
+    few_shot = None if args.few_shot is None else args.few_shot == "on"
+    report = asyncio.run(evaluate(args.provider, delay=args.delay, few_shot=few_shot, model=args.model))
     print_report(report)
     if args.label:
-        out = EVAL_DIR / "results" / f"{args.label}.json"
-        out.parent.mkdir(exist_ok=True)
-        out.write_text(json.dumps(report, indent=2), encoding="utf-8")
-        print(f"\nsaved {out.relative_to(EVAL_DIR.parent)}")
+        _save(report, args.label)
+
+
+def _save(report: dict[str, Any], label: str) -> None:
+    out = EVAL_DIR / "results" / f"{label}.json"
+    out.parent.mkdir(exist_ok=True)
+    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
+    print(f"\nsaved {out.relative_to(EVAL_DIR.parent)}")
 
 
 if __name__ == "__main__":

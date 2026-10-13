@@ -1,4 +1,5 @@
 import os
+import tempfile
 
 # Tests run offline and never touch real services, even when backend/.env holds
 # live keys. Real env vars take precedence over the .env file in pydantic-settings,
@@ -13,6 +14,8 @@ os.environ.update({
     "SUPABASE_URL": "",
     "SUPABASE_KEY": "",
     "OTEL_EXPORTER_ENDPOINT": "",
+    # Persisted state (API keys, tenant settings) goes to a throwaway directory.
+    "DATA_DIR": tempfile.mkdtemp(prefix="rag-test-data-"),
 })
 
 import pytest  # noqa: E402

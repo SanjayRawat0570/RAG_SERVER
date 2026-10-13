@@ -57,7 +57,7 @@ def build_index_workflow() -> WorkflowDef:
     )
 
 
-def build_ask_workflow(provider: str) -> WorkflowDef:
+def build_ask_workflow(provider: str, model: str | None = None) -> WorkflowDef:
     return WorkflowDef(
         name="ui_ask",
         nodes=[
@@ -73,10 +73,12 @@ def build_ask_workflow(provider: str) -> WorkflowDef:
             {"id": "rerank", "type": "rerank",
              "config": {"method": "cross_encoder", "query": "$.qp.normalized", "top_n": 3}},
             {"id": "augment", "type": "augment",
-             "config": {"query": "$.qp.normalized", "max_context_tokens": 600}},
+             "config": {"query": "$.qp.normalized", "max_context_tokens": 600,
+                        "examples": "$.inputs.few_shot", "example_format": "json"}},
             {"id": "generate", "type": "generate",
              "config": {"provider": provider, "query": "$.qp.normalized", "cache": True,
-                        "max_tokens": 2048, "structured": True, "tenant": "$.inputs.tenant"},
+                        "max_tokens": 2048, "structured": True, "tenant": "$.inputs.tenant",
+                        **({"model": model} if model else {})},
              "retry": {"max_attempts": 2},
              "fallback": {"answer": "Generation is temporarily unavailable.",
                           "citations": [], "cited_markers": [], "confidence": "low",

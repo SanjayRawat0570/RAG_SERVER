@@ -2,11 +2,13 @@
 
 Produces both a single user-prompt string and a chat ``messages`` list, ready
 for the F16 LLM node. Supports a custom ``template`` ({context}/{question}),
-optional chain-of-thought, and an answer-format instruction. Prompt size is
+optional chain-of-thought, an answer-format instruction, and few-shot
+``examples`` (question → cited answer pairs) appended to the system prompt. Prompt size is
 adjusted to query complexity (F15 dynamic adjustment) via the caller's budget.
 """
 from __future__ import annotations
 
+import json
 from typing import Any
 
 _SYSTEM_PROMPTS: dict[str, str] = {
@@ -44,12 +46,40 @@ def list_templates() -> dict[str, str]:
     return dict(_SYSTEM_PROMPTS)
 
 
+def render_examples(examples: list[Any], fmt: str = "text") -> str:
+    """Few-shot block: each example shows context → question → ideal answer.
+
+    ``fmt="json"`` renders answers as the structured-output object, so the model
+    sees exactly the shape it must produce; ``"text"`` shows the answer text.
+    """
+    blocks: list[str] = []
+    for i, ex in enumerate(examples, 1):
+        ex = ex.model_dump() if hasattr(ex, "model_dump") else dict(ex)
+        context = "\n".join(f"[{n}] {c}" for n, c in enumerate(ex.get("context", []), 1))
+        if fmt == "json":
+            answer = json.dumps({
+                "answer": ex["answer"],
+                "citations": ex.get("citations", []),
+                "confidence": ex.get("confidence", "high"),
+                "answerable": ex.get("answerable", True),
+            })
+        else:
+            answer = ex["answer"]
+        blocks.append(
+            f"Example {i}\nContext:\n{context or '(no context)'}\n"
+            f"Question: {ex['question']}\nAnswer: {answer}"
+        )
+    return "Follow these examples of good answers:\n\n" + "\n\n".join(blocks)
+
+
 def build_prompt(
     question: str, context: str, config: dict[str, Any] | None = None
 ) -> dict[str, Any]:
     config = config or {}
     tmpl_name = config.get("template_name", "default")
     system = config.get("system") or _SYSTEM_PROMPTS.get(tmpl_name, DEFAULT_SYSTEM)
+    if config.get("examples"):
+        system = f"{system}\n\n{render_examples(config['examples'], config.get('example_format', 'text'))}"
 
     template = config.get("template")
     if template:

@@ -19,6 +19,7 @@ from app.observability.query_log import log_query
 from app.observability.tracing import current_trace_id
 from app.rag.cache import cache_stats
 from app.rag.cost import budget_stats
+from app.rag.tenants.ai_settings import effective_examples
 from app.rag.vectorstore import store_stats
 
 router = APIRouter()
@@ -37,6 +38,8 @@ class AskRequest(BaseModel):
     tenant: str = "default"
     question: str
     provider: str | None = Field(default=None, description="LLM provider; defaults to server config")
+    few_shot: bool | None = Field(
+        default=None, description="Force few-shot examples on/off; default = tenant setting")
 
 
 @router.post("/workflows/run", response_model=RunResponse, tags=["workflows"])
@@ -105,9 +108,12 @@ async def rag_ask(
     """Full RAG answer: query → hybrid search → rerank → augment → generate."""
     provider = request.provider or default_provider()
     executor = WorkflowExecutor(build_ask_workflow(provider))
-    result = await executor.run(
-        {"tenant": request.tenant, "question": request.question}
-    )
+    examples = effective_examples(request.tenant, request.few_shot)
+    result = await executor.run({
+        "tenant": request.tenant,
+        "question": request.question,
+        "few_shot": [e.model_dump() for e in examples],
+    })
     if result.status != "success":
         raise HTTPException(status_code=500, detail="answering failed")
     out = result.outputs.get("out", {})

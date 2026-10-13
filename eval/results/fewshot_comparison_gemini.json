@@ -1,0 +1,955 @@
+{
+  "provider": "gemini",
+  "summary": {
+    "citation_rate": {
+      "without": 0.85,
+      "with": 0.8,
+      "delta": -0.05
+    },
+    "citation_precision": {
+      "without": 1.0,
+      "with": 1.0,
+      "delta": 0.0
+    },
+    "answer_accuracy": {
+      "without": 0.8,
+      "with": 0.8,
+      "delta": 0.0
+    },
+    "idk_accuracy": {
+      "without": 1.0,
+      "with": 1.0,
+      "delta": 0.0
+    },
+    "false_idk_rate": {
+      "without": 0.2,
+      "with": 0.2,
+      "delta": 0.0
+    },
+    "fallback_rate": {
+      "without": 0.071,
+      "with": 0.0,
+      "delta": -0.071
+    }
+  },
+  "without_examples": {
+    "provider": "gemini",
+    "model": "gemini-3.1-flash-lite",
+    "few_shot": false,
+    "chunks_indexed": 18,
+    "metrics": {
+      "questions": 28,
+      "citation_rate": 0.85,
+      "citation_precision": 1.0,
+      "answer_accuracy": 0.8,
+      "multihop_accuracy": 0.0,
+      "idk_accuracy": 1.0,
+      "false_idk_rate": 0.2,
+      "fallback_rate": 0.071,
+      "latency_ms_mean": 16838.7,
+      "latency_ms_p95": 29262.7
+    },
+    "rows": [
+      {
+        "id": "a01",
+        "type": "answerable",
+        "question": "How many days of annual leave do full-time employees get?",
+        "answer": "Full-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 8378.6
+      },
+      {
+        "id": "a02",
+        "type": "answerable",
+        "question": "How is annual leave calculated for part-time staff?",
+        "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+        "provider": "extractive-fallback",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 66683.8
+      },
+      {
+        "id": "a03",
+        "type": "answerable",
+        "question": "How many unused leave days can be carried over?",
+        "answer": "Up to 5 unused leave days may be carried over into the next year [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 21930.9
+      },
+      {
+        "id": "a04",
+        "type": "answerable",
+        "question": "How many days of paid sick leave do employees receive?",
+        "answer": "Employees receive 10 days of paid sick leave per year [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 29262.7
+      },
+      {
+        "id": "a05",
+        "type": "answerable",
+        "question": "How long is parental leave for primary caregivers?",
+        "answer": "Primary caregivers receive 16 weeks of fully paid parental leave [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 9018.8
+      },
+      {
+        "id": "a06",
+        "type": "answerable",
+        "question": "How is customer data encrypted at rest?",
+        "answer": "Customer data is encrypted at rest using AES-256 [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "security_policy.md"
+        ],
+        "expected_sources": [
+          "security_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 15816.9
+      },
+      {
+        "id": "a07",
+        "type": "answerable",
+        "question": "How often are encryption keys rotated?",
+        "answer": "Encryption keys are rotated every 90 days [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "security_policy.md"
+        ],
+        "expected_sources": [
+          "security_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 12637.5
+      },
+      {
+        "id": "a08",
+        "type": "answerable",
+        "question": "What is the minimum password length?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "extractive-fallback",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [
+          "security_policy.md"
+        ],
+        "keywords_ok": false,
+        "idk": true,
+        "latency_ms": 74073.1
+      },
+      {
+        "id": "a09",
+        "type": "answerable",
+        "question": "Within how many hours must a security incident be reported?",
+        "answer": "Suspected security incidents must be reported to security@example.com within 24 hours of discovery [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "security_policy.md"
+        ],
+        "expected_sources": [
+          "security_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 10354.7
+      },
+      {
+        "id": "a10",
+        "type": "answerable",
+        "question": "What is the daily meal allowance when travelling?",
+        "answer": "The daily meal allowance while travelling is capped at 60 USD [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "expenses_policy.md"
+        ],
+        "expected_sources": [
+          "expenses_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 12427.8
+      },
+      {
+        "id": "a11",
+        "type": "answerable",
+        "question": "Above what amount are receipts required for expenses?",
+        "answer": "Receipts are required for every expense above 25 USD [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "expenses_policy.md"
+        ],
+        "expected_sources": [
+          "expenses_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 8314.4
+      },
+      {
+        "id": "a12",
+        "type": "answerable",
+        "question": "Which expenses need approval from the Chief Financial Officer?",
+        "answer": "Expenses exceeding 5,000 USD require approval from the Chief Financial Officer [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "expenses_policy.md"
+        ],
+        "expected_sources": [
+          "expenses_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 11881.1
+      },
+      {
+        "id": "a13",
+        "type": "answerable",
+        "question": "How many days per week can employees work remotely?",
+        "answer": "Employees are permitted to work remotely for a maximum of 3 days per week [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "remote_work.md"
+        ],
+        "expected_sources": [
+          "remote_work.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 8808.1
+      },
+      {
+        "id": "a14",
+        "type": "answerable",
+        "question": "How much is the home office stipend?",
+        "answer": "New employees receive a one-time home office stipend of 500 USD [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "remote_work.md"
+        ],
+        "expected_sources": [
+          "remote_work.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 9602.0
+      },
+      {
+        "id": "a15",
+        "type": "answerable",
+        "question": "How often are company laptops refreshed?",
+        "answer": "Company laptops are refreshed every 3 years [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "remote_work.md"
+        ],
+        "expected_sources": [
+          "remote_work.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 18844.7
+      },
+      {
+        "id": "a16",
+        "type": "answerable",
+        "question": "Which team owns Project Atlas?",
+        "answer": "Project Atlas is owned by the Data Platform team [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "projects.md"
+        ],
+        "expected_sources": [
+          "projects.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 7663.8
+      },
+      {
+        "id": "a17",
+        "type": "answerable",
+        "question": "Who leads the Mobile team?",
+        "answer": "The Mobile team is led by Tom Becker [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "teams.md"
+        ],
+        "expected_sources": [
+          "teams.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 6225.8
+      },
+      {
+        "id": "m01",
+        "type": "multihop",
+        "question": "Who leads the team that owns Project Atlas?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [
+          "projects.md",
+          "teams.md"
+        ],
+        "keywords_ok": false,
+        "idk": true,
+        "latency_ms": 10481.3
+      },
+      {
+        "id": "m02",
+        "type": "multihop",
+        "question": "In which office is the team that owns Project Beacon based?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [
+          "projects.md",
+          "teams.md"
+        ],
+        "keywords_ok": false,
+        "idk": true,
+        "latency_ms": 9291.2
+      },
+      {
+        "id": "m03",
+        "type": "multihop",
+        "question": "Who leads the team responsible for Project Cedar?",
+        "answer": "I don't know based on the provided context. The context states that Project Cedar is owned by the Payments team [1], but it does not provide information regarding the leadership of the Payments team.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "projects.md"
+        ],
+        "expected_sources": [
+          "projects.md",
+          "teams.md"
+        ],
+        "keywords_ok": false,
+        "idk": true,
+        "latency_ms": 15401.2
+      },
+      {
+        "id": "u01",
+        "type": "unanswerable",
+        "question": "What is the parking fee at the Berlin office?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 9887.2
+      },
+      {
+        "id": "u02",
+        "type": "unanswerable",
+        "question": "Which company provides our dental insurance?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 9073.0
+      },
+      {
+        "id": "u03",
+        "type": "unanswerable",
+        "question": "Are pets allowed in the office?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 9530.2
+      },
+      {
+        "id": "u04",
+        "type": "unanswerable",
+        "question": "How large is the annual performance bonus?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 6767.8
+      },
+      {
+        "id": "u05",
+        "type": "unanswerable",
+        "question": "What is on the cafeteria menu on Fridays?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 12408.7
+      },
+      {
+        "id": "u06",
+        "type": "unanswerable",
+        "question": "Who won the 2022 company hackathon?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 15649.1
+      },
+      {
+        "id": "u07",
+        "type": "unanswerable",
+        "question": "What is the company's stock ticker symbol?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 21437.8
+      },
+      {
+        "id": "u08",
+        "type": "unanswerable",
+        "question": "How many vacation days do contractors in Japan receive?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 19631.7
+      }
+    ]
+  },
+  "with_examples": {
+    "provider": "gemini",
+    "model": "gemini-3.1-flash-lite",
+    "few_shot": true,
+    "chunks_indexed": 18,
+    "metrics": {
+      "questions": 28,
+      "citation_rate": 0.8,
+      "citation_precision": 1.0,
+      "answer_accuracy": 0.8,
+      "multihop_accuracy": 0.0,
+      "idk_accuracy": 1.0,
+      "false_idk_rate": 0.2,
+      "fallback_rate": 0.0,
+      "latency_ms_mean": 13245.7,
+      "latency_ms_p95": 23011.5
+    },
+    "rows": [
+      {
+        "id": "a01",
+        "type": "answerable",
+        "question": "How many days of annual leave do full-time employees get?",
+        "answer": "Full-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 9753.8
+      },
+      {
+        "id": "a02",
+        "type": "answerable",
+        "question": "How is annual leave calculated for part-time staff?",
+        "answer": "Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 13650.4
+      },
+      {
+        "id": "a03",
+        "type": "answerable",
+        "question": "How many unused leave days can be carried over?",
+        "answer": "Up to 5 unused leave days may be carried over into the next year [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 21975.0
+      },
+      {
+        "id": "a04",
+        "type": "answerable",
+        "question": "How many days of paid sick leave do employees receive?",
+        "answer": "Employees receive 10 days of paid sick leave per year [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 21617.6
+      },
+      {
+        "id": "a05",
+        "type": "answerable",
+        "question": "How long is parental leave for primary caregivers?",
+        "answer": "Primary caregivers receive 16 weeks of fully paid parental leave [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "hr_leave_policy.md"
+        ],
+        "expected_sources": [
+          "hr_leave_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 23011.5
+      },
+      {
+        "id": "a06",
+        "type": "answerable",
+        "question": "How is customer data encrypted at rest?",
+        "answer": "Customer data is encrypted at rest using AES-256 [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "security_policy.md"
+        ],
+        "expected_sources": [
+          "security_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 37426.5
+      },
+      {
+        "id": "a07",
+        "type": "answerable",
+        "question": "How often are encryption keys rotated?",
+        "answer": "Encryption keys are rotated every 90 days [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "security_policy.md"
+        ],
+        "expected_sources": [
+          "security_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 7521.6
+      },
+      {
+        "id": "a08",
+        "type": "answerable",
+        "question": "What is the minimum password length?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [
+          "security_policy.md"
+        ],
+        "keywords_ok": false,
+        "idk": true,
+        "latency_ms": 7252.9
+      },
+      {
+        "id": "a09",
+        "type": "answerable",
+        "question": "Within how many hours must a security incident be reported?",
+        "answer": "Suspected security incidents must be reported to security@example.com within 24 hours of discovery [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "security_policy.md"
+        ],
+        "expected_sources": [
+          "security_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 11953.0
+      },
+      {
+        "id": "a10",
+        "type": "answerable",
+        "question": "What is the daily meal allowance when travelling?",
+        "answer": "The daily meal allowance while travelling is capped at 60 USD [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "expenses_policy.md"
+        ],
+        "expected_sources": [
+          "expenses_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 8347.4
+      },
+      {
+        "id": "a11",
+        "type": "answerable",
+        "question": "Above what amount are receipts required for expenses?",
+        "answer": "Receipts are required for every expense above 25 USD [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "expenses_policy.md"
+        ],
+        "expected_sources": [
+          "expenses_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 13023.1
+      },
+      {
+        "id": "a12",
+        "type": "answerable",
+        "question": "Which expenses need approval from the Chief Financial Officer?",
+        "answer": "Expenses above 5,000 USD require approval from the Chief Financial Officer [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "expenses_policy.md"
+        ],
+        "expected_sources": [
+          "expenses_policy.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 11492.5
+      },
+      {
+        "id": "a13",
+        "type": "answerable",
+        "question": "How many days per week can employees work remotely?",
+        "answer": "Employees may work remotely up to 3 days per week [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "remote_work.md"
+        ],
+        "expected_sources": [
+          "remote_work.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 7062.2
+      },
+      {
+        "id": "a14",
+        "type": "answerable",
+        "question": "How much is the home office stipend?",
+        "answer": "New employees receive a one-time home office stipend of 500 USD [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "remote_work.md"
+        ],
+        "expected_sources": [
+          "remote_work.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 4950.6
+      },
+      {
+        "id": "a15",
+        "type": "answerable",
+        "question": "How often are company laptops refreshed?",
+        "answer": "Company laptops are refreshed every 3 years [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "remote_work.md"
+        ],
+        "expected_sources": [
+          "remote_work.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 8359.1
+      },
+      {
+        "id": "a16",
+        "type": "answerable",
+        "question": "Which team owns Project Atlas?",
+        "answer": "Project Atlas is owned by the Data Platform team [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "projects.md"
+        ],
+        "expected_sources": [
+          "projects.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 9426.7
+      },
+      {
+        "id": "a17",
+        "type": "answerable",
+        "question": "Who leads the Mobile team?",
+        "answer": "The Mobile team is led by Tom Becker [1].",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [
+          "teams.md"
+        ],
+        "expected_sources": [
+          "teams.md"
+        ],
+        "keywords_ok": true,
+        "idk": false,
+        "latency_ms": 14689.6
+      },
+      {
+        "id": "m01",
+        "type": "multihop",
+        "question": "Who leads the team that owns Project Atlas?",
+        "answer": "I don't know based on the provided context. The context states that Project Atlas is owned by the Data Platform team [1], but it does not provide information about the leadership of the Data Platform team.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [
+          "projects.md",
+          "teams.md"
+        ],
+        "keywords_ok": false,
+        "idk": true,
+        "latency_ms": 4126.9
+      },
+      {
+        "id": "m02",
+        "type": "multihop",
+        "question": "In which office is the team that owns Project Beacon based?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [
+          "projects.md",
+          "teams.md"
+        ],
+        "keywords_ok": false,
+        "idk": true,
+        "latency_ms": 10406.8
+      },
+      {
+        "id": "m03",
+        "type": "multihop",
+        "question": "Who leads the team responsible for Project Cedar?",
+        "answer": "I don't know based on the provided context. The context states that Project Cedar is owned by the Payments team [1], but it does not provide information regarding the leadership of the Payments team.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [
+          "projects.md",
+          "teams.md"
+        ],
+        "keywords_ok": false,
+        "idk": true,
+        "latency_ms": 17754.0
+      },
+      {
+        "id": "u01",
+        "type": "unanswerable",
+        "question": "What is the parking fee at the Berlin office?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 11961.9
+      },
+      {
+        "id": "u02",
+        "type": "unanswerable",
+        "question": "Which company provides our dental insurance?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 10354.8
+      },
+      {
+        "id": "u03",
+        "type": "unanswerable",
+        "question": "Are pets allowed in the office?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 23953.8
+      },
+      {
+        "id": "u04",
+        "type": "unanswerable",
+        "question": "How large is the annual performance bonus?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 10925.9
+      },
+      {
+        "id": "u05",
+        "type": "unanswerable",
+        "question": "What is on the cafeteria menu on Fridays?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 11360.1
+      },
+      {
+        "id": "u06",
+        "type": "unanswerable",
+        "question": "Who won the 2022 company hackathon?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 13872.1
+      },
+      {
+        "id": "u07",
+        "type": "unanswerable",
+        "question": "What is the company's stock ticker symbol?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "low",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 12996.9
+      },
+      {
+        "id": "u08",
+        "type": "unanswerable",
+        "question": "How many vacation days do contractors in Japan receive?",
+        "answer": "I don't know based on the provided context.",
+        "provider": "gemini",
+        "confidence": "high",
+        "cited_sources": [],
+        "expected_sources": [],
+        "keywords_ok": true,
+        "idk": true,
+        "latency_ms": 11653.8
+      }
+    ]
+  }
+}

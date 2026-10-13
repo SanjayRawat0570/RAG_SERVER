@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     llm_breaker_recovery: float = 30.0
     default_tenant_budget_usd: float = 10.0
 
+    # Directory for state shared across processes (API keys, tenant AI settings).
+    data_dir: str = "data"
+
     # Embedding API keys (F11).  Leave empty to use free local models only.
     openai_api_key: str = ""
     cohere_api_key: str = ""

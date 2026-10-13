@@ -18,6 +18,7 @@ from app.api.feedback import router as feedback_router
 from app.api.personalization import router as personalization_router
 from app.api.indexing import router as indexing_router
 from app.api.tenants import router as tenants_router
+from app.api.tenant_settings import router as tenant_settings_router
 from app.api.context import router as context_router
 from app.api.rag import router as rag_router
 from app.api.rerank import router as rerank_router
@@ -81,6 +82,7 @@ app.include_router(feedback_router,        prefix="/api/v1")
 app.include_router(personalization_router, prefix="/api/v1")
 app.include_router(indexing_router,    prefix="/api/v1")
 app.include_router(tenants_router,     prefix="/api/v1")
+app.include_router(tenant_settings_router, prefix="/api/v1")
 app.include_router(context_router,     prefix="/api/v1")
 app.include_router(rag_router,         prefix="/api/v1")
 
