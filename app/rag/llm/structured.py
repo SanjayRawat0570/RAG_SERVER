@@ -26,7 +26,7 @@ from typing import Any, Literal
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from app.rag.cost import BudgetExceededError
-from app.rag.llm.gateway import call_llm
+from app.rag.llm.gateway import call_llm, redact
 
 Confidence = Literal["high", "medium", "low"]
 IDK_ANSWER = "I don't know based on the provided context."
@@ -168,7 +168,7 @@ async def generate_structured(
             except BudgetExceededError:
                 raise
             except Exception as exc:  # provider down / unconfigured / circuit open
-                errors.append(f"provider error: {exc}")
+                errors.append(f"provider error: {redact(str(exc))}")
                 break
             reply = last_response.text
         else:

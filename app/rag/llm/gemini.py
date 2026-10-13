@@ -1,8 +1,9 @@
 """Google Gemini provider (F16) — free-tier generative API via REST.
 
 Used only when a key is configured (``GEMINI_API_KEY``). No SDK dependency: a
-single ``httpx`` POST to the Generative Language API. Chat ``messages`` are
-mapped to Gemini's ``system_instruction`` + multi-turn ``contents`` shape
+single ``httpx`` POST to the Generative Language API. The key is sent in the
+``x-goog-api-key`` header — never in the URL, where error messages would expose
+it. Chat ``messages`` are mapped to Gemini's ``system_instruction`` + multi-turn ``contents`` shape
 (``assistant`` → ``model``).
 
 Structured output: ``config["response_schema"]`` switches on Gemini's JSON mode
@@ -62,7 +63,7 @@ class GeminiLLM:
 
         url = _ENDPOINT.format(model=model)
         async with httpx.AsyncClient(verify=tls_verify(), timeout=config.get("timeout", settings.llm_timeout)) as client:
-            resp = await client.post(url, params={"key": api_key}, json=payload)
+            resp = await client.post(url, headers={"x-goog-api-key": api_key}, json=payload)
             resp.raise_for_status()
             data = resp.json()
 
@@ -102,7 +103,8 @@ class GeminiLLM:
             ) as client:
                 async with client.stream(
                     "POST", url,
-                    params={"key": api_key, "alt": "sse"},
+                    params={"alt": "sse"},
+                    headers={"x-goog-api-key": api_key},
                     json=payload,
                 ) as resp:
                     resp.raise_for_status()

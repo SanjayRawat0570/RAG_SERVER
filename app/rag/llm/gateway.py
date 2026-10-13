@@ -15,8 +15,11 @@ breaker, so a missing key never opens the circuit for everyone else.
 """
 from __future__ import annotations
 
+import asyncio
+import re
 from typing import Any, AsyncIterator
 
+import httpx
 from opentelemetry.trace import Status, StatusCode
 
 from app.config import settings
@@ -38,6 +41,25 @@ _KEY_SETTINGS = {
 
 class LLMUnavailableError(RuntimeError):
     """The provider cannot be called right now (no key, or circuit open)."""
+
+
+# Overloaded/unreachable providers often recover within seconds: retry those
+# (not 4xx, not quota 429s that last hours) before counting a breaker failure.
+TRANSIENT_RETRIES = 2
+TRANSIENT_BACKOFF_S = 1.0
+_TRANSIENT_STATUS = {500, 502, 503, 504}
+_SECRET_PARAM = re.compile(r"([?&](?:key|api_key|apikey)=)[^&\s'\"]+", re.IGNORECASE)
+
+
+def is_transient(exc: Exception) -> bool:
+    if isinstance(exc, httpx.HTTPStatusError):
+        return exc.response.status_code in _TRANSIENT_STATUS
+    return isinstance(exc, httpx.TransportError)
+
+
+def redact(text: str) -> str:
+    """Remove credentials that may appear in URLs inside error messages."""
+    return _SECRET_PARAM.sub(r"\1***", text)
 
 
 def is_configured(provider: str, config: dict[str, Any] | None = None) -> bool:
@@ -134,11 +156,18 @@ async def call_llm(
     try:
         breaker, model, in_est, limit = _preflight(provider, request, config, tenant, budget_limit, span)
         span.set_attribute("llm.model", model)
-        try:
-            response = await get_llm(provider).generate(request, config)
-        except Exception:
-            breaker.record_failure()
-            raise
+        llm = get_llm(provider)
+        for attempt in range(TRANSIENT_RETRIES + 1):
+            try:
+                response = await llm.generate(request, config)
+                break
+            except Exception as exc:
+                if attempt < TRANSIENT_RETRIES and is_transient(exc):
+                    span.add_event("llm.retry", {"attempt": attempt + 1, "error": redact(str(exc))[:200]})
+                    await asyncio.sleep(TRANSIENT_BACKOFF_S * 2 ** attempt)
+                    continue
+                breaker.record_failure()
+                raise
         breaker.record_success()
 
         usage = response.usage or {}
@@ -151,8 +180,9 @@ async def call_llm(
                           "cost_usd": cost}
         return response
     except Exception as exc:
-        span.record_exception(exc)
-        span.set_status(Status(StatusCode.ERROR, str(exc)))
+        message = redact(str(exc))
+        span.add_event("exception", {"exception.type": type(exc).__name__, "exception.message": message})
+        span.set_status(Status(StatusCode.ERROR, message))
         raise
     finally:
         span.end()
@@ -193,8 +223,9 @@ async def stream_llm(
                  user_id=user_id, limit=limit, in_tokens=in_est,
                  out_tokens=count_tokens("".join(collected)), span=span)
     except Exception as exc:
-        span.record_exception(exc)
-        span.set_status(Status(StatusCode.ERROR, str(exc)))
+        message = redact(str(exc))
+        span.add_event("exception", {"exception.type": type(exc).__name__, "exception.message": message})
+        span.set_status(Status(StatusCode.ERROR, message))
         raise
     finally:
         span.end()

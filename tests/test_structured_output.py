@@ -274,3 +274,84 @@ def test_rag_ask_returns_structured_fields():
     assert out["confidence"] in ("high", "medium")
     assert out["cited_markers"] == ["[1]"]
     assert out["structured"]["fallback"] is False
+
+
+# ── Transient retries & secret hygiene ────────────────────────────────────────
+
+def _http_error(status: int):
+    import httpx
+    request = httpx.Request("POST", "https://example.test/v1/models/m:generateContent?key=SECRET123")
+    return httpx.HTTPStatusError(f"Server error '{status}' for url '{request.url}'",
+                                 request=request, response=httpx.Response(status, request=request))
+
+
+@pytest.mark.asyncio
+async def test_gateway_retries_transient_errors(scripted, monkeypatch):
+    from app.rag.llm import gateway
+    monkeypatch.setattr(gateway, "TRANSIENT_BACKOFF_S", 0.0)
+    llm = scripted([VALID])
+    errors = [_http_error(503)]
+    original = llm.generate
+
+    async def flaky(request, config):
+        if errors:
+            raise errors.pop()
+        return await original(request, config)
+
+    llm.generate = flaky
+    response = await call_llm("scripted", REQUEST, {})
+    assert response.text == VALID
+
+
+@pytest.mark.asyncio
+async def test_gateway_does_not_retry_client_errors(scripted, monkeypatch):
+    import httpx
+    from app.rag.llm import gateway
+    monkeypatch.setattr(gateway, "TRANSIENT_BACKOFF_S", 0.0)
+    llm = scripted([])
+    calls = 0
+
+    async def quota(request, config):
+        nonlocal calls
+        calls += 1
+        raise _http_error(429)
+
+    llm.generate = quota
+    with pytest.raises(httpx.HTTPStatusError):
+        await call_llm("scripted", REQUEST, {})
+    assert calls == 1
+
+
+@pytest.mark.asyncio
+async def test_provider_errors_never_expose_api_keys(scripted):
+    from app.rag.llm.gateway import redact
+    assert "SECRET123" not in redact("for url 'https://x/y?key=SECRET123&alt=sse'")
+
+    llm = scripted([])
+
+    async def boom(request, config):
+        raise _http_error(400)
+
+    llm.generate = boom
+    out = await generate_structured("scripted", REQUEST, {})
+    assert out["structured"]["fallback"] is True
+    assert "SECRET123" not in json.dumps(out["structured"])
+
+
+@pytest.mark.asyncio
+async def test_gemini_sends_key_in_header_not_url(monkeypatch):
+    import httpx
+    from app.rag.llm.gemini import GeminiLLM
+
+    seen: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        return httpx.Response(200, json={"candidates": [{"content": {"parts": [{"text": "ok"}]}}]})
+
+    real_client = httpx.AsyncClient
+    monkeypatch.setattr(httpx, "AsyncClient",
+                        lambda **kw: real_client(transport=httpx.MockTransport(handler)))
+    await GeminiLLM().generate(REQUEST, {"api_key": "SECRET123"})
+    assert "SECRET123" not in str(seen[0].url)
+    assert seen[0].headers["x-goog-api-key"] == "SECRET123"
