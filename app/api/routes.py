@@ -2,14 +2,19 @@
 from __future__ import annotations
 
 import json
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from app.api.deps import get_optional_user
-from app.api.pipelines import build_ask_workflow, build_index_workflow, default_provider
+from app.api.pipelines import (
+    build_agentic_workflow,
+    build_ask_workflow,
+    build_index_workflow,
+    default_provider,
+)
 from app.engine.executor import WorkflowExecutor
 from app.engine.graph import WorkflowGraphError, build_graph, generations
 from app.engine.merging import STRATEGIES
@@ -40,6 +45,10 @@ class AskRequest(BaseModel):
     provider: str | None = Field(default=None, description="LLM provider; defaults to server config")
     few_shot: bool | None = Field(
         default=None, description="Force few-shot examples on/off; default = tenant setting")
+    mode: Literal["fast", "agentic"] = Field(
+        default="fast",
+        description="fast = fixed retrieval pipeline; agentic = tool-calling agent "
+                    "(plan → search → evaluate → rewrite, max 3 rounds)")
 
 
 @router.post("/workflows/run", response_model=RunResponse, tags=["workflows"])
@@ -105,9 +114,16 @@ async def rag_ask(
     request: AskRequest,
     user: Annotated[dict, Depends(get_optional_user)],
 ) -> dict:
-    """Full RAG answer: query → hybrid search → rerank → augment → generate."""
+    """Full RAG answer.
+
+    * ``mode="fast"`` (default): query → hybrid search → rerank → augment → generate.
+    * ``mode="agentic"``: the agent plans tool calls (search_docs, get_document,
+      lookup_entity), evaluates the evidence and may rewrite the query and search
+      again; the response includes the ``steps`` trace.
+    """
     provider = request.provider or default_provider()
-    executor = WorkflowExecutor(build_ask_workflow(provider))
+    build = build_agentic_workflow if request.mode == "agentic" else build_ask_workflow
+    executor = WorkflowExecutor(build(provider))
     examples = effective_examples(request.tenant, request.few_shot)
     result = await executor.run({
         "tenant": request.tenant,

@@ -8,6 +8,11 @@ it. Chat ``messages`` are mapped to Gemini's ``system_instruction`` + multi-turn
 
 Structured output: ``config["response_schema"]`` switches on Gemini's JSON mode
 (``responseMimeType: application/json`` + ``responseSchema``).
+
+Tool calling: ``config["tools"]`` (function declarations) is sent as
+``tools.functionDeclarations``; ``functionCall`` parts come back as
+``LLMResponse.tool_calls``. Messages may carry raw ``parts`` (functionCall /
+functionResponse / inline image data) which are passed through unchanged.
 """
 from __future__ import annotations
 
@@ -46,11 +51,16 @@ def build_payload(request: dict[str, Any], config: dict[str, Any]) -> dict[str, 
     payload: dict[str, Any] = {"contents": contents, "generationConfig": generation}
     if system:
         payload["system_instruction"] = {"parts": [{"text": system}]}
+    if config.get("tools"):
+        # Function calling: the model may answer with functionCall parts.
+        payload["tools"] = [{"functionDeclarations": config["tools"]}]
+        payload["toolConfig"] = {"functionCallingConfig": {"mode": config.get("tool_mode", "AUTO")}}
     return payload
 
 
 class GeminiLLM:
     name = "gemini"
+    supports_tools = True
 
     async def generate(self, request: dict[str, Any], config: dict[str, Any]) -> LLMResponse:
         api_key = config.get("api_key") or settings.gemini_api_key
@@ -69,7 +79,13 @@ class GeminiLLM:
 
         candidate = (data.get("candidates") or [{}])[0]
         parts = candidate.get("content", {}).get("parts", [])
-        text = "".join(p.get("text", "") for p in parts if not p.get("thought")).strip()
+        # Thought parts (internal reasoning) are never surfaced.
+        visible = [p for p in parts if not p.get("thought")]
+        text = "".join(p.get("text", "") for p in visible).strip()
+        tool_calls = [
+            {"name": p["functionCall"].get("name", ""), "args": p["functionCall"].get("args") or {}}
+            for p in visible if "functionCall" in p
+        ]
         usage = data.get("usageMetadata", {})
         return LLMResponse(
             text=text,
@@ -81,6 +97,8 @@ class GeminiLLM:
                 "output_tokens": usage.get("candidatesTokenCount"),
                 "total_tokens": usage.get("totalTokenCount"),
             },
+            tool_calls=tool_calls,
+            parts=visible,
         )
 
     async def generate_stream(

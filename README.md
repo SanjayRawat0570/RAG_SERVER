@@ -193,6 +193,9 @@ rejected up front and the pipeline degrades to the extractive answer.
 
 | Concept | Feature | Where |
 |---|---|---|
+| **Tool calling** | Three tools are exposed to the model as Gemini function declarations: `search_docs(query, filters?)` (hybrid search), `get_document(doc_id, page?)` and `lookup_entity(name)` (knowledge graph). The tenant is never a tool parameter: it comes from the server-side `ToolContext`, and any tenant-like argument the model sends is stripped and reported. | `app/rag/agent/tools.py`, `app/rag/llm/gemini.py` (`tools`, `tool_calls`), `app/rag/graph/store.py` (per-tenant graphs) |
+| **Agents** | `mode: "agentic"` on `/rag/ask` and `/rag/stream/ask` runs an explicit state machine — plan → search → evaluate → answer \| rewrite — inside the DAG engine's `loop` node (one iteration per tool round). Hard limits: 3 tool rounds, 45 s deadline (also bounds each model call), 8 000-token planning budget. Without a tool-capable model a heuristic planner takes over (search + entity lookup, then a bridge-entity rewrite for questions like "the team that owns X"). `fast` stays the default. | `app/rag/agent/planner.py`, `app/engine/nodes/agent.py`, `app/api/pipelines.py` (`build_agentic_workflow`), `tests/test_agentic.py` |
+| **Chain of thought** | The agent reasons before acting, but the reasoning stays internal: Gemini's thought parts are dropped, and the UI only receives the `steps` trace — tool calls, query rewrites, evidence coverage and why it stopped. | `app/rag/agent/planner.py` (`_step`), `app/rag/llm/gemini.py` |
 | **Few-shot prompting** | Two example question → cited-answer pairs (one answerable, one "I don't know") are rendered into the system prompt in the exact JSON shape the model must return. Examples are configurable per tenant (`GET/PUT /api/v1/tenant-settings/{tenant}`) and can be toggled per request (`few_shot: false`). `eval/run_eval.py --compare-fewshot` measures their effect. | `app/rag/tenants/ai_settings.py`, `app/rag/context/prompt.py` (`render_examples`), `app/api/tenant_settings.py`, `eval/results/fewshot_comparison_*.json`, `tests/test_few_shot.py` |
 | **Structured output** | The answer is JSON `{answer, citations, confidence, answerable}` validated by Pydantic. Gemini runs in JSON-schema mode; invalid replies are retried once with the validation error, then fall back to the extractive answer. SSE streams the `answer` field and finishes with a `sources` event. | `app/rag/llm/structured.py`, `app/rag/llm/gemini.py` (`build_payload`), `app/engine/nodes/generate.py`, `app/api/stream.py`, `tests/test_structured_output.py` |
 
@@ -230,6 +233,20 @@ difference. The false "I don't know" answers are the multi-hop questions, which
 the single-pass fast mode cannot retrieve — see agentic mode. The free tier
 allows only 20 `gemini-2.5-flash` requests per day, so run comparisons on a lite
 model (`--model`).
+
+**Fast vs agentic** (offline stub, `eval/results/f3_*_stub.json`):
+
+| metric | fast | agentic |
+|---|---|---|
+| answer accuracy | 0.70 | 0.85 |
+| multi-hop accuracy | 0.00 | 1.00 |
+| citation precision | 1.00 | 1.00 |
+| "I don't know" accuracy | 1.00 | 1.00 |
+
+With Gemini (`gemini-3.1-flash-lite`) the model plans its own hops, e.g. for
+"In which office is the team that owns Project Beacon based?" it searched
+"Project Beacon owner team", then "Mobile team office location", and answered
+"Lisbon" citing both files.
 
 ## Roadmap
 

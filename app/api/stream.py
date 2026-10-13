@@ -26,21 +26,22 @@ import asyncio
 import json
 import time
 import uuid
-from typing import Any, AsyncIterator
+from typing import Any, AsyncIterator, Literal
 
 from fastapi import APIRouter, Depends, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
 from app.api.deps import get_current_user
-from app.api.pipelines import STORE, DIM, default_provider
+from app.api.pipelines import DIM, STORE, build_agentic_retrieval_workflow, default_provider
 from app.engine.context import ExecutionContext
+from app.engine.executor import WorkflowExecutor
 from app.engine.merging import rrf
 from app.engine.nodes import get_node
 from app.models.workflow import NodeDef, NodeType
 from app.rag.cost import BudgetExceededError
 from app.rag.tenants.ai_settings import effective_examples
-from app.rag.llm.gateway import stream_llm
+from app.rag.llm.gateway import redact, stream_llm
 from app.rag.llm.structured import (
     AnswerStreamExtractor,
     generate_structured,
@@ -58,6 +59,7 @@ class StreamAskRequest(BaseModel):
     tenant: str = "default"
     provider: str | None = None
     few_shot: bool | None = None   # None → tenant setting
+    mode: Literal["fast", "agentic"] = "fast"
 
 
 # ── Pipeline helpers ───────────────────────────────────────────────────────────
@@ -67,25 +69,15 @@ def _nd(node_type: NodeType, node_id: str, config: dict[str, Any]) -> Any:
     return get_node(NodeDef(id=node_id, type=node_type, config=config))
 
 
-async def _rag_pipeline_events(
+async def _fast_retrieval(
+    ctx: ExecutionContext,
     question: str,
     tenant: str,
-    provider_name: str,
-    cancel: asyncio.Event | None = None,
-    few_shot: bool | None = None,
+    few_shot: bool | None,
+    cancelled,
+    out: dict[str, Any],
 ) -> AsyncIterator[dict[str, Any]]:
-    """Run the full RAG pipeline step-by-step, yielding event dicts.
-
-    Steps (mirrors the build_ask_workflow pipeline):
-        query_process → vector_search + keyword_search → rrf → rerank → augment → generate
-    """
-    run_id = str(uuid.uuid4())
-    ctx = ExecutionContext(run_id=run_id, inputs={"question": question, "tenant": tenant})
-    t0 = time.perf_counter()
-
-    def cancelled() -> bool:
-        return cancel is not None and cancel.is_set()
-
+    """Fixed pipeline: query_process → dense + sparse → RRF → rerank → augment."""
     # ── Step 1: Query understanding ────────────────────────────────────────────
     yield {"event": "step", "step": "query_process", "status": "start",
            "message": "Understanding your question..."}
@@ -96,7 +88,7 @@ async def _rag_pipeline_events(
            "intent": qp_out.get("intent"), "normalized": qp_out.get("normalized")}
 
     if cancelled():
-        yield {"event": "cancelled"}
+        out["cancelled"] = True
         return
 
     # ── Step 2: Hybrid search ──────────────────────────────────────────────────
@@ -128,7 +120,7 @@ async def _rag_pipeline_events(
            "hit_count": len(merged)}
 
     if cancelled():
-        yield {"event": "cancelled"}
+        out["cancelled"] = True
         return
 
     # ── Step 3: Rerank ─────────────────────────────────────────────────────────
@@ -158,8 +150,79 @@ async def _rag_pipeline_events(
            "doc_count": augment_out.get("included", 0) if isinstance(augment_out, dict) else 0}
 
     if cancelled():
+        out["cancelled"] = True
+        return
+
+    out.update(qp=qp_out, augment=augment_out, hit_count=len(merged),
+               answer_query=qp_out.get("normalized", question))
+
+
+async def _agentic_retrieval(
+    question: str,
+    tenant: str,
+    provider_name: str,
+    few_shot: bool | None,
+    out: dict[str, Any],
+) -> AsyncIterator[dict[str, Any]]:
+    """Agentic retrieval through the DAG engine (plan → search → evaluate loop → augment).
+
+    The agent's steps are emitted as one ``agent_steps`` event when the loop ends.
+    """
+    yield {"event": "step", "step": "agent", "status": "start",
+           "message": "Agent is planning tool calls..."}
+    examples = [e.model_dump() for e in effective_examples(tenant, few_shot)]
+    result = await WorkflowExecutor(build_agentic_retrieval_workflow(provider_name)).run(
+        {"question": question, "tenant": tenant, "few_shot": examples})
+    if result.status != "success":
+        errors = "; ".join(r.error for r in result.results if r.error)
+        raise RuntimeError(f"agentic retrieval failed: {redact(errors)}")
+    res = result.outputs["out"]
+    agent = res.get("agent") or {}
+    yield {"event": "step", "step": "agent", "status": "done",
+           "rounds": agent.get("round"), "stop_reason": agent.get("stop_reason"),
+           "planner": agent.get("planner")}
+    yield {"event": "agent_steps", "steps": agent.get("steps", []),
+           "rewritten_query": agent.get("rewritten_query")}
+    out.update(qp=res.get("qp") or {}, augment=res.get("augment") or {},
+               hit_count=len(agent.get("evidence", [])),
+               answer_query=agent.get("answer_query") or question,
+               steps=agent.get("steps", []), rewritten_query=agent.get("rewritten_query"))
+
+
+async def _rag_pipeline_events(
+    question: str,
+    tenant: str,
+    provider_name: str,
+    cancel: asyncio.Event | None = None,
+    few_shot: bool | None = None,
+    mode: str = "fast",
+) -> AsyncIterator[dict[str, Any]]:
+    """Run the full RAG pipeline step-by-step, yielding event dicts.
+
+    Retrieval depends on ``mode``:
+        fast:    query_process → vector_search + keyword_search → rrf → rerank → augment
+        agentic: plan → search → evaluate (→ rewrite …) agent loop → augment
+    then structured generation streams the answer for both.
+    """
+    run_id = str(uuid.uuid4())
+    ctx = ExecutionContext(run_id=run_id, inputs={"question": question, "tenant": tenant})
+    t0 = time.perf_counter()
+
+    def cancelled() -> bool:
+        return cancel is not None and cancel.is_set()
+
+    # ── Steps 1-4: retrieval (fixed pipeline or agent) ─────────────────────────
+    retrieved: dict[str, Any] = {}
+    if mode == "agentic":
+        source = _agentic_retrieval(question, tenant, provider_name, few_shot, retrieved)
+    else:
+        source = _fast_retrieval(ctx, question, tenant, few_shot, cancelled, retrieved)
+    async for ev in source:
+        yield ev
+    if cancelled() or retrieved.get("cancelled"):
         yield {"event": "cancelled"}
         return
+    qp_out, augment_out = retrieved["qp"], retrieved["augment"]
 
     # ── Step 5: Generate (token streaming) ────────────────────────────────────
     yield {"event": "step", "step": "generate", "status": "start",
@@ -168,7 +231,7 @@ async def _rag_pipeline_events(
     if isinstance(augment_out, dict) and "messages" in augment_out:
         llm_request = {
             "messages":  augment_out["messages"],
-            "query":     qp_out.get("normalized", question),
+            "query":     retrieved["answer_query"],
             "documents": augment_out.get("documents", []),
             "citations": augment_out.get("citations", []),
         }
@@ -203,7 +266,7 @@ async def _rag_pipeline_events(
     except BudgetExceededError:
         raise
     except Exception as exc:  # provider down / unconfigured / circuit open
-        stream_error = str(exc)
+        stream_error = redact(str(exc))
 
     if cancelled():
         yield {"event": "cancelled"}
@@ -244,7 +307,10 @@ async def _rag_pipeline_events(
         "confidence":    result["confidence"],
         "answerable":    result["answerable"],
         "intent":        qp_out.get("intent"),
-        "hit_count":     len(merged),
+        "hit_count":     retrieved["hit_count"],
+        "mode":          mode,
+        "steps":         retrieved.get("steps"),
+        "rewritten_query": retrieved.get("rewritten_query"),
         "duration_ms":   round((time.perf_counter() - t0) * 1000, 1),
         "run_id":        run_id,
     }
@@ -272,7 +338,7 @@ async def stream_rag_ask(
     async def event_source() -> AsyncIterator[str]:
         try:
             async for ev in _rag_pipeline_events(body.question, body.tenant, provider,
-                                                 few_shot=body.few_shot):
+                                                 few_shot=body.few_shot, mode=body.mode):
                 if await http_request.is_disconnected():
                     break
                 yield f"event: {ev['event']}\ndata: {json.dumps(ev)}\n\n"
@@ -341,7 +407,8 @@ async def ws_rag_ask(ws: WebSocket) -> None:
             monitor_task = asyncio.create_task(_monitor_cancel())
             try:
                 async for ev in _rag_pipeline_events(question, tenant, provider, cancel,
-                                                     few_shot=data.get("few_shot")):
+                                                     few_shot=data.get("few_shot"),
+                                                     mode="agentic" if data.get("mode") == "agentic" else "fast"):
                     await ws.send_json(ev)
                     if ev.get("event") in ("complete", "cancelled", "error"):
                         break

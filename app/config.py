@@ -41,6 +41,11 @@ class Settings(BaseSettings):
     llm_breaker_recovery: float = 30.0
     default_tenant_budget_usd: float = 10.0
 
+    # Agentic retrieval hard limits (per request).
+    agent_max_rounds: int = 3
+    agent_timeout_s: float = 45.0
+    agent_token_budget: int = 8000
+
     # Directory for state shared across processes (API keys, tenant AI settings).
     data_dir: str = "data"
 

@@ -16,6 +16,7 @@ Usage (from backend/)::
     python eval/run_eval.py --provider gemini     # real model (needs GEMINI_API_KEY)
     python eval/run_eval.py --label baseline      # results -> eval/results/baseline.json
     python eval/run_eval.py --few-shot off        # disable few-shot examples
+    python eval/run_eval.py --mode agentic        # tool-calling agent instead of fast mode
     python eval/run_eval.py --compare-fewshot --provider gemini --model gemini-3.1-flash-lite --delay 7
         # runs with and without examples -> eval/results/fewshot_comparison_<provider>.json
 """
@@ -34,7 +35,11 @@ from typing import Any
 EVAL_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(EVAL_DIR.parent))
 
-from app.api.pipelines import build_ask_workflow, build_index_workflow  # noqa: E402
+from app.api.pipelines import (  # noqa: E402
+    build_agentic_workflow,
+    build_ask_workflow,
+    build_index_workflow,
+)
 from app.engine.executor import WorkflowExecutor  # noqa: E402
 from app.rag.tenants.ai_settings import effective_examples  # noqa: E402
 
@@ -62,9 +67,12 @@ async def index_corpus(tenant: str = TENANT) -> int:
 
 
 async def ask(question: str, provider: str, tenant: str = TENANT,
-              few_shot: bool | None = None, model: str | None = None) -> dict[str, Any]:
+              few_shot: bool | None = None, model: str | None = None,
+              mode: str = "fast") -> dict[str, Any]:
     examples = [e.model_dump() for e in effective_examples(tenant, few_shot)]
-    result = await WorkflowExecutor(build_ask_workflow(provider, model)).run(
+    result = await WorkflowExecutor(
+        (build_agentic_workflow if mode == "agentic" else build_ask_workflow)(provider, model)
+    ).run(
         {"tenant": tenant, "question": question, "few_shot": examples}
     )
     return result.outputs.get("out", {}) or {}
@@ -115,8 +123,8 @@ def score(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 async def evaluate(provider: str, *, delay: float = 0.0, few_shot: bool | None = None,
-                   model: str | None = None, ask_fn=None) -> dict[str, Any]:
-    ask_fn = ask_fn or (lambda q: ask(q, provider, few_shot=few_shot, model=model))
+                   model: str | None = None, mode: str = "fast", ask_fn=None) -> dict[str, Any]:
+    ask_fn = ask_fn or (lambda q: ask(q, provider, few_shot=few_shot, model=model, mode=mode))
     consecutive_fallbacks = 0
     questions = load_questions(EVAL_DIR / "questions.jsonl")
     chunks = await index_corpus()
@@ -147,7 +155,8 @@ async def evaluate(provider: str, *, delay: float = 0.0, few_shot: bool | None =
                              "answers would come from the extractive fallback")
         if delay:
             await asyncio.sleep(delay)  # stay under free-tier rate limits
-    return {"provider": provider, "model": model, "few_shot": few_shot, "chunks_indexed": chunks,
+    return {"provider": provider, "model": model, "mode": mode, "few_shot": few_shot,
+            "chunks_indexed": chunks,
             "metrics": score(rows), "rows": rows}
 
 
@@ -170,7 +179,8 @@ async def compare_fewshot(provider: str, delay: float, model: str | None = None)
 
 
 def print_report(report: dict[str, Any]) -> None:
-    print(f"\nprovider={report['provider']}  few_shot={report.get('few_shot')}  "
+    print(f"\nprovider={report['provider']}  mode={report.get('mode', 'fast')}  "
+          f"few_shot={report.get('few_shot')}  "
           f"chunks={report['chunks_indexed']}")
     for k, v in report["metrics"].items():
         print(f"  {k:<20} {v}")
@@ -182,6 +192,7 @@ def print_report(report: dict[str, Any]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--provider", default="stub")
+    parser.add_argument("--mode", choices=["fast", "agentic"], default="fast")
     parser.add_argument("--model", default=None, help="provider model override, e.g. gemini-3.1-flash-lite")
     parser.add_argument("--delay", type=float, default=0.0, help="seconds between questions")
     parser.add_argument("--label", default=None, help="save to eval/results/<label>.json")
@@ -201,7 +212,8 @@ def main() -> None:
         return
 
     few_shot = None if args.few_shot is None else args.few_shot == "on"
-    report = asyncio.run(evaluate(args.provider, delay=args.delay, few_shot=few_shot, model=args.model))
+    report = asyncio.run(evaluate(args.provider, delay=args.delay, few_shot=few_shot, model=args.model,
+                                  mode=args.mode))
     print_report(report)
     if args.label:
         _save(report, args.label)

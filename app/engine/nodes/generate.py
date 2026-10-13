@@ -59,7 +59,10 @@ class GenerateNode(Node):
         # 1) Exact response cache (F17).
         cache_name = self.config.get("cache_name", "llm-response")
         cache = get_cache(cache_name, ttl=float(self.config.get("cache_ttl", 300)))
-        cache_key = self._cache_key(provider_name, request, bool(self.config.get("structured")))
+        tenant, budget_limit = self._budget(ctx)
+        # Tenant is part of the key: one tenant never receives another's cached answer.
+        cache_key = self._cache_key(provider_name, request, bool(self.config.get("structured")),
+                                    tenant)
         if self.config.get("cache"):
             cached = cache.get(cache_key)
             record_cache(cache_name, cached is not MISS)
@@ -72,8 +75,10 @@ class GenerateNode(Node):
         sem_cache = None
         if sem_cfg.get("enabled") and request["query"]:
             dim = int(sem_cfg.get("dimension", DEFAULT_DIMENSION))
+            sem_name = sem_cfg.get("name", cache_name)
             sem_cache = SemanticCache(
-                sem_cfg.get("name", cache_name), dim, float(sem_cfg.get("threshold", 0.95))
+                f"{sem_name}:{tenant}" if tenant else sem_name, dim,
+                float(sem_cfg.get("threshold", 0.95)),
             )
             query_vec = embed_texts([request["query"]], dimension=dim)[0]
             hit = sem_cache.lookup(query_vec)
@@ -83,7 +88,6 @@ class GenerateNode(Node):
 
         # 3) Generate through the LLM gateway: circuit breaker, budget guard,
         #    cost ledger, metrics and an OTel span all apply (F7/F24/F8).
-        tenant, budget_limit = self._budget(ctx)
         if self.config.get("structured"):
             result = await self._generate_structured(provider_name, request, tenant, budget_limit)
         else:
@@ -136,9 +140,12 @@ class GenerateNode(Node):
                                         tenant=tenant, budget_limit=budget_limit)
         response = out.pop("response")
         usage = (response.usage or {}) if response else {}
+        sources = {c.get("marker"): c.get("source") for c in request.get("citations", [])}
         return {
             **out,
             "citations": out["cited_markers"],
+            "cited_sources": list(dict.fromkeys(
+                sources[m] for m in out["cited_markers"] if sources.get(m))),
             "provider": response.provider if response else "extractive-fallback",
             "model": response.model if response else "extractive-stub",
             "finish_reason": response.finish_reason if response else "fallback",
@@ -147,9 +154,10 @@ class GenerateNode(Node):
         }
 
     @staticmethod
-    def _cache_key(provider: str, request: dict[str, Any], structured: bool = False) -> str:
-        payload = json.dumps({"p": provider, "m": request["messages"], "s": structured},
-                             sort_keys=True)
+    def _cache_key(provider: str, request: dict[str, Any], structured: bool = False,
+                   tenant: str | None = None) -> str:
+        payload = json.dumps({"p": provider, "m": request["messages"], "s": structured,
+                              "t": tenant}, sort_keys=True)
         return hashlib.sha1(payload.encode("utf-8")).hexdigest()
 
     def _build_request(self, ctx: ExecutionContext, source: Any) -> dict[str, Any]:

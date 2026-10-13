@@ -24,6 +24,7 @@ ASK_OUTPUT: dict[str, Any] = {
     "cited_markers": "$.generate.cited_markers",
     "confidence": "$.generate.confidence",
     "answerable": "$.generate.answerable",
+    "cited_sources": "$.generate.cited_sources",
     "structured": "$.generate.structured",
     "provider": "$.generate.provider",
     "cost_usd": "$.generate.cost_usd",
@@ -42,6 +43,8 @@ def build_index_workflow() -> WorkflowDef:
                         "metadata": {"tenant": "$.inputs.tenant"}}},
             {"id": "chunk", "type": "chunk",
              "config": {"strategy": "structure", "chunk_size": 512, "size_unit": "tokens"}},
+            # Entities/relations → the tenant's knowledge graph (agent's lookup_entity).
+            {"id": "graph", "type": "graph_index", "config": {"tenant": "$.inputs.tenant"}},
             {"id": "embed", "type": "embed", "config": {"dimension": DIM}},
             {"id": "upsert", "type": "upsert",
              "config": {"store": STORE, "namespace": "$.inputs.tenant", "dimension": DIM}},
@@ -50,7 +53,8 @@ def build_index_workflow() -> WorkflowDef:
         edges=[
             {"source": "in", "target": "ingest"},
             {"source": "ingest", "target": "chunk"},
-            {"source": "chunk", "target": "embed"},
+            {"source": "chunk", "target": "graph"},
+            {"source": "graph", "target": "embed"},
             {"source": "embed", "target": "upsert"},
             {"source": "upsert", "target": "out"},
         ],
@@ -83,7 +87,7 @@ def build_ask_workflow(provider: str, model: str | None = None) -> WorkflowDef:
              "fallback": {"answer": "Generation is temporarily unavailable.",
                           "citations": [], "cited_markers": [], "confidence": "low",
                           "answerable": False, "provider": provider, "cache_hit": False}},
-            {"id": "out", "type": "output", "config": {"value": ASK_OUTPUT}},
+            {"id": "out", "type": "output", "config": {"value": {**ASK_OUTPUT, "mode": "fast"}}},
         ],
         edges=[
             {"source": "in", "target": "qp"},
@@ -97,6 +101,116 @@ def build_ask_workflow(provider: str, model: str | None = None) -> WorkflowDef:
             {"source": "generate", "target": "out"},
         ],
     )
+
+
+def _agentic_retrieval(
+    provider: str,
+    model: str | None = None,
+    *,
+    max_rounds: int | None = None,
+    timeout_s: float | None = None,
+    token_budget: int | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Nodes/edges for in → qp → agent loop → augment (shared by API and SSE)."""
+    rounds = max_rounds or settings.agent_max_rounds
+    agent_round = {
+        "name": "agent_round",
+        "nodes": [
+            {"id": "in", "type": "input"},
+            {"id": "plan", "type": "agent_plan", "config": {
+                "question": "$.inputs.question", "tenant": "$.inputs.tenant",
+                "provider": provider, "model": model, "max_rounds": rounds,
+                "timeout_s": timeout_s, "token_budget": token_budget}},
+            {"id": "search", "type": "agent_search"},
+            {"id": "evaluate", "type": "agent_evaluate"},
+            {"id": "out", "type": "output", "config": {"value": "$.evaluate"}},
+        ],
+        "edges": [
+            {"source": "in", "target": "plan"},
+            {"source": "plan", "target": "search"},
+            {"source": "search", "target": "evaluate"},
+            {"source": "evaluate", "target": "out"},
+        ],
+    }
+    nodes = [
+        {"id": "in", "type": "input"},
+        {"id": "qp", "type": "query_process", "config": {"query": "$.inputs.question"}},
+        {"id": "agent", "type": "loop", "config": {
+            "workflow": agent_round,
+            # The tenant is bound here from the request — tools never take it from the model.
+            "input_map": {"question": "$.inputs.question", "tenant": "$.inputs.tenant"},
+            "state_key": "state",
+            "output_key": "out",
+            "until": {"left": "$.inputs.state.phase", "op": "==", "right": "answer"},
+            "max_iterations": rounds + 1,
+        }},
+        {"id": "augment", "type": "augment",
+         "config": {"hits": "$.agent.output.evidence", "query": "$.agent.output.answer_query",
+                    "max_context_tokens": 1200,
+                    "examples": "$.inputs.few_shot", "example_format": "json"}},
+    ]
+    edges = [
+        {"source": "in", "target": "qp"},
+        {"source": "qp", "target": "agent"},
+        {"source": "agent", "target": "augment"},
+    ]
+    return nodes, edges
+
+
+def build_agentic_retrieval_workflow(provider: str, model: str | None = None,
+                                     **limits: Any) -> WorkflowDef:
+    """Agentic retrieval only — the SSE endpoint streams generation itself."""
+    nodes, edges = _agentic_retrieval(provider, model, **limits)
+    nodes.append({"id": "out", "type": "output", "config": {"value": {
+        "qp": "$.qp", "agent": "$.agent.output", "augment": "$.augment"}}})
+    edges.append({"source": "augment", "target": "out"})
+    return WorkflowDef(name="ui_ask_agentic_retrieval", nodes=nodes, edges=edges)
+
+
+def build_agentic_workflow(
+    provider: str,
+    model: str | None = None,
+    *,
+    max_rounds: int | None = None,
+    timeout_s: float | None = None,
+    token_budget: int | None = None,
+) -> WorkflowDef:
+    """Agentic mode: a plan → search → evaluate → (rewrite | answer) state machine.
+
+    The state machine runs inside the existing ``loop`` node — one iteration per
+    tool round — so every transition is a traced, metered DAG node. The final
+    answer uses the same augment → structured generate steps as fast mode, over
+    the evidence the agent gathered.
+    """
+    nodes, edges = _agentic_retrieval(provider, model, max_rounds=max_rounds, timeout_s=timeout_s,
+                                      token_budget=token_budget)
+    nodes += [
+        {"id": "generate", "type": "generate",
+         "config": {"provider": provider, "query": "$.agent.output.answer_query", "cache": True,
+                    "max_tokens": 2048, "structured": True, "tenant": "$.inputs.tenant",
+                    **({"model": model} if model else {})},
+         "retry": {"max_attempts": 2},
+         "fallback": {"answer": "Generation is temporarily unavailable.",
+                      "citations": [], "cited_markers": [], "confidence": "low",
+                      "answerable": False, "provider": provider, "cache_hit": False}},
+        {"id": "out", "type": "output", "config": {"value": {
+            **ASK_OUTPUT,
+            "mode": "agentic",
+            "steps": "$.agent.output.steps",
+            "rewritten_query": "$.agent.output.rewritten_query",
+            "agent": {
+                "rounds": "$.agent.output.round",
+                "stop_reason": "$.agent.output.stop_reason",
+                "planner": "$.agent.output.planner",
+                "tokens_used": "$.agent.output.tokens_used",
+            },
+        }}},
+    ]
+    edges += [
+        {"source": "augment", "target": "generate"},
+        {"source": "generate", "target": "out"},
+    ]
+    return WorkflowDef(name="ui_ask_agentic", nodes=nodes, edges=edges)
 
 
 def build_decompose_workflow() -> WorkflowDef:

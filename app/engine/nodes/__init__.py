@@ -1,5 +1,6 @@
 """Node implementations and registry."""
 from app.engine.nodes import (  # noqa: F401
+    agent,
     augment,
     chunk,
     classify,

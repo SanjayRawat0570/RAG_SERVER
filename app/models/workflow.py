@@ -34,6 +34,10 @@ class NodeType(str, Enum):
     SYNTHESIZE = "synthesize"
     ENTITY_SEARCH = "entity_search"
     CLASSIFY = "classify"
+    AGENT_PLAN = "agent_plan"
+    AGENT_SEARCH = "agent_search"
+    AGENT_EVALUATE = "agent_evaluate"
+    GRAPH_INDEX = "graph_index"
     OUTPUT = "output"
 
 

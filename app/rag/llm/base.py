@@ -20,6 +20,10 @@ class LLMResponse(BaseModel):
     usage: dict[str, Any] = Field(default_factory=dict)
     # Citation markers (e.g. ["[1]"]) the answer relies on, when known.
     citations: list[str] = Field(default_factory=list)
+    # Tool calling: functions the model asked to call ({"name", "args"}), plus the
+    # provider's raw content parts so the turn can be replayed in the transcript.
+    tool_calls: list[dict[str, Any]] = Field(default_factory=list)
+    parts: list[dict[str, Any]] = Field(default_factory=list)
 
 
 class LLMProvider(Protocol):
