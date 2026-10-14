@@ -1,0 +1,349 @@
+{
+  "provider": "gemini",
+  "mode": "fast",
+  "questions": 40,
+  "errors": 0,
+  "index": {
+    "docs": 23,
+    "chunks": 93,
+    "ms_total": 613.0,
+    "ms_per_doc": 26.7
+  },
+  "retrieval_ms": {
+    "p50": 6.4,
+    "p95": 13.2,
+    "mean": 7.1
+  },
+  "ttft_ms": {
+    "p50": 981.2,
+    "p95": 1243.3,
+    "mean": 992.2
+  },
+  "total_ms": {
+    "p50": 990.1,
+    "p95": 1303.9,
+    "mean": 1032.9
+  },
+  "rows": [
+    {
+      "id": "f01",
+      "category": "factual",
+      "retrieval_ms": 5.702399997971952,
+      "ttft_ms": 1243.2601999607868,
+      "total_ms": 1290.0526999728754,
+      "error": false
+    },
+    {
+      "id": "f02",
+      "category": "factual",
+      "retrieval_ms": 9.549500013235956,
+      "ttft_ms": 878.3275000168942,
+      "total_ms": 948.0524000246078,
+      "error": false
+    },
+    {
+      "id": "f03",
+      "category": "factual",
+      "retrieval_ms": 4.268299962859601,
+      "ttft_ms": 827.9679999686778,
+      "total_ms": 872.5449999910779,
+      "error": false
+    },
+    {
+      "id": "f04",
+      "category": "factual",
+      "retrieval_ms": 5.669599981047213,
+      "ttft_ms": 740.9262000001036,
+      "total_ms": 790.0700999889523,
+      "error": false
+    },
+    {
+      "id": "f05",
+      "category": "factual",
+      "retrieval_ms": 5.445600021630526,
+      "ttft_ms": 1001.5658999909647,
+      "total_ms": 1077.5460000149906,
+      "error": false
+    },
+    {
+      "id": "f06",
+      "category": "factual",
+      "retrieval_ms": 8.015000028535724,
+      "ttft_ms": 991.804699995555,
+      "total_ms": 1006.8481999915093,
+      "error": false
+    },
+    {
+      "id": "f07",
+      "category": "factual",
+      "retrieval_ms": 6.756799994036555,
+      "ttft_ms": 904.9160000286065,
+      "total_ms": 990.1269000256434,
+      "error": false
+    },
+    {
+      "id": "f08",
+      "category": "factual",
+      "retrieval_ms": 4.501499992329627,
+      "ttft_ms": 865.6688000191934,
+      "total_ms": 920.9659000043757,
+      "error": false
+    },
+    {
+      "id": "f09",
+      "category": "factual",
+      "retrieval_ms": 6.07010000385344,
+      "ttft_ms": 756.211899977643,
+      "total_ms": 771.1097999708727,
+      "error": false
+    },
+    {
+      "id": "f10",
+      "category": "factual",
+      "retrieval_ms": 6.86140003381297,
+      "ttft_ms": 907.6684000319801,
+      "total_ms": 921.9609000138007,
+      "error": false
+    },
+    {
+      "id": "f11",
+      "category": "factual",
+      "retrieval_ms": 6.222100055310875,
+      "ttft_ms": 907.5047000078484,
+      "total_ms": 963.8364000129513,
+      "error": false
+    },
+    {
+      "id": "f12",
+      "category": "factual",
+      "retrieval_ms": 6.725999992340803,
+      "ttft_ms": 1128.7080000038259,
+      "total_ms": 1212.5546000315808,
+      "error": false
+    },
+    {
+      "id": "f13",
+      "category": "factual",
+      "retrieval_ms": 8.644299989100546,
+      "ttft_ms": 767.3802000354044,
+      "total_ms": 854.4797000358813,
+      "error": false
+    },
+    {
+      "id": "f14",
+      "category": "factual",
+      "retrieval_ms": 4.259200009983033,
+      "ttft_ms": 1227.922399993986,
+      "total_ms": 1231.9359999964945,
+      "error": false
+    },
+    {
+      "id": "f15",
+      "category": "factual",
+      "retrieval_ms": 5.17219997709617,
+      "ttft_ms": 1011.6011999780312,
+      "total_ms": 1013.1254000007175,
+      "error": false
+    },
+    {
+      "id": "f16",
+      "category": "factual",
+      "retrieval_ms": 7.248499954584986,
+      "ttft_ms": 819.561899988912,
+      "total_ms": 903.0211999779567,
+      "error": false
+    },
+    {
+      "id": "f17",
+      "category": "factual",
+      "retrieval_ms": 5.561100027989596,
+      "ttft_ms": 985.6125999940559,
+      "total_ms": 1011.734500003513,
+      "error": false
+    },
+    {
+      "id": "f18",
+      "category": "factual",
+      "retrieval_ms": 6.636400008574128,
+      "ttft_ms": 1096.0557999787852,
+      "total_ms": 1099.669500021264,
+      "error": false
+    },
+    {
+      "id": "f19",
+      "category": "factual",
+      "retrieval_ms": 5.448599986266345,
+      "ttft_ms": 1081.770199991297,
+      "total_ms": 1153.948599996511,
+      "error": false
+    },
+    {
+      "id": "f20",
+      "category": "factual",
+      "retrieval_ms": 6.545500014908612,
+      "ttft_ms": 958.7792999809608,
+      "total_ms": 961.7700999951921,
+      "error": false
+    },
+    {
+      "id": "f21",
+      "category": "factual",
+      "retrieval_ms": 4.594199999701232,
+      "ttft_ms": 1218.3250000234693,
+      "total_ms": 1303.9433999801986,
+      "error": false
+    },
+    {
+      "id": "f22",
+      "category": "factual",
+      "retrieval_ms": 5.225400032941252,
+      "ttft_ms": 992.2985000303015,
+      "total_ms": 1060.0248000118881,
+      "error": false
+    },
+    {
+      "id": "f23",
+      "category": "factual",
+      "retrieval_ms": 13.19959998363629,
+      "ttft_ms": 1418.7722000060603,
+      "total_ms": 1473.4002000186592,
+      "error": false
+    },
+    {
+      "id": "f24",
+      "category": "factual",
+      "retrieval_ms": 4.83150000218302,
+      "ttft_ms": 1111.4498999668285,
+      "total_ms": 1143.4994000010192,
+      "error": false
+    },
+    {
+      "id": "f25",
+      "category": "factual",
+      "retrieval_ms": 6.729000015184283,
+      "ttft_ms": 1084.3403000035323,
+      "total_ms": 1151.8757999874651,
+      "error": false
+    },
+    {
+      "id": "f26",
+      "category": "factual",
+      "retrieval_ms": 6.353400007355958,
+      "ttft_ms": 944.1903000115417,
+      "total_ms": 993.7433000304736,
+      "error": false
+    },
+    {
+      "id": "f27",
+      "category": "factual",
+      "retrieval_ms": 10.858299967367202,
+      "ttft_ms": 1021.1976999999024,
+      "total_ms": 1096.416499989573,
+      "error": false
+    },
+    {
+      "id": "f28",
+      "category": "factual",
+      "retrieval_ms": 7.081700023263693,
+      "ttft_ms": 1199.6071000467055,
+      "total_ms": 1201.557100052014,
+      "error": false
+    },
+    {
+      "id": "f29",
+      "category": "factual",
+      "retrieval_ms": 14.846200007013977,
+      "ttft_ms": 889.2881000065245,
+      "total_ms": 898.3265000279061,
+      "error": false
+    },
+    {
+      "id": "f30",
+      "category": "factual",
+      "retrieval_ms": 8.437299984507263,
+      "ttft_ms": 1002.0115000079386,
+      "total_ms": 1007.1813999675214,
+      "error": false
+    },
+    {
+      "id": "f31",
+      "category": "factual",
+      "retrieval_ms": 15.702400007285178,
+      "ttft_ms": 901.9704000093043,
+      "total_ms": 913.4560999809764,
+      "error": false
+    },
+    {
+      "id": "f32",
+      "category": "factual",
+      "retrieval_ms": 5.944699980318546,
+      "ttft_ms": 761.386499973014,
+      "total_ms": 832.2050999850035,
+      "error": false
+    },
+    {
+      "id": "f33",
+      "category": "factual",
+      "retrieval_ms": 5.315299960784614,
+      "ttft_ms": 981.2079999828711,
+      "total_ms": 983.8952999562025,
+      "error": false
+    },
+    {
+      "id": "f34",
+      "category": "factual",
+      "retrieval_ms": 6.992399983573705,
+      "ttft_ms": 992.6566000212915,
+      "total_ms": 1031.6015999997035,
+      "error": false
+    },
+    {
+      "id": "f35",
+      "category": "factual",
+      "retrieval_ms": 9.204100002534688,
+      "ttft_ms": 863.4693999774754,
+      "total_ms": 890.724400000181,
+      "error": false
+    },
+    {
+      "id": "f36",
+      "category": "factual",
+      "retrieval_ms": 4.497100017033517,
+      "ttft_ms": 986.327100021299,
+      "total_ms": 988.2486999849789,
+      "error": false
+    },
+    {
+      "id": "f37",
+      "category": "factual",
+      "retrieval_ms": 6.366099987644702,
+      "ttft_ms": 945.2600000076927,
+      "total_ms": 947.9500000015832,
+      "error": false
+    },
+    {
+      "id": "f38",
+      "category": "factual",
+      "retrieval_ms": 7.270700007211417,
+      "ttft_ms": 1586.0442999983206,
+      "total_ms": 1625.4851999692619,
+      "error": false
+    },
+    {
+      "id": "f39",
+      "category": "factual",
+      "retrieval_ms": 7.912500004749745,
+      "ttft_ms": 726.5245000016876,
+      "total_ms": 819.66730003478,
+      "error": false
+    },
+    {
+      "id": "f40",
+      "category": "factual",
+      "retrieval_ms": 5.743099958635867,
+      "ttft_ms": 957.7716999920085,
+      "total_ms": 959.1038000071421,
+      "error": false
+    }
+  ]
+}

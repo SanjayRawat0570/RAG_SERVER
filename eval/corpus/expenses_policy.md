@@ -2,7 +2,7 @@
 
 Business travel must be booked through the corporate travel portal. Economy class is required for flights shorter than 6 hours.
 
-The daily meal allowance while travelling is capped at 60 USD.
+The daily meal allowance while travelling is capped at 60 USD. Hotel stays are capped at 200 USD per night. This policy is effective from 1 January 2025.
 
 # Expense Claims
 
