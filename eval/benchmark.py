@@ -63,7 +63,7 @@ async def time_question(question: str, provider: str, mode: str) -> dict[str, An
 async def run(provider: str, mode: str, limit: int | None, delay: float) -> dict[str, Any]:
     t0 = time.perf_counter()
     chunks, _ = await index_corpus(TENANT)
-    docs = len(list((EVAL_DIR / "corpus").glob("*.md")))
+    docs = len(list((EVAL_DIR / "corpus").rglob("*.md")))
     index_ms = (time.perf_counter() - t0) * 1000
 
     questions = load_questions()[:limit] if limit else load_questions()

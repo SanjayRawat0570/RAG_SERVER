@@ -1,0 +1,1349 @@
+{
+  "provider": "stub",
+  "mode": "fast",
+  "questions": 165,
+  "errors": 0,
+  "index": {
+    "docs": 115,
+    "chunks": 305,
+    "ms_total": 1634.2,
+    "ms_per_doc": 14.2
+  },
+  "retrieval_ms": {
+    "p50": 14.7,
+    "p95": 31.6,
+    "mean": 17.6
+  },
+  "ttft_ms": {
+    "p50": 15.0,
+    "p95": 32.9,
+    "mean": 18.0
+  },
+  "total_ms": {
+    "p50": 15.6,
+    "p95": 34.0,
+    "mean": 18.8
+  },
+  "rows": [
+    {
+      "id": "f01",
+      "category": "factual",
+      "retrieval_ms": 8.540899958461523,
+      "ttft_ms": 8.835599990561604,
+      "total_ms": 9.405799966771156,
+      "error": false
+    },
+    {
+      "id": "f02",
+      "category": "factual",
+      "retrieval_ms": 11.072700028307736,
+      "ttft_ms": 11.439900030381978,
+      "total_ms": 12.12850003503263,
+      "error": false
+    },
+    {
+      "id": "f03",
+      "category": "factual",
+      "retrieval_ms": 13.765099982265383,
+      "ttft_ms": 14.212300011422485,
+      "total_ms": 15.024099964648485,
+      "error": false
+    },
+    {
+      "id": "f04",
+      "category": "factual",
+      "retrieval_ms": 14.307299978099763,
+      "ttft_ms": 14.69169999472797,
+      "total_ms": 15.589100017677993,
+      "error": false
+    },
+    {
+      "id": "f05",
+      "category": "factual",
+      "retrieval_ms": 12.350300035905093,
+      "ttft_ms": 12.634100043214858,
+      "total_ms": 13.227600022219121,
+      "error": false
+    },
+    {
+      "id": "f06",
+      "category": "factual",
+      "retrieval_ms": 14.987800037488341,
+      "ttft_ms": 15.201200032606721,
+      "total_ms": 15.59690001886338,
+      "error": false
+    },
+    {
+      "id": "f07",
+      "category": "factual",
+      "retrieval_ms": 8.557899971492589,
+      "ttft_ms": 8.863899973221123,
+      "total_ms": 9.268999972846359,
+      "error": false
+    },
+    {
+      "id": "f08",
+      "category": "factual",
+      "retrieval_ms": 22.669699974358082,
+      "ttft_ms": 23.226800025440753,
+      "total_ms": 25.084600027184933,
+      "error": false
+    },
+    {
+      "id": "f09",
+      "category": "factual",
+      "retrieval_ms": 34.12159997969866,
+      "ttft_ms": 34.43050000350922,
+      "total_ms": 35.014100023545325,
+      "error": false
+    },
+    {
+      "id": "f10",
+      "category": "factual",
+      "retrieval_ms": 12.937700026668608,
+      "ttft_ms": 13.314400042872876,
+      "total_ms": 14.029700017999858,
+      "error": false
+    },
+    {
+      "id": "f11",
+      "category": "factual",
+      "retrieval_ms": 12.310299964156002,
+      "ttft_ms": 12.684299959801137,
+      "total_ms": 13.805399998091161,
+      "error": false
+    },
+    {
+      "id": "f12",
+      "category": "factual",
+      "retrieval_ms": 12.365599977783859,
+      "ttft_ms": 12.68539996817708,
+      "total_ms": 13.341000012587756,
+      "error": false
+    },
+    {
+      "id": "f13",
+      "category": "factual",
+      "retrieval_ms": 15.940100012812763,
+      "ttft_ms": 16.28270000219345,
+      "total_ms": 17.236700048670173,
+      "error": false
+    },
+    {
+      "id": "f14",
+      "category": "factual",
+      "retrieval_ms": 12.906000018119812,
+      "ttft_ms": 13.189600023906678,
+      "total_ms": 13.631500012706965,
+      "error": false
+    },
+    {
+      "id": "f15",
+      "category": "factual",
+      "retrieval_ms": 14.602899958845228,
+      "ttft_ms": 15.196399996057153,
+      "total_ms": 16.523499973118305,
+      "error": false
+    },
+    {
+      "id": "f16",
+      "category": "factual",
+      "retrieval_ms": 28.623600024729967,
+      "ttft_ms": 29.161500046029687,
+      "total_ms": 30.696700036060065,
+      "error": false
+    },
+    {
+      "id": "f17",
+      "category": "factual",
+      "retrieval_ms": 28.44099997309968,
+      "ttft_ms": 28.772099991329014,
+      "total_ms": 29.407399997580796,
+      "error": false
+    },
+    {
+      "id": "f18",
+      "category": "factual",
+      "retrieval_ms": 16.34229999035597,
+      "ttft_ms": 16.698800027370453,
+      "total_ms": 17.461400013417006,
+      "error": false
+    },
+    {
+      "id": "f19",
+      "category": "factual",
+      "retrieval_ms": 28.669800027273595,
+      "ttft_ms": 29.582200048025697,
+      "total_ms": 32.79080003267154,
+      "error": false
+    },
+    {
+      "id": "f20",
+      "category": "factual",
+      "retrieval_ms": 36.209499987307936,
+      "ttft_ms": 36.78999998373911,
+      "total_ms": 38.691399968229234,
+      "error": false
+    },
+    {
+      "id": "f21",
+      "category": "factual",
+      "retrieval_ms": 30.345499981194735,
+      "ttft_ms": 30.924600025173277,
+      "total_ms": 32.04299998469651,
+      "error": false
+    },
+    {
+      "id": "f22",
+      "category": "factual",
+      "retrieval_ms": 31.10339998966083,
+      "ttft_ms": 31.603299954440445,
+      "total_ms": 33.6437999503687,
+      "error": false
+    },
+    {
+      "id": "f23",
+      "category": "factual",
+      "retrieval_ms": 30.730500002391636,
+      "ttft_ms": 31.198500015307218,
+      "total_ms": 32.01119997538626,
+      "error": false
+    },
+    {
+      "id": "f24",
+      "category": "factual",
+      "retrieval_ms": 28.491699951700866,
+      "ttft_ms": 29.07639998011291,
+      "total_ms": 31.080799992196262,
+      "error": false
+    },
+    {
+      "id": "f25",
+      "category": "factual",
+      "retrieval_ms": 30.127600010018796,
+      "ttft_ms": 30.698099988512695,
+      "total_ms": 31.94929996971041,
+      "error": false
+    },
+    {
+      "id": "f26",
+      "category": "factual",
+      "retrieval_ms": 24.990900012198836,
+      "ttft_ms": 25.5413000122644,
+      "total_ms": 26.19780000532046,
+      "error": false
+    },
+    {
+      "id": "f27",
+      "category": "factual",
+      "retrieval_ms": 32.124800025485456,
+      "ttft_ms": 32.86179999122396,
+      "total_ms": 35.51379998680204,
+      "error": false
+    },
+    {
+      "id": "f28",
+      "category": "factual",
+      "retrieval_ms": 28.442999988328665,
+      "ttft_ms": 29.010500002186745,
+      "total_ms": 30.164299998432398,
+      "error": false
+    },
+    {
+      "id": "f29",
+      "category": "factual",
+      "retrieval_ms": 25.42750001884997,
+      "ttft_ms": 25.917000020854175,
+      "total_ms": 26.509899995289743,
+      "error": false
+    },
+    {
+      "id": "f30",
+      "category": "factual",
+      "retrieval_ms": 14.911799982655793,
+      "ttft_ms": 15.20859997253865,
+      "total_ms": 15.781699970830232,
+      "error": false
+    },
+    {
+      "id": "f31",
+      "category": "factual",
+      "retrieval_ms": 12.731800030451268,
+      "ttft_ms": 13.006500026676804,
+      "total_ms": 13.57300003292039,
+      "error": false
+    },
+    {
+      "id": "f32",
+      "category": "factual",
+      "retrieval_ms": 13.442699972074479,
+      "ttft_ms": 13.760700006969273,
+      "total_ms": 14.750199974514544,
+      "error": false
+    },
+    {
+      "id": "f33",
+      "category": "factual",
+      "retrieval_ms": 12.576399953104556,
+      "ttft_ms": 12.990099960006773,
+      "total_ms": 13.85589997516945,
+      "error": false
+    },
+    {
+      "id": "f34",
+      "category": "factual",
+      "retrieval_ms": 12.555000022985041,
+      "ttft_ms": 12.836500012781471,
+      "total_ms": 13.502700021490455,
+      "error": false
+    },
+    {
+      "id": "f35",
+      "category": "factual",
+      "retrieval_ms": 14.782900048885494,
+      "ttft_ms": 15.128300001379102,
+      "total_ms": 15.877800004091114,
+      "error": false
+    },
+    {
+      "id": "f36",
+      "category": "factual",
+      "retrieval_ms": 20.829299988690764,
+      "ttft_ms": 21.15889999549836,
+      "total_ms": 21.735500020440668,
+      "error": false
+    },
+    {
+      "id": "f37",
+      "category": "factual",
+      "retrieval_ms": 18.9004999701865,
+      "ttft_ms": 19.464799959678203,
+      "total_ms": 20.24299994809553,
+      "error": false
+    },
+    {
+      "id": "f38",
+      "category": "factual",
+      "retrieval_ms": 15.220900007989258,
+      "ttft_ms": 15.453700034413487,
+      "total_ms": 15.843100030906498,
+      "error": false
+    },
+    {
+      "id": "f39",
+      "category": "factual",
+      "retrieval_ms": 13.024199986830354,
+      "ttft_ms": 13.307599991094321,
+      "total_ms": 13.8868999783881,
+      "error": false
+    },
+    {
+      "id": "f40",
+      "category": "factual",
+      "retrieval_ms": 12.740699981804937,
+      "ttft_ms": 13.008899986743927,
+      "total_ms": 13.420899980701506,
+      "error": false
+    },
+    {
+      "id": "f41",
+      "category": "factual",
+      "retrieval_ms": 12.92399998055771,
+      "ttft_ms": 13.376299990341067,
+      "total_ms": 14.125899993814528,
+      "error": false
+    },
+    {
+      "id": "f42",
+      "category": "factual",
+      "retrieval_ms": 11.47929998114705,
+      "ttft_ms": 11.730299971532077,
+      "total_ms": 12.266599980648607,
+      "error": false
+    },
+    {
+      "id": "f43",
+      "category": "factual",
+      "retrieval_ms": 9.80679999338463,
+      "ttft_ms": 10.044399998150766,
+      "total_ms": 10.35649998812005,
+      "error": false
+    },
+    {
+      "id": "f44",
+      "category": "factual",
+      "retrieval_ms": 11.499900021590292,
+      "ttft_ms": 11.881900019943714,
+      "total_ms": 12.474199989810586,
+      "error": false
+    },
+    {
+      "id": "f45",
+      "category": "factual",
+      "retrieval_ms": 13.408800004981458,
+      "ttft_ms": 13.657799980137497,
+      "total_ms": 14.91089997580275,
+      "error": false
+    },
+    {
+      "id": "m01",
+      "category": "multihop",
+      "retrieval_ms": 11.015099997166544,
+      "ttft_ms": 11.289400048553944,
+      "total_ms": 11.881800019182265,
+      "error": false
+    },
+    {
+      "id": "m02",
+      "category": "multihop",
+      "retrieval_ms": 12.379299965687096,
+      "ttft_ms": 12.638399959541857,
+      "total_ms": 12.998899968806654,
+      "error": false
+    },
+    {
+      "id": "m03",
+      "category": "multihop",
+      "retrieval_ms": 11.68990001315251,
+      "ttft_ms": 12.133200012613088,
+      "total_ms": 12.690700008533895,
+      "error": false
+    },
+    {
+      "id": "m04",
+      "category": "multihop",
+      "retrieval_ms": 14.261500036809593,
+      "ttft_ms": 14.533500012475997,
+      "total_ms": 15.391900029499084,
+      "error": false
+    },
+    {
+      "id": "m05",
+      "category": "multihop",
+      "retrieval_ms": 11.673300003167242,
+      "ttft_ms": 12.33289996162057,
+      "total_ms": 13.252399978227913,
+      "error": false
+    },
+    {
+      "id": "m06",
+      "category": "multihop",
+      "retrieval_ms": 24.556700023822486,
+      "ttft_ms": 25.10420000180602,
+      "total_ms": 25.755700014997274,
+      "error": false
+    },
+    {
+      "id": "m07",
+      "category": "multihop",
+      "retrieval_ms": 27.324899972882122,
+      "ttft_ms": 27.751100016757846,
+      "total_ms": 28.57700001914054,
+      "error": false
+    },
+    {
+      "id": "m08",
+      "category": "multihop",
+      "retrieval_ms": 23.919400002341717,
+      "ttft_ms": 24.58269998896867,
+      "total_ms": 25.061699969228357,
+      "error": false
+    },
+    {
+      "id": "m09",
+      "category": "multihop",
+      "retrieval_ms": 31.46220004418865,
+      "ttft_ms": 31.83520003221929,
+      "total_ms": 33.6144000175409,
+      "error": false
+    },
+    {
+      "id": "m10",
+      "category": "multihop",
+      "retrieval_ms": 22.850199951790273,
+      "ttft_ms": 23.13819999108091,
+      "total_ms": 23.753799963742495,
+      "error": false
+    },
+    {
+      "id": "m11",
+      "category": "multihop",
+      "retrieval_ms": 31.58060001442209,
+      "ttft_ms": 33.72240002499893,
+      "total_ms": 35.40450002765283,
+      "error": false
+    },
+    {
+      "id": "m12",
+      "category": "multihop",
+      "retrieval_ms": 20.350400009192526,
+      "ttft_ms": 21.0549000184983,
+      "total_ms": 21.890000032726675,
+      "error": false
+    },
+    {
+      "id": "m13",
+      "category": "multihop",
+      "retrieval_ms": 29.922100016847253,
+      "ttft_ms": 30.222899978980422,
+      "total_ms": 30.873199983034283,
+      "error": false
+    },
+    {
+      "id": "m14",
+      "category": "multihop",
+      "retrieval_ms": 20.236800017300993,
+      "ttft_ms": 21.012499986682087,
+      "total_ms": 22.215500008314848,
+      "error": false
+    },
+    {
+      "id": "m15",
+      "category": "multihop",
+      "retrieval_ms": 26.263899984769523,
+      "ttft_ms": 27.477399969939142,
+      "total_ms": 29.199099983088672,
+      "error": false
+    },
+    {
+      "id": "m16",
+      "category": "multihop",
+      "retrieval_ms": 23.402999970130622,
+      "ttft_ms": 23.709299974143505,
+      "total_ms": 24.40629998454824,
+      "error": false
+    },
+    {
+      "id": "m17",
+      "category": "multihop",
+      "retrieval_ms": 23.025200003758073,
+      "ttft_ms": 23.841300047934055,
+      "total_ms": 26.001200021710247,
+      "error": false
+    },
+    {
+      "id": "m18",
+      "category": "multihop",
+      "retrieval_ms": 32.61430002748966,
+      "ttft_ms": 33.30940002342686,
+      "total_ms": 35.22550000343472,
+      "error": false
+    },
+    {
+      "id": "m19",
+      "category": "multihop",
+      "retrieval_ms": 64.6716000046581,
+      "ttft_ms": 65.22129999939352,
+      "total_ms": 66.52469997061417,
+      "error": false
+    },
+    {
+      "id": "m20",
+      "category": "multihop",
+      "retrieval_ms": 36.44350002286956,
+      "ttft_ms": 37.06100000999868,
+      "total_ms": 37.67009999137372,
+      "error": false
+    },
+    {
+      "id": "m21",
+      "category": "multihop",
+      "retrieval_ms": 38.27150003053248,
+      "ttft_ms": 38.726900005713105,
+      "total_ms": 39.64169998653233,
+      "error": false
+    },
+    {
+      "id": "m22",
+      "category": "multihop",
+      "retrieval_ms": 20.374400017317384,
+      "ttft_ms": 21.220399998128414,
+      "total_ms": 23.775600013323128,
+      "error": false
+    },
+    {
+      "id": "m23",
+      "category": "multihop",
+      "retrieval_ms": 15.081399993505329,
+      "ttft_ms": 15.941500023473054,
+      "total_ms": 16.544400015845895,
+      "error": false
+    },
+    {
+      "id": "m24",
+      "category": "multihop",
+      "retrieval_ms": 16.359200002625585,
+      "ttft_ms": 16.69610000681132,
+      "total_ms": 17.392300011124462,
+      "error": false
+    },
+    {
+      "id": "m25",
+      "category": "multihop",
+      "retrieval_ms": 15.062299964483827,
+      "ttft_ms": 15.73179999832064,
+      "total_ms": 17.04559999052435,
+      "error": false
+    },
+    {
+      "id": "c01",
+      "category": "comparison",
+      "retrieval_ms": 26.060600008349866,
+      "ttft_ms": 26.396000001113862,
+      "total_ms": 26.878700009547174,
+      "error": false
+    },
+    {
+      "id": "c02",
+      "category": "comparison",
+      "retrieval_ms": 20.650000020395964,
+      "ttft_ms": 21.098700002767146,
+      "total_ms": 21.59259998006746,
+      "error": false
+    },
+    {
+      "id": "c03",
+      "category": "comparison",
+      "retrieval_ms": 13.421500043477863,
+      "ttft_ms": 13.713700056541711,
+      "total_ms": 14.300900045782328,
+      "error": false
+    },
+    {
+      "id": "c04",
+      "category": "comparison",
+      "retrieval_ms": 15.428899961989373,
+      "ttft_ms": 15.763800009153783,
+      "total_ms": 16.397700004745275,
+      "error": false
+    },
+    {
+      "id": "c05",
+      "category": "comparison",
+      "retrieval_ms": 15.57330001378432,
+      "ttft_ms": 15.953599999193102,
+      "total_ms": 17.152000044006854,
+      "error": false
+    },
+    {
+      "id": "c06",
+      "category": "comparison",
+      "retrieval_ms": 16.974099969957024,
+      "ttft_ms": 17.763399984687567,
+      "total_ms": 18.504499981645495,
+      "error": false
+    },
+    {
+      "id": "c07",
+      "category": "comparison",
+      "retrieval_ms": 13.23219999903813,
+      "ttft_ms": 13.505999988410622,
+      "total_ms": 15.22789994487539,
+      "error": false
+    },
+    {
+      "id": "c08",
+      "category": "comparison",
+      "retrieval_ms": 17.249499971512705,
+      "ttft_ms": 17.50840002205223,
+      "total_ms": 17.87280000280589,
+      "error": false
+    },
+    {
+      "id": "c09",
+      "category": "comparison",
+      "retrieval_ms": 13.838700018823147,
+      "ttft_ms": 14.248299994505942,
+      "total_ms": 16.335399996023625,
+      "error": false
+    },
+    {
+      "id": "c10",
+      "category": "comparison",
+      "retrieval_ms": 17.162400006782264,
+      "ttft_ms": 17.467099998611957,
+      "total_ms": 18.059900030493736,
+      "error": false
+    },
+    {
+      "id": "c11",
+      "category": "comparison",
+      "retrieval_ms": 11.387799982912838,
+      "ttft_ms": 11.667300015687943,
+      "total_ms": 12.019400019198656,
+      "error": false
+    },
+    {
+      "id": "c12",
+      "category": "comparison",
+      "retrieval_ms": 10.963600012473762,
+      "ttft_ms": 11.192400008440018,
+      "total_ms": 11.685700039379299,
+      "error": false
+    },
+    {
+      "id": "c13",
+      "category": "comparison",
+      "retrieval_ms": 22.69349998096004,
+      "ttft_ms": 23.130399989895523,
+      "total_ms": 23.774500004947186,
+      "error": false
+    },
+    {
+      "id": "c14",
+      "category": "comparison",
+      "retrieval_ms": 11.026800028048456,
+      "ttft_ms": 11.242799984756857,
+      "total_ms": 11.678999988362193,
+      "error": false
+    },
+    {
+      "id": "c15",
+      "category": "comparison",
+      "retrieval_ms": 11.888000008184463,
+      "ttft_ms": 12.097200029529631,
+      "total_ms": 12.4795000301674,
+      "error": false
+    },
+    {
+      "id": "c16",
+      "category": "comparison",
+      "retrieval_ms": 12.715400021988899,
+      "ttft_ms": 13.030000030994415,
+      "total_ms": 13.857799989636987,
+      "error": false
+    },
+    {
+      "id": "c17",
+      "category": "comparison",
+      "retrieval_ms": 16.495300049427897,
+      "ttft_ms": 16.777000040747225,
+      "total_ms": 17.13480002945289,
+      "error": false
+    },
+    {
+      "id": "c18",
+      "category": "comparison",
+      "retrieval_ms": 11.960800038650632,
+      "ttft_ms": 12.293400010094047,
+      "total_ms": 13.338399992790073,
+      "error": false
+    },
+    {
+      "id": "c19",
+      "category": "comparison",
+      "retrieval_ms": 24.61989998118952,
+      "ttft_ms": 25.118199991993606,
+      "total_ms": 26.045799953863025,
+      "error": false
+    },
+    {
+      "id": "c20",
+      "category": "comparison",
+      "retrieval_ms": 12.742199993226677,
+      "ttft_ms": 13.015499978791922,
+      "total_ms": 13.39509995887056,
+      "error": false
+    },
+    {
+      "id": "c21",
+      "category": "comparison",
+      "retrieval_ms": 12.59669999126345,
+      "ttft_ms": 12.854999979026616,
+      "total_ms": 13.24689999455586,
+      "error": false
+    },
+    {
+      "id": "c22",
+      "category": "comparison",
+      "retrieval_ms": 15.482300019357353,
+      "ttft_ms": 16.006599995307624,
+      "total_ms": 17.061399994418025,
+      "error": false
+    },
+    {
+      "id": "c23",
+      "category": "comparison",
+      "retrieval_ms": 15.777199994772673,
+      "ttft_ms": 16.06230001198128,
+      "total_ms": 16.425699985120445,
+      "error": false
+    },
+    {
+      "id": "c24",
+      "category": "comparison",
+      "retrieval_ms": 12.418100028298795,
+      "ttft_ms": 12.677300022915006,
+      "total_ms": 13.182200025767088,
+      "error": false
+    },
+    {
+      "id": "c25",
+      "category": "comparison",
+      "retrieval_ms": 11.770899989642203,
+      "ttft_ms": 12.010400008875877,
+      "total_ms": 12.624399969354272,
+      "error": false
+    },
+    {
+      "id": "u01",
+      "category": "unanswerable",
+      "retrieval_ms": 32.548699993640184,
+      "ttft_ms": 33.246600010897964,
+      "total_ms": 34.03709997655824,
+      "error": false
+    },
+    {
+      "id": "u02",
+      "category": "unanswerable",
+      "retrieval_ms": 37.203899992164224,
+      "ttft_ms": 37.837999989278615,
+      "total_ms": 38.716299983207136,
+      "error": false
+    },
+    {
+      "id": "u03",
+      "category": "unanswerable",
+      "retrieval_ms": 25.442800018936396,
+      "ttft_ms": 26.14139998331666,
+      "total_ms": 27.115700009744614,
+      "error": false
+    },
+    {
+      "id": "u04",
+      "category": "unanswerable",
+      "retrieval_ms": 15.385499980766326,
+      "ttft_ms": 15.814999991562217,
+      "total_ms": 16.782700025942177,
+      "error": false
+    },
+    {
+      "id": "u05",
+      "category": "unanswerable",
+      "retrieval_ms": 24.116899992804974,
+      "ttft_ms": 24.622900004033,
+      "total_ms": 25.43149999110028,
+      "error": false
+    },
+    {
+      "id": "u06",
+      "category": "unanswerable",
+      "retrieval_ms": 14.797799987718463,
+      "ttft_ms": 15.467200020793825,
+      "total_ms": 16.468700021505356,
+      "error": false
+    },
+    {
+      "id": "u07",
+      "category": "unanswerable",
+      "retrieval_ms": 23.35299999685958,
+      "ttft_ms": 23.84189999429509,
+      "total_ms": 24.362399999517947,
+      "error": false
+    },
+    {
+      "id": "u08",
+      "category": "unanswerable",
+      "retrieval_ms": 18.503099970985204,
+      "ttft_ms": 18.83989997440949,
+      "total_ms": 19.23570001963526,
+      "error": false
+    },
+    {
+      "id": "u09",
+      "category": "unanswerable",
+      "retrieval_ms": 18.670700024813414,
+      "ttft_ms": 19.14510002825409,
+      "total_ms": 19.94249998824671,
+      "error": false
+    },
+    {
+      "id": "u10",
+      "category": "unanswerable",
+      "retrieval_ms": 18.81040004082024,
+      "ttft_ms": 19.313100026920438,
+      "total_ms": 20.109000033698976,
+      "error": false
+    },
+    {
+      "id": "u11",
+      "category": "unanswerable",
+      "retrieval_ms": 18.676100007724017,
+      "ttft_ms": 18.98960000835359,
+      "total_ms": 19.3987000384368,
+      "error": false
+    },
+    {
+      "id": "u12",
+      "category": "unanswerable",
+      "retrieval_ms": 17.04470004187897,
+      "ttft_ms": 17.440600029658526,
+      "total_ms": 18.14840000588447,
+      "error": false
+    },
+    {
+      "id": "u13",
+      "category": "unanswerable",
+      "retrieval_ms": 11.786100047174841,
+      "ttft_ms": 12.23510003183037,
+      "total_ms": 12.594000028911978,
+      "error": false
+    },
+    {
+      "id": "u14",
+      "category": "unanswerable",
+      "retrieval_ms": 12.990299961529672,
+      "ttft_ms": 13.2603999809362,
+      "total_ms": 13.858299993444234,
+      "error": false
+    },
+    {
+      "id": "u15",
+      "category": "unanswerable",
+      "retrieval_ms": 12.785599974449724,
+      "ttft_ms": 13.064200000371784,
+      "total_ms": 13.846300018485636,
+      "error": false
+    },
+    {
+      "id": "u16",
+      "category": "unanswerable",
+      "retrieval_ms": 12.60850002290681,
+      "ttft_ms": 12.88120000390336,
+      "total_ms": 13.219100015703589,
+      "error": false
+    },
+    {
+      "id": "u17",
+      "category": "unanswerable",
+      "retrieval_ms": 15.518500003963709,
+      "ttft_ms": 15.826300019398332,
+      "total_ms": 16.15090004634112,
+      "error": false
+    },
+    {
+      "id": "u18",
+      "category": "unanswerable",
+      "retrieval_ms": 11.858199955895543,
+      "ttft_ms": 12.228399980813265,
+      "total_ms": 14.165000000502914,
+      "error": false
+    },
+    {
+      "id": "u19",
+      "category": "unanswerable",
+      "retrieval_ms": 14.264600002206862,
+      "ttft_ms": 14.772400027140975,
+      "total_ms": 15.612500021234155,
+      "error": false
+    },
+    {
+      "id": "u20",
+      "category": "unanswerable",
+      "retrieval_ms": 16.391999961342663,
+      "ttft_ms": 16.6915999725461,
+      "total_ms": 17.384000006131828,
+      "error": false
+    },
+    {
+      "id": "u21",
+      "category": "unanswerable",
+      "retrieval_ms": 14.68119997298345,
+      "ttft_ms": 14.945599948987365,
+      "total_ms": 15.31229994725436,
+      "error": false
+    },
+    {
+      "id": "u22",
+      "category": "unanswerable",
+      "retrieval_ms": 13.414599990937859,
+      "ttft_ms": 13.664599973708391,
+      "total_ms": 14.011299994308501,
+      "error": false
+    },
+    {
+      "id": "u23",
+      "category": "unanswerable",
+      "retrieval_ms": 13.296500022988766,
+      "ttft_ms": 13.600800011772662,
+      "total_ms": 14.029800018761307,
+      "error": false
+    },
+    {
+      "id": "u24",
+      "category": "unanswerable",
+      "retrieval_ms": 14.720899984240532,
+      "ttft_ms": 15.01149998512119,
+      "total_ms": 15.32880001468584,
+      "error": false
+    },
+    {
+      "id": "u25",
+      "category": "unanswerable",
+      "retrieval_ms": 17.50189997255802,
+      "ttft_ms": 17.929199966602027,
+      "total_ms": 18.388399970717728,
+      "error": false
+    },
+    {
+      "id": "x01",
+      "category": "exact_id",
+      "retrieval_ms": 14.516299997922033,
+      "ttft_ms": 15.472900005988777,
+      "total_ms": 16.833200003020465,
+      "error": false
+    },
+    {
+      "id": "x02",
+      "category": "exact_id",
+      "retrieval_ms": 13.683700002729893,
+      "ttft_ms": 14.17450001463294,
+      "total_ms": 14.866799989249557,
+      "error": false
+    },
+    {
+      "id": "x03",
+      "category": "exact_id",
+      "retrieval_ms": 17.385499959345907,
+      "ttft_ms": 17.731299973092973,
+      "total_ms": 18.35869997739792,
+      "error": false
+    },
+    {
+      "id": "x04",
+      "category": "exact_id",
+      "retrieval_ms": 13.565099972765893,
+      "ttft_ms": 13.911399990320206,
+      "total_ms": 14.507099986076355,
+      "error": false
+    },
+    {
+      "id": "x05",
+      "category": "exact_id",
+      "retrieval_ms": 15.332399983890355,
+      "ttft_ms": 15.735100023448467,
+      "total_ms": 16.508899978362024,
+      "error": false
+    },
+    {
+      "id": "x06",
+      "category": "exact_id",
+      "retrieval_ms": 13.11499997973442,
+      "ttft_ms": 13.4023999562487,
+      "total_ms": 13.982100004795939,
+      "error": false
+    },
+    {
+      "id": "x07",
+      "category": "exact_id",
+      "retrieval_ms": 12.901300040539354,
+      "ttft_ms": 13.216699997428805,
+      "total_ms": 13.719100039452314,
+      "error": false
+    },
+    {
+      "id": "x08",
+      "category": "exact_id",
+      "retrieval_ms": 11.816499987617135,
+      "ttft_ms": 12.041700014378875,
+      "total_ms": 12.655500031542033,
+      "error": false
+    },
+    {
+      "id": "x09",
+      "category": "exact_id",
+      "retrieval_ms": 20.70539997657761,
+      "ttft_ms": 20.970899960957468,
+      "total_ms": 21.62099996348843,
+      "error": false
+    },
+    {
+      "id": "x10",
+      "category": "exact_id",
+      "retrieval_ms": 12.699599959887564,
+      "ttft_ms": 12.959699961356819,
+      "total_ms": 13.503099966328591,
+      "error": false
+    },
+    {
+      "id": "x11",
+      "category": "exact_id",
+      "retrieval_ms": 10.824400000274181,
+      "ttft_ms": 11.085700010880828,
+      "total_ms": 11.66190003277734,
+      "error": false
+    },
+    {
+      "id": "x12",
+      "category": "exact_id",
+      "retrieval_ms": 12.49579997966066,
+      "ttft_ms": 12.782700010575354,
+      "total_ms": 13.264100009109825,
+      "error": false
+    },
+    {
+      "id": "x13",
+      "category": "exact_id",
+      "retrieval_ms": 12.217999959830195,
+      "ttft_ms": 12.464899977203459,
+      "total_ms": 12.812600005418062,
+      "error": false
+    },
+    {
+      "id": "x14",
+      "category": "exact_id",
+      "retrieval_ms": 11.840599996503443,
+      "ttft_ms": 12.090499978512526,
+      "total_ms": 12.452599999960512,
+      "error": false
+    },
+    {
+      "id": "x15",
+      "category": "exact_id",
+      "retrieval_ms": 11.709699989296496,
+      "ttft_ms": 12.002900009974837,
+      "total_ms": 12.656499980948865,
+      "error": false
+    },
+    {
+      "id": "x16",
+      "category": "exact_id",
+      "retrieval_ms": 16.438900027424097,
+      "ttft_ms": 16.829200030770153,
+      "total_ms": 17.938500037416816,
+      "error": false
+    },
+    {
+      "id": "x17",
+      "category": "exact_id",
+      "retrieval_ms": 15.743000025395304,
+      "ttft_ms": 16.356000036466867,
+      "total_ms": 17.11690000956878,
+      "error": false
+    },
+    {
+      "id": "x18",
+      "category": "exact_id",
+      "retrieval_ms": 11.83199998922646,
+      "ttft_ms": 12.157299963291734,
+      "total_ms": 12.840499985031784,
+      "error": false
+    },
+    {
+      "id": "x19",
+      "category": "exact_id",
+      "retrieval_ms": 13.419300026725978,
+      "ttft_ms": 13.73160001821816,
+      "total_ms": 14.41300002625212,
+      "error": false
+    },
+    {
+      "id": "x20",
+      "category": "exact_id",
+      "retrieval_ms": 12.193200003821403,
+      "ttft_ms": 12.52849999582395,
+      "total_ms": 13.244599977042526,
+      "error": false
+    },
+    {
+      "id": "x21",
+      "category": "exact_id",
+      "retrieval_ms": 11.493899975903332,
+      "ttft_ms": 11.755299987271428,
+      "total_ms": 12.344199989456683,
+      "error": false
+    },
+    {
+      "id": "x22",
+      "category": "exact_id",
+      "retrieval_ms": 10.145800013560802,
+      "ttft_ms": 10.73119998909533,
+      "total_ms": 12.038199987728149,
+      "error": false
+    },
+    {
+      "id": "x23",
+      "category": "exact_id",
+      "retrieval_ms": 11.191300000064075,
+      "ttft_ms": 11.446499964222312,
+      "total_ms": 11.919999960809946,
+      "error": false
+    },
+    {
+      "id": "x24",
+      "category": "exact_id",
+      "retrieval_ms": 12.721500010229647,
+      "ttft_ms": 13.004200009163469,
+      "total_ms": 13.559299986809492,
+      "error": false
+    },
+    {
+      "id": "x25",
+      "category": "exact_id",
+      "retrieval_ms": 22.844100021757185,
+      "ttft_ms": 23.427699983585626,
+      "total_ms": 24.27739999257028,
+      "error": false
+    },
+    {
+      "id": "fu01",
+      "category": "followup",
+      "retrieval_ms": 19.685300008859485,
+      "ttft_ms": 20.24630003143102,
+      "total_ms": 21.49090002058074,
+      "error": false
+    },
+    {
+      "id": "fu02",
+      "category": "followup",
+      "retrieval_ms": 14.823800011072308,
+      "ttft_ms": 15.023900021333247,
+      "total_ms": 15.411400003358722,
+      "error": false
+    },
+    {
+      "id": "fu03",
+      "category": "followup",
+      "retrieval_ms": 28.111000021453947,
+      "ttft_ms": 28.772299992851913,
+      "total_ms": 30.684800003655255,
+      "error": false
+    },
+    {
+      "id": "fu04",
+      "category": "followup",
+      "retrieval_ms": 16.670299984980375,
+      "ttft_ms": 17.178300011437386,
+      "total_ms": 17.941500002052635,
+      "error": false
+    },
+    {
+      "id": "fu05",
+      "category": "followup",
+      "retrieval_ms": 12.407900008838624,
+      "ttft_ms": 12.655000027734786,
+      "total_ms": 12.98650004900992,
+      "error": false
+    },
+    {
+      "id": "fu06",
+      "category": "followup",
+      "retrieval_ms": 18.70549999875948,
+      "ttft_ms": 19.085100037045777,
+      "total_ms": 19.872000033501536,
+      "error": false
+    },
+    {
+      "id": "fu07",
+      "category": "followup",
+      "retrieval_ms": 9.769399999640882,
+      "ttft_ms": 9.987900033593178,
+      "total_ms": 10.334799997508526,
+      "error": false
+    },
+    {
+      "id": "fu08",
+      "category": "followup",
+      "retrieval_ms": 11.985399993136525,
+      "ttft_ms": 12.483800004702061,
+      "total_ms": 12.81290000770241,
+      "error": false
+    },
+    {
+      "id": "fu09",
+      "category": "followup",
+      "retrieval_ms": 14.68259998364374,
+      "ttft_ms": 14.958399988245219,
+      "total_ms": 15.603400010149926,
+      "error": false
+    },
+    {
+      "id": "fu10",
+      "category": "followup",
+      "retrieval_ms": 11.125600023660809,
+      "ttft_ms": 11.48400001693517,
+      "total_ms": 11.887900007423013,
+      "error": false
+    },
+    {
+      "id": "fu11",
+      "category": "followup",
+      "retrieval_ms": 10.591099970042706,
+      "ttft_ms": 10.79510001000017,
+      "total_ms": 11.107800004538149,
+      "error": false
+    },
+    {
+      "id": "fu12",
+      "category": "followup",
+      "retrieval_ms": 13.737700006458908,
+      "ttft_ms": 13.976999965962023,
+      "total_ms": 14.426600013393909,
+      "error": false
+    },
+    {
+      "id": "fu13",
+      "category": "followup",
+      "retrieval_ms": 12.76549999602139,
+      "ttft_ms": 12.994999997317791,
+      "total_ms": 13.49450001725927,
+      "error": false
+    },
+    {
+      "id": "fu14",
+      "category": "followup",
+      "retrieval_ms": 12.34620000468567,
+      "ttft_ms": 12.58019998203963,
+      "total_ms": 12.918899999931455,
+      "error": false
+    },
+    {
+      "id": "fu15",
+      "category": "followup",
+      "retrieval_ms": 13.641399971675128,
+      "ttft_ms": 13.85300001129508,
+      "total_ms": 14.31080000475049,
+      "error": false
+    },
+    {
+      "id": "fu16",
+      "category": "followup",
+      "retrieval_ms": 11.415099957957864,
+      "ttft_ms": 11.628500011283904,
+      "total_ms": 11.987900012172759,
+      "error": false
+    },
+    {
+      "id": "fu17",
+      "category": "followup",
+      "retrieval_ms": 10.976399993523955,
+      "ttft_ms": 11.223399953451008,
+      "total_ms": 11.613399954512715,
+      "error": false
+    },
+    {
+      "id": "fu18",
+      "category": "followup",
+      "retrieval_ms": 10.853799991309643,
+      "ttft_ms": 11.081399978138506,
+      "total_ms": 11.696200002916157,
+      "error": false
+    },
+    {
+      "id": "fu19",
+      "category": "followup",
+      "retrieval_ms": 11.960500036366284,
+      "ttft_ms": 12.199799995869398,
+      "total_ms": 12.516200018581003,
+      "error": false
+    },
+    {
+      "id": "fu20",
+      "category": "followup",
+      "retrieval_ms": 12.878499983344227,
+      "ttft_ms": 13.120099960360676,
+      "total_ms": 13.58179998351261,
+      "error": false
+    }
+  ]
+}

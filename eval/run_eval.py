@@ -97,7 +97,8 @@ def expected_sources(q: dict[str, Any]) -> list[str]:
 async def index_corpus(tenant: str = TENANT) -> tuple[int, dict[str, str]]:
     """Index the corpus; returns (chunks, {unit: section text}) for label validation."""
     total, units = 0, {}
-    for doc in sorted((EVAL_DIR / "corpus").glob("*.md")):
+    # Gold documents plus the generated hard negatives in corpus/distractors/.
+    for doc in sorted((EVAL_DIR / "corpus").rglob("*.md")):
         result = await WorkflowExecutor(build_index_workflow()).run(
             {"tenant": tenant, "text": doc.read_text(encoding="utf-8"), "filename": doc.name}
         )
