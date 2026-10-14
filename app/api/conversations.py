@@ -15,7 +15,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.rag.memory import store
 
 router = APIRouter(prefix="/conversations", tags=["conversations"])
@@ -23,18 +23,21 @@ router = APIRouter(prefix="/conversations", tags=["conversations"])
 
 @router.get("")
 async def list_conversations(user: CurrentUser, tenant: str = Query("default")) -> dict[str, Any]:
+    require_tenant(user, tenant, "query")
     convs = store.list_conversations(tenant, user["id"])
     return {"tenant": tenant, "total": len(convs), "conversations": [c.summary() for c in convs]}
 
 
 @router.post("", status_code=201)
 async def new_conversation(user: CurrentUser, tenant: str = Query("default")) -> dict[str, Any]:
+    require_tenant(user, tenant, "query")
     return store.create(tenant, user["id"]).summary()
 
 
 @router.get("/{conversation_id}")
 async def get_conversation(conversation_id: str, user: CurrentUser,
                            tenant: str = Query("default")) -> dict[str, Any]:
+    require_tenant(user, tenant, "query")
     conv = store.get(tenant, user["id"], conversation_id)
     if conv is None:
         raise HTTPException(404, "Conversation not found")
@@ -44,6 +47,7 @@ async def get_conversation(conversation_id: str, user: CurrentUser,
 @router.delete("/{conversation_id}")
 async def clear_conversation(conversation_id: str, user: CurrentUser,
                              tenant: str = Query("default")) -> dict[str, Any]:
+    require_tenant(user, tenant, "query")
     if not store.delete(tenant, user["id"], conversation_id):
         raise HTTPException(404, "Conversation not found")
     return {"status": "deleted", "conversation_id": conversation_id}
@@ -51,6 +55,7 @@ async def clear_conversation(conversation_id: str, user: CurrentUser,
 
 @router.delete("")
 async def clear_all(user: CurrentUser, tenant: str = Query("default")) -> dict[str, Any]:
+    require_tenant(user, tenant, "query")
     convs = store.list_conversations(tenant, user["id"])
     for c in convs:
         store.delete(tenant, user["id"], c.id)

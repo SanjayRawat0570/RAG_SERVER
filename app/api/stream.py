@@ -32,7 +32,7 @@ from fastapi import APIRouter, Depends, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_tenant
 from app.api.pipelines import DIM, STORE, build_agentic_retrieval_workflow, default_provider
 from app.engine.context import ExecutionContext
 from app.engine.executor import WorkflowExecutor
@@ -344,6 +344,7 @@ async def stream_rag_ask(
     With ``conversation_id`` (or a new conversation), a follow-up is first
     rewritten into a standalone question, announced in a ``memory`` event.
     """
+    require_tenant(user, body.tenant, "query")
     provider = body.provider or default_provider()
 
     async def event_source() -> AsyncIterator[str]:

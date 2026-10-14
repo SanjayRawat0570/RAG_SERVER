@@ -23,7 +23,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query as QParam
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.rag.security import (
     AuditAction, compliance_report,
     create_api_key, data_inventory, decrypt, delete_user_data,
@@ -31,6 +31,7 @@ from app.rag.security import (
     list_api_keys, log_event, reset_api_keys, reset_audit,
     revoke_api_key, verify_api_key,
 )
+from app.rag.security.rbac import ROLES, role_rank
 
 router = APIRouter(prefix="/security", tags=["security"])
 
@@ -56,7 +57,10 @@ class DecryptRequest(BaseModel):
 
 
 class CreateKeyRequest(BaseModel):
-    name: str = Field(..., min_length=1)
+    name:   str = Field(..., min_length=1)
+    # Scope the key to one tenant (required for data access, e.g. the MCP server).
+    tenant: str | None = None
+    role:   str = Field("member", description="viewer | member | admin | owner")
 
 
 class VerifyKeyRequest(BaseModel):
@@ -161,12 +165,24 @@ async def gdpr_delete(user: CurrentUser) -> dict[str, Any]:
 
 @router.post("/api-keys", status_code=201)
 async def create_key(req: CreateKeyRequest, user: CurrentUser) -> dict[str, Any]:
-    key_record, plaintext = create_api_key(user["id"], req.name)
+    if user.get("auth") == "api_key":
+        raise HTTPException(403, "API keys cannot create other API keys")
+    if req.role not in ROLES:
+        raise HTTPException(422, f"role must be one of {', '.join(ROLES)}")
+    if req.tenant:
+        # A key can never hold more rights than its creator has in that tenant.
+        creator_role = require_tenant(user, req.tenant, "query")
+        if role_rank(req.role) > role_rank(creator_role):
+            raise HTTPException(403, f"you are '{creator_role}' in '{req.tenant}' and cannot "
+                                     f"create a '{req.role}' key")
+    key_record, plaintext = create_api_key(user["id"], req.name, tenant=req.tenant, role=req.role)
     log_event(user["id"], AuditAction.API_KEY_CREATE, resource=key_record.id)
     return {
         "id":         key_record.id,
         "name":       key_record.name,
         "prefix":     key_record.prefix,
+        "tenant":     key_record.tenant,
+        "role":       key_record.role,
         "key":        plaintext,           # shown exactly once
         "created_at": key_record.created_at.isoformat(),
         "warning":    "Store this key now — it won't be shown again.",
@@ -183,6 +199,8 @@ async def list_keys(user: CurrentUser) -> dict[str, Any]:
                 "id":          k.id,
                 "name":        k.name,
                 "prefix":      k.prefix,
+                "tenant":      k.tenant,
+                "role":        k.role,
                 "revoked":     k.revoked,
                 "usage_count": k.usage_count,
                 "created_at":  k.created_at.isoformat(),
@@ -213,6 +231,18 @@ async def verify_key(req: VerifyKeyRequest, _: CurrentUser) -> dict[str, Any]:
         "user_id":     key.user_id,
         "name":        key.name,
         "usage_count": key.usage_count,
+    }
+
+
+@router.get("/whoami")
+async def whoami(user: CurrentUser) -> dict[str, Any]:
+    """Who the credentials belong to — the MCP server uses it to learn its key's tenant."""
+    return {
+        "user_id": user["id"],
+        "auth":    user.get("auth", "session"),
+        "tenant":  user.get("tenant"),
+        "role":    user.get("role"),
+        "key_name": user["username"][len("api-key:"):] if user.get("auth") == "api_key" else None,
     }
 
 

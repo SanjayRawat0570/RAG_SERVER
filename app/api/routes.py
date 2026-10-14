@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from app.api.deps import get_optional_user
+from app.api.deps import get_optional_user, require_tenant
 from app.api.pipelines import (
     build_agentic_workflow,
     build_ask_workflow,
@@ -38,6 +38,12 @@ class IndexRequest(BaseModel):
     tenant: str = "default"
     text: str
     filename: str = "document.md"
+
+
+class SearchRequest(BaseModel):
+    tenant: str = "default"
+    query: str = Field(..., min_length=1)
+    top_k: int = Field(5, ge=1, le=20)
 
 
 class AskRequest(BaseModel):
@@ -105,8 +111,12 @@ async def validate_workflow(workflow: WorkflowDef) -> dict:
 
 
 @router.post("/rag/index", tags=["rag"])
-async def rag_index(request: IndexRequest) -> dict:
+async def rag_index(
+    request: IndexRequest,
+    user: Annotated[dict, Depends(get_optional_user)],
+) -> dict:
     """Ingest → chunk → embed → upsert a document into the tenant's namespace."""
+    require_tenant(user, request.tenant, "ingest")
     executor = WorkflowExecutor(build_index_workflow())
     result = await executor.run(request.model_dump())
     if result.status != "success":
@@ -126,6 +136,7 @@ async def rag_ask(
       lookup_entity), evaluates the evidence and may rewrite the query and search
       again; the response includes the ``steps`` trace.
     """
+    require_tenant(user, request.tenant, "query")
     provider = request.provider or default_provider()
     # Conversation memory: rewrite a follow-up into a standalone question first.
     memory_ctx = await memory.before(tenant=request.tenant, user_id=user["id"],
@@ -160,6 +171,39 @@ async def rag_ask(
     except Exception:
         pass
     return {**out, "run_id": result.run_id, "duration_ms": result.duration_ms}
+
+
+@router.post("/rag/search", tags=["rag"])
+async def rag_search(
+    request: SearchRequest,
+    user: Annotated[dict, Depends(get_optional_user)],
+) -> dict:
+    """Hybrid search (dense + BM25 → RRF → rerank) in one tenant's knowledge base.
+
+    Returns passages without generating an answer — used by the MCP
+    ``search_knowledge_base`` tool. Tenant access is checked like ``/rag/ask``.
+    """
+    from app.rag.agent.tools import ToolContext, hybrid_search
+
+    require_tenant(user, request.tenant, "query")
+    hits = await hybrid_search(request.query, ToolContext(tenant=request.tenant, top_k=request.top_k))
+    return {
+        "tenant": request.tenant,
+        "query": request.query,
+        "results": [
+            {
+                "rank": i + 1,
+                "doc_id": h.get("metadata", {}).get("document_id"),
+                "chunk_id": h.get("id"),
+                "source": h.get("metadata", {}).get("source"),
+                "heading": h.get("metadata", {}).get("heading"),
+                "page": h.get("metadata", {}).get("page"),
+                "score": round(float(h.get("score", 0.0)), 4),
+                "text": h.get("metadata", {}).get("text", ""),
+            }
+            for i, h in enumerate(hits)
+        ],
+    }
 
 
 @router.get("/merge-strategies", tags=["meta"])

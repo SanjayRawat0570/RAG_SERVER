@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPException, UploadFile
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_tenant
 from app.api.pipelines import build_index_workflow
 from app.config import settings
 from app.engine.executor import WorkflowExecutor
@@ -168,6 +168,7 @@ async def upload_document(
     tenant: str        = Form(default="acme"),
     user:   dict       = Depends(get_current_user),
 ) -> dict:
+    require_tenant(user, tenant, "ingest")
     filename = file.filename or "document"
     ext      = os.path.splitext(filename)[1].lower()
 

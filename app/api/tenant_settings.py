@@ -10,7 +10,7 @@ from typing import Any
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.rag.tenants.ai_settings import (
     DEFAULT_EXAMPLES,
     FewShotExample,
@@ -43,12 +43,15 @@ def _view(tenant: str) -> dict[str, Any]:
 
 
 @router.get("/{tenant}")
-async def read_settings(tenant: str, _: CurrentUser) -> dict[str, Any]:
+async def read_settings(tenant: str, user: CurrentUser) -> dict[str, Any]:
+    require_tenant(user, tenant, "query")
     return _view(tenant)
 
 
 @router.put("/{tenant}")
-async def write_settings(tenant: str, body: SettingsUpdate, _: CurrentUser) -> dict[str, Any]:
+async def write_settings(tenant: str, body: SettingsUpdate, user: CurrentUser) -> dict[str, Any]:
+    # Examples change every answer and vision costs money: admins only.
+    require_tenant(user, tenant, "manage")
     changes: dict[str, Any] = body.model_dump(exclude_unset=True, exclude={"reset_examples"})
     if body.reset_examples:
         changes["few_shot_examples"] = None
