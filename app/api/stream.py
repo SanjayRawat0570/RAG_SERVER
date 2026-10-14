@@ -28,11 +28,11 @@ import time
 import uuid
 from typing import Any, AsyncIterator, Literal
 
-from fastapi import APIRouter, Depends, Request, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, HTTPException, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from app.api.deps import get_current_user, require_tenant
+from app.api.deps import get_current_user, get_optional_user, require_tenant
 from app.api.pipelines import DIM, STORE, build_agentic_retrieval_workflow, default_provider
 from app.engine.context import ExecutionContext
 from app.engine.executor import WorkflowExecutor
@@ -393,8 +393,22 @@ async def ws_rag_ask(ws: WebSocket) -> None:
 
     The connection stays open after completion so the client can ask follow-up
     questions. Send ``{"type": "close"}`` or disconnect to end the session.
+
+    Credentials (optional, like ``/rag/ask``): ``Authorization`` / ``X-API-Key``
+    headers, or ``?token=`` / ``?api_key=`` query parameters for browsers, which
+    cannot set WebSocket headers. Every ask is checked against its tenant with
+    the same RBAC as the REST API; invalid credentials close with code 4401.
     """
     await ws.accept()
+    token = ws.query_params.get("token", "")
+    authorization = ws.headers.get("authorization") or (f"Bearer {token}" if token else "")
+    api_key = ws.headers.get("x-api-key") or ws.query_params.get("api_key", "")
+    try:
+        user = await get_optional_user(authorization, api_key)
+    except HTTPException as exc:
+        await ws.send_json({"event": "error", "detail": exc.detail, "status": exc.status_code})
+        await ws.close(code=4401)
+        return
     try:
         while True:
             data = await ws.receive_json()
@@ -412,6 +426,11 @@ async def ws_rag_ask(ws: WebSocket) -> None:
             tenant      = str(data.get("tenant", "default"))
             provider    = str(data.get("provider") or default_provider())
             cancel      = asyncio.Event()
+            try:
+                require_tenant(user, tenant, "query")
+            except HTTPException as exc:
+                await ws.send_json({"event": "error", "detail": exc.detail, "status": exc.status_code})
+                continue
 
             # Listen for cancel messages concurrently while the pipeline runs
             async def _monitor_cancel() -> None:
@@ -431,7 +450,8 @@ async def ws_rag_ask(ws: WebSocket) -> None:
             try:
                 async for ev in _rag_pipeline_events(question, tenant, provider, cancel,
                                                      few_shot=data.get("few_shot"),
-                                                     mode="agentic" if data.get("mode") == "agentic" else "fast"):
+                                                     mode="agentic" if data.get("mode") == "agentic" else "fast",
+                                                     user_id=user["id"]):
                     await ws.send_json(ev)
                     if ev.get("event") in ("complete", "cancelled", "error"):
                         break

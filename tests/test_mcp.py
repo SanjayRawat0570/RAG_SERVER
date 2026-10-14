@@ -131,6 +131,35 @@ def test_key_scoped_to_a_cannot_reach_b_over_rest(tenants):
         assert client.get(f"/api/v1/tenant-settings/{b}", headers=h).status_code == 403
 
 
+def test_websocket_applies_the_same_tenant_checks(tenants):
+    a, b = tenants
+    _, key_a = create_api_key("alice", "k", tenant=a, role="viewer")
+    with TestClient(app) as client:
+        with client.websocket_connect(f"/api/v1/rag/stream/ws?api_key={key_a}") as ws:
+            ws.send_json({"type": "ask", "question": "What is the Falcon budget?", "tenant": b})
+            denied = ws.receive_json()
+            assert denied["event"] == "error" and denied["status"] == 403
+            ws.send_json({"type": "ask", "question": "What is the Falcon budget?", "tenant": a})
+            events = []
+            while not events or events[-1]["event"] not in ("complete", "error"):
+                events.append(ws.receive_json())
+        assert events[-1]["event"] == "complete"
+        assert "7 million" in events[-1]["answer"] and "BLUEHERON" not in json.dumps(events)
+
+        with client.websocket_connect("/api/v1/rag/stream/ws?api_key=sk-bogus") as ws:
+            assert ws.receive_json()["status"] == 401
+
+        # Anonymous callers can't reach a registered organisation.
+        slug = f"org-{uuid.uuid4().hex[:6]}"
+        create_organization(slug, "Org", owner_id="someone-else")
+        try:
+            with client.websocket_connect("/api/v1/rag/stream/ws") as ws:
+                ws.send_json({"type": "ask", "question": "x", "tenant": slug})
+                assert ws.receive_json()["status"] == 403
+        finally:
+            delete_organization(slug)
+
+
 def test_bearer_api_key_and_invalid_keys():
     _, key = create_api_key("alice", "k", tenant="acme")
     with TestClient(app) as client:
