@@ -146,7 +146,7 @@ async def run_question(q: dict[str, Any], provider: str, *, mode: str = "fast",
             memory_store.add_turn(conv, memory_store.Turn(
                 question=turn["question"], standalone_question=turn["question"], answer=turn["answer"]))
         ctx = await memory.before(tenant=tenant, user_id=EVAL_USER, conversation_id=conv.id,
-                                  question=question, provider=provider)
+                                  question=question, provider=provider, model=model)
         standalone = ctx.standalone
         memory_store.delete(tenant, EVAL_USER, conv.id)
 

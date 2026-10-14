@@ -39,12 +39,12 @@ class MemoryContext:
 
 
 async def before(*, tenant: str, user_id: str, conversation_id: str | None, question: str,
-                 provider: str) -> MemoryContext:
+                 provider: str, model: str | None = None) -> MemoryContext:
     if not user_id or user_id == ANONYMOUS:
         return MemoryContext(question=question, standalone=question)
     conv = store.get_or_create(tenant, user_id, conversation_id)
     result = await rewrite_follow_up(question, store.history(conv), provider=provider,
-                                     tenant=tenant, user_id=user_id)
+                                     tenant=tenant, user_id=user_id, model=model)
     ctx = MemoryContext(question=question, standalone=result["question"], conversation=conv)
     if result["rewritten"]:
         ctx.steps.append({"type": "memory_rewrite", "round": 0, "query": result["question"],

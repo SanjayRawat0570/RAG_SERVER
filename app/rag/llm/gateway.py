@@ -80,6 +80,11 @@ def model_name(provider: str, config: dict[str, Any] | None = None) -> str:
     return provider
 
 
+def fast_model(provider: str) -> str | None:
+    """Model for small auxiliary calls (query rewriting); None → the provider default."""
+    return settings.gemini_fast_model or None if provider == "gemini" else None
+
+
 def _breaker(provider: str):
     return breaker_registry.get(
         f"llm:{provider}",

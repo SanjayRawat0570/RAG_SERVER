@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     llm_provider: str = "stub"
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
+    # Small auxiliary calls (follow-up rewriting, query planning): a fast model
+    # without hidden "thinking" tokens and with a larger free-tier quota.
+    gemini_fast_model: str = "gemini-flash-lite-latest"
     llm_timeout: int = 30
     # TLS trust for provider calls: "system" (OS store) or "certifi".
     tls_trust: str = "system"

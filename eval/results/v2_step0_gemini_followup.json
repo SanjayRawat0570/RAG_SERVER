@@ -1,0 +1,502 @@
+{
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "mode": "fast",
+  "few_shot": null,
+  "chunks_indexed": 305,
+  "outage_retries": 2,
+  "metrics": {
+    "questions": 20,
+    "recall_at_5": 1.0,
+    "mrr": 0.908,
+    "context_recall": 1.0,
+    "answer_accuracy": 1.0,
+    "citation_rate": 1.0,
+    "citation_precision": 1.0,
+    "faithfulness": 1.0,
+    "idk_accuracy": null,
+    "false_idk_rate": 0.0,
+    "fallback_rate": 0.0,
+    "latency_ms_p50": 2026.9,
+    "latency_ms_p95": 3167.7
+  },
+  "by_category": {
+    "followup": {
+      "questions": 20,
+      "recall_at_5": 1.0,
+      "mrr": 0.908,
+      "context_recall": 1.0,
+      "answer_accuracy": 1.0,
+      "citation_rate": 1.0,
+      "citation_precision": 1.0,
+      "faithfulness": 1.0,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.0,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 2026.9,
+      "latency_ms_p95": 3167.7
+    }
+  },
+  "rows": [
+    {
+      "id": "fu01",
+      "category": "followup",
+      "question": "What about part-time staff?",
+      "standalone_question": "How many days of annual leave do part-time staff get?",
+      "answer": "Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours, such as 15 days for an employee working 3 days a week [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3253.9
+    },
+    {
+      "id": "fu02",
+      "category": "followup",
+      "question": "And for secondary caregivers?",
+      "standalone_question": "How long is parental leave for secondary caregivers?",
+      "answer": "Secondary caregivers receive 4 weeks of fully paid parental leave [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2253.5
+    },
+    {
+      "id": "fu03",
+      "category": "followup",
+      "question": "Where is that team based?",
+      "standalone_question": "Where is the Mobile team based?",
+      "answer": "The Mobile team is based in the Lisbon office [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2151.2
+    },
+    {
+      "id": "fu04",
+      "category": "followup",
+      "question": "Who leads that team?",
+      "standalone_question": "Who leads the Payments team?",
+      "answer": "The Payments team is led by Amara Okafor [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2215.8
+    },
+    {
+      "id": "fu05",
+      "category": "followup",
+      "question": "What happens if I exceed it?",
+      "standalone_question": "What happens if I exceed the rate limit of the Orders API v2?",
+      "answer": "When the limit of the Orders API v2 is exceeded, the API returns HTTP 429 with a Retry-After header [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2368.4
+    },
+    {
+      "id": "fu06",
+      "category": "followup",
+      "question": "What is its deductible?",
+      "standalone_question": "What is the deductible of the Plus health plan?",
+      "answer": "The annual deductible of the Plus plan is 400 USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "benefits_health.md"
+      ],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1594.7
+    },
+    {
+      "id": "fu07",
+      "category": "followup",
+      "question": "How do I fix it?",
+      "standalone_question": "How do I fix error E-4012?",
+      "answer": "Error E-4012 means the VPN certificate has expired, and you can fix it by re-enrolling the device in the VPN portal to get a new certificate [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2255.2
+    },
+    {
+      "id": "fu08",
+      "category": "followup",
+      "question": "What is the contact email for that role?",
+      "standalone_question": "What is the contact email for the data protection officer?",
+      "answer": "The contact email for the data protection officer, Sofia Marin, is dpo@example.com [3].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1925.0
+    },
+    {
+      "id": "fu09",
+      "category": "followup",
+      "question": "What was it under the 2023 policy?",
+      "standalone_question": "What was the daily meal allowance under the 2023 policy?",
+      "answer": "Under the 2023 travel policy, the daily meal allowance was 45 USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "travel_policy_2023.md"
+      ],
+      "expected_sources": [
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2125.3
+    },
+    {
+      "id": "fu10",
+      "category": "followup",
+      "question": "Who manages it?",
+      "standalone_question": "Who manages the Berlin office?",
+      "answer": "The Berlin office is managed by Lena Vogel [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1985.5
+    },
+    {
+      "id": "fu11",
+      "category": "followup",
+      "question": "And what uptime does it commit to?",
+      "standalone_question": "What uptime does Premium support commit to?",
+      "answer": "Premium customers get an uptime commitment of 99.9% [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1776.6
+    },
+    {
+      "id": "fu12",
+      "category": "followup",
+      "question": "What about security audit logs?",
+      "standalone_question": "How long are security audit logs kept?",
+      "answer": "Security audit logs are kept for 1 year [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1683.3
+    },
+    {
+      "id": "fu13",
+      "category": "followup",
+      "question": "What is that region's 2025 revenue target?",
+      "standalone_question": "What is the 2025 revenue target for the EMEA sales region?",
+      "answer": "The 2025 revenue target for the EMEA region is 24 million USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1836.7
+    },
+    {
+      "id": "fu14",
+      "category": "followup",
+      "question": "How much does it cost?",
+      "standalone_question": "How much does SKU LAP-14-PRO cost?",
+      "answer": "SKU LAP-14-PRO costs 1,450 USD [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2442.3
+    },
+    {
+      "id": "fu15",
+      "category": "followup",
+      "question": "How long did it last?",
+      "standalone_question": "How long did incident INC-2024-031 last?",
+      "answer": "Incident INC-2024-031 lasted 47 minutes [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2026.9
+    },
+    {
+      "id": "fu16",
+      "category": "followup",
+      "question": "What did it add?",
+      "standalone_question": "What did version 2.4.0 add?",
+      "answer": "Version 2.4.0 added the new analytics dashboard, which is built on Project Atlas, and increased webhook retries to 6 attempts [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3167.7
+    },
+    {
+      "id": "fu17",
+      "category": "followup",
+      "question": "On what payment terms are vendor invoices like theirs paid?",
+      "standalone_question": "On what payment terms are vendor invoices like theirs paid?",
+      "answer": "Vendor invoices are paid on net 45 day terms [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1192.7
+    },
+    {
+      "id": "fu18",
+      "category": "followup",
+      "question": "Are language courses covered too?",
+      "standalone_question": "Are language courses covered too?",
+      "answer": "Yes, language courses are covered up to 300 USD per year [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1124.3
+    },
+    {
+      "id": "fu19",
+      "category": "followup",
+      "question": "What are the core hours then?",
+      "standalone_question": "What are the core hours then?",
+      "answer": "Core collaboration hours are 10:00 to 15:00 local time [3].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1071.4
+    },
+    {
+      "id": "fu20",
+      "category": "followup",
+      "question": "What is the notice period during it?",
+      "standalone_question": "What is the notice period during the probation period?",
+      "answer": "The notice period during probation is 2 weeks [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2724.5
+    }
+  ]
+}

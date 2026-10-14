@@ -104,11 +104,14 @@ class GenerateNode(Node):
         result["cache_hit"] = False
         result["cache_type"] = None
 
-        # 6) Populate caches for next time.
-        if self.config.get("cache"):
-            cache.set(cache_key, result)
-        if sem_cache is not None and query_vec is not None:
-            sem_cache.put(request["query"], query_vec, result)
+        # 6) Populate caches for next time — but never with the extractive fallback:
+        #    a provider outage would otherwise keep serving fallback answers for the
+        #    whole TTL after the provider has recovered.
+        if result.get("provider") != "extractive-fallback":
+            if self.config.get("cache"):
+                cache.set(cache_key, result)
+            if sem_cache is not None and query_vec is not None:
+                sem_cache.put(request["query"], query_vec, result)
         return result
 
     # -- helpers -----------------------------------------------------------

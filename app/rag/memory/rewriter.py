@@ -22,7 +22,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from app.rag.llm.gateway import call_llm, is_configured
+from app.rag.llm.gateway import call_llm, fast_model, is_configured
 from app.rag.memory.store import Turn
 
 _SWAP = re.compile(r"^\s*(?:and\s+)?(?:what|how)\s+about\s+(?P<x>.+?)\s*\??\s*$|^\s*and\s+(?P<y>.+?)\s*\?\s*$",
@@ -90,14 +90,21 @@ async def rewrite_follow_up(
     provider: str,
     tenant: str | None = None,
     user_id: str = "",
+    model: str | None = None,
 ) -> dict[str, Any]:
-    """Return ``{"question": standalone, "rewritten": bool, "method": ...}``."""
+    """Return ``{"question": standalone, "rewritten": bool, "method": ...}``.
+
+    ``model`` overrides the provider's fast model (see ``gateway.fast_model``).
+    """
     if not is_follow_up(question, turns):
         return {"question": question, "rewritten": False, "method": None}
 
     if provider != "stub" and is_configured(provider):
         transcript = "\n".join(
             f"User: {t.standalone_question}\nAssistant: {t.answer[:300]}" for t in turns[-3:])
+        config: dict[str, Any] = {"temperature": 0.0, "max_tokens": 256}
+        if model or fast_model(provider):
+            config["model"] = model or fast_model(provider)
         try:
             response = await call_llm(
                 provider,
@@ -105,11 +112,13 @@ async def rewrite_follow_up(
                     {"role": "system", "content": REWRITE_SYSTEM},
                     {"role": "user", "content": f"Conversation:\n{transcript}\n\nLatest question: {question}"},
                 ]},
-                {"temperature": 0.0, "max_tokens": 128},
+                config,
                 tenant=tenant, user_id=user_id, operation="rewrite_query",
             )
             text = response.text.strip().strip('"').splitlines()[0].strip() if response.text.strip() else ""
-            if 3 <= len(text) <= 400:
+            # A rewrite cut off by the token limit ("How much does SKU") is worse than none.
+            truncated = str(response.finish_reason).upper() in ("MAX_TOKENS", "LENGTH")
+            if 3 <= len(text) <= 400 and not truncated:
                 return {"question": text, "rewritten": text != question, "method": "llm"}
         except Exception:  # noqa: BLE001 - fall through to the offline rewrite
             pass
