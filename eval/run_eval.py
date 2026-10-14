@@ -32,6 +32,8 @@ Usage (from backend/)::
     python eval/run_eval.py --provider gemini --model gemini-3.1-flash-lite --delay 4
     python eval/run_eval.py --mode agentic               # tool-calling agent instead of fast mode
     python eval/run_eval.py --category exact_id          # one category only
+    python eval/run_eval.py --provider gemini --per-category 10 --delay 4
+        # fixed 60-question subset (10 per category) for A/B runs on the free tier
     python eval/run_eval.py --compare-fewshot --provider gemini --delay 7
 """
 from __future__ import annotations
@@ -297,13 +299,18 @@ def _provider_outage(out: dict[str, Any]) -> bool:
 
 async def evaluate(provider: str, *, delay: float = 0.0, few_shot: bool | None = None,
                    model: str | None = None, mode: str = "fast", category: str | None = None,
-                   limit: int | None = None, run_fn=None) -> dict[str, Any]:
+                   limit: int | None = None, per_category: int | None = None,
+                   run_fn=None) -> dict[str, Any]:
     run_fn = run_fn or (lambda q: run_question(q, provider, mode=mode, few_shot=few_shot, model=model))
     questions = load_questions()
     chunks, units = await index_corpus()
     validate_labels(questions, units)
     if category:
         questions = [q for q in questions if q["category"] == category]
+    if per_category:
+        # Fixed stratified subset: the first N questions of each category, in file
+        # order — cheap enough for the free tier, identical across runs.
+        questions = [q for c in CATEGORIES for q in [x for x in questions if x["category"] == c][:per_category]]
     questions = questions[:limit] if limit else questions
 
     rows: list[dict[str, Any]] = []
@@ -398,6 +405,8 @@ def main() -> None:
     parser.add_argument("--label", default=None, help="save to eval/results/<label>.json")
     parser.add_argument("--category", choices=CATEGORIES, default=None)
     parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--per-category", type=int, default=None,
+                        help="first N questions of each category (free-tier friendly subset)")
     parser.add_argument("--few-shot", choices=["on", "off"], default=None,
                         help="force few-shot examples (default: tenant setting = on)")
     parser.add_argument("--compare-fewshot", action="store_true",
@@ -415,7 +424,8 @@ def main() -> None:
 
     few_shot = None if args.few_shot is None else args.few_shot == "on"
     report = asyncio.run(evaluate(args.provider, delay=args.delay, few_shot=few_shot, model=args.model,
-                                  mode=args.mode, category=args.category, limit=args.limit))
+                                  mode=args.mode, category=args.category, limit=args.limit,
+                                  per_category=args.per_category))
     print_report(report)
     if args.label:
         _save(report, args.label)

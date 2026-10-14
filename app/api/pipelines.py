@@ -11,9 +11,12 @@ from typing import Any
 
 from app.config import settings
 from app.models.workflow import WorkflowDef
+from app.rag.embeddings import active_embedding
 
 STORE = "kb"
-DIM = 256
+# The knowledge base's embedding dimension: 256 (hash) or the active model's
+# (384 for bge-small). Nodes that only name this dimension use the active model.
+DIM = active_embedding()[1]
 
 # Response shape of the ask workflows. ``citations`` lists every context source
 # shown to the model; ``cited_markers`` are the ones the answer actually uses.

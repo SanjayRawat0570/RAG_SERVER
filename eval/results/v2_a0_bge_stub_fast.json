@@ -1,0 +1,3803 @@
+{
+  "provider": "stub",
+  "model": null,
+  "mode": "fast",
+  "few_shot": null,
+  "chunks_indexed": 305,
+  "outage_retries": 0,
+  "metrics": {
+    "questions": 165,
+    "recall_at_5": 0.939,
+    "mrr": 0.93,
+    "context_recall": 0.921,
+    "answer_accuracy": 0.5,
+    "citation_rate": 0.807,
+    "citation_precision": 0.956,
+    "faithfulness": 1.0,
+    "idk_accuracy": 0.72,
+    "false_idk_rate": 0.193,
+    "fallback_rate": 0.0,
+    "latency_ms_p50": 30.9,
+    "latency_ms_p95": 38.9
+  },
+  "by_category": {
+    "factual": {
+      "questions": 45,
+      "recall_at_5": 1.0,
+      "mrr": 0.963,
+      "context_recall": 1.0,
+      "answer_accuracy": 0.733,
+      "citation_rate": 0.889,
+      "citation_precision": 1.0,
+      "faithfulness": 1.0,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.111,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 32.5,
+      "latency_ms_p95": 39.4
+    },
+    "multihop": {
+      "questions": 25,
+      "recall_at_5": 0.7,
+      "mrr": 0.96,
+      "context_recall": 0.627,
+      "answer_accuracy": 0.08,
+      "citation_rate": 0.8,
+      "citation_precision": 0.9,
+      "faithfulness": 1.0,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.2,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 30.9,
+      "latency_ms_p95": 36.6
+    },
+    "comparison": {
+      "questions": 25,
+      "recall_at_5": 1.0,
+      "mrr": 0.953,
+      "context_recall": 0.97,
+      "answer_accuracy": 0.36,
+      "citation_rate": 0.68,
+      "citation_precision": 1.0,
+      "faithfulness": 1.0,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.32,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 30.1,
+      "latency_ms_p95": 35.6
+    },
+    "unanswerable": {
+      "questions": 25,
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "answer_accuracy": null,
+      "citation_rate": null,
+      "citation_precision": null,
+      "faithfulness": 1.0,
+      "idk_accuracy": 0.72,
+      "false_idk_rate": null,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 28.2,
+      "latency_ms_p95": 33.5
+    },
+    "exact_id": {
+      "questions": 25,
+      "recall_at_5": 1.0,
+      "mrr": 0.88,
+      "context_recall": 1.0,
+      "answer_accuracy": 0.52,
+      "citation_rate": 0.84,
+      "citation_precision": 0.857,
+      "faithfulness": 1.0,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.16,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 32.4,
+      "latency_ms_p95": 36.9
+    },
+    "followup": {
+      "questions": 20,
+      "recall_at_5": 0.95,
+      "mrr": 0.85,
+      "context_recall": 0.95,
+      "answer_accuracy": 0.65,
+      "citation_rate": 0.75,
+      "citation_precision": 1.0,
+      "faithfulness": 1.0,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.25,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 30.7,
+      "latency_ms_p95": 36.6
+    }
+  },
+  "rows": [
+    {
+      "id": "f01",
+      "category": "factual",
+      "question": "How many days of annual leave do full-time employees get?",
+      "standalone_question": "How many days of annual leave do full-time employees get?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 42.7
+    },
+    {
+      "id": "f02",
+      "category": "factual",
+      "question": "How is annual leave calculated for part-time staff?",
+      "standalone_question": "How is annual leave calculated for part-time staff?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 37.9
+    },
+    {
+      "id": "f03",
+      "category": "factual",
+      "question": "How many unused leave days can be carried over?",
+      "standalone_question": "How many unused leave days can be carried over?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 38.2
+    },
+    {
+      "id": "f04",
+      "category": "factual",
+      "question": "How many days of paid sick leave do employees receive?",
+      "standalone_question": "How many days of paid sick leave do employees receive?",
+      "answer": "# Sick Leave\n\nEmployees receive 10 days of paid sick leave per year. A doctor's note is required for absences longer than 3 consecutive days. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 37.0
+    },
+    {
+      "id": "f05",
+      "category": "factual",
+      "question": "How long is parental leave for primary caregivers?",
+      "standalone_question": "How long is parental leave for primary caregivers?",
+      "answer": "# Parental Leave\n\nPrimary caregivers receive 16 weeks of fully paid parental leave. Secondary caregivers receive 4 weeks of fully paid parental leave. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.7
+    },
+    {
+      "id": "f06",
+      "category": "factual",
+      "question": "How is customer data encrypted at rest?",
+      "standalone_question": "How is customer data encrypted at rest?",
+      "answer": "# Encryption\n\nAll customer data is encrypted at rest with AES-256. Data in transit is protected with TLS 1.3. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 37.6
+    },
+    {
+      "id": "f07",
+      "category": "factual",
+      "question": "How often are encryption keys rotated?",
+      "standalone_question": "How often are encryption keys rotated?",
+      "answer": "# Encryption\n\nAll customer data is encrypted at rest with AES-256. Data in transit is protected with TLS 1.3. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.3
+    },
+    {
+      "id": "f08",
+      "category": "factual",
+      "question": "What is the minimum password length?",
+      "standalone_question": "What is the minimum password length?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 32.5
+    },
+    {
+      "id": "f09",
+      "category": "factual",
+      "question": "Within how many hours must a security incident be reported?",
+      "standalone_question": "Within how many hours must a security incident be reported?",
+      "answer": "# Incident Reporting\n\nSuspected security incidents must be reported to security@example.com within 24 hours of discovery. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.3
+    },
+    {
+      "id": "f10",
+      "category": "factual",
+      "question": "What is the current daily meal allowance when travelling?",
+      "standalone_question": "What is the current daily meal allowance when travelling?",
+      "answer": "# Travel Expenses\n\nBusiness travel must be booked through the corporate travel portal. Economy class is required for flights shorter than 6 hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 35.5
+    },
+    {
+      "id": "f11",
+      "category": "factual",
+      "question": "Above what amount are receipts required for expenses?",
+      "standalone_question": "Above what amount are receipts required for expenses?",
+      "answer": "# Expense Claims\n\nReceipts are required for every expense above 25 USD. Expense claims must be submitted within 30 days of the purchase. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 34.0
+    },
+    {
+      "id": "f12",
+      "category": "factual",
+      "question": "Which expenses need approval from the Chief Financial Officer?",
+      "standalone_question": "Which expenses need approval from the Chief Financial Officer?",
+      "answer": "# Approvals\n\nExpenses above 500 USD require manager approval. Expenses above 5,000 USD also require approval from the Chief Financial Officer. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 31.8
+    },
+    {
+      "id": "f13",
+      "category": "factual",
+      "question": "How many days per week can employees work remotely?",
+      "standalone_question": "How many days per week can employees work remotely?",
+      "answer": "# Remote Work\n\nEmployees may work remotely up to 3 days per week. Core collaboration hours are 10:00 to 15:00 local time. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.1
+    },
+    {
+      "id": "f14",
+      "category": "factual",
+      "question": "How much is the home office stipend?",
+      "standalone_question": "How much is the home office stipend?",
+      "answer": "# Home Office Stipend\n\nNew employees receive a one-time home office stipend of 500 USD to buy a desk, chair or monitor. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 39.4
+    },
+    {
+      "id": "f15",
+      "category": "factual",
+      "question": "How often are company laptops refreshed?",
+      "standalone_question": "How often are company laptops refreshed?",
+      "answer": "# Laptops\n\nCompany laptops are refreshed every 3 years. Lost or stolen laptops must be reported to the IT helpdesk immediately. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 35.3
+    },
+    {
+      "id": "f16",
+      "category": "factual",
+      "question": "Which team owns Project Atlas?",
+      "standalone_question": "Which team owns Project Atlas?",
+      "answer": "# Project Atlas\n\nProject Atlas is the company's new analytics warehouse. Project Atlas is owned by the Data Platform team and is scheduled to launch in Q3. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.2
+    },
+    {
+      "id": "f17",
+      "category": "factual",
+      "question": "Who leads the Mobile team?",
+      "standalone_question": "Who leads the Mobile team?",
+      "answer": "# Mobile Team\n\nThe Mobile team is led by Tom Becker. The Mobile team is based in the Lisbon office. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 34.0
+    },
+    {
+      "id": "f18",
+      "category": "factual",
+      "question": "After how many consecutive days of absence is a doctor's note required?",
+      "standalone_question": "After how many consecutive days of absence is a doctor's note required?",
+      "answer": "# Sick Leave\n\nEmployees receive 10 days of paid sick leave per year. A doctor's note is required for absences longer than 3 consecutive days. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 35.2
+    },
+    {
+      "id": "f19",
+      "category": "factual",
+      "question": "By when must carried-over leave days be used?",
+      "standalone_question": "By when must carried-over leave days be used?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.8
+    },
+    {
+      "id": "f20",
+      "category": "factual",
+      "question": "What are the core collaboration hours for remote employees?",
+      "standalone_question": "What are the core collaboration hours for remote employees?",
+      "answer": "# Remote Work\n\nEmployees may work remotely up to 3 days per week. Core collaboration hours are 10:00 to 15:00 local time. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.6
+    },
+    {
+      "id": "f21",
+      "category": "factual",
+      "question": "How much does the Plus health plan cost employees each month?",
+      "standalone_question": "How much does the Plus health plan cost employees each month?",
+      "answer": "# Health Insurance Plans\n\nEmployees can choose between two health insurance plans: the Essential plan and the Plus plan. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "benefits_health.md"
+      ],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 33.0
+    },
+    {
+      "id": "f22",
+      "category": "factual",
+      "question": "When does open enrollment for health insurance take place?",
+      "standalone_question": "When does open enrollment for health insurance take place?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 31.0
+    },
+    {
+      "id": "f23",
+      "category": "factual",
+      "question": "How much is the monthly gym reimbursement?",
+      "standalone_question": "How much is the monthly gym reimbursement?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 33.3
+    },
+    {
+      "id": "f24",
+      "category": "factual",
+      "question": "What is the address of the Berlin office?",
+      "standalone_question": "What is the address of the Berlin office?",
+      "answer": "# Berlin Office\n\nThe Berlin office is located at Torstrasse 120, 10119 Berlin. It has 180 desks and opened in 2019. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.3
+    },
+    {
+      "id": "f25",
+      "category": "factual",
+      "question": "Who is the office manager of the London office?",
+      "standalone_question": "Who is the office manager of the London office?",
+      "answer": "# London Office\n\nThe London office is located at 12 Finsbury Square, London, and is the company headquarters. It has 140 desks and opened in 2017. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 38.7
+    },
+    {
+      "id": "f26",
+      "category": "factual",
+      "question": "What are the opening hours of the offices?",
+      "standalone_question": "What are the opening hours of the offices?",
+      "answer": "# Office Hours\n\nAll offices are open from 08:00 to 19:00 on weekdays. Visitors must be registered at reception at least 24 hours in advance. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 33.1
+    },
+    {
+      "id": "f27",
+      "category": "factual",
+      "question": "How large is the yearly learning budget per employee?",
+      "standalone_question": "How large is the yearly learning budget per employee?",
+      "answer": "# Learning Budget\n\nEvery employee has a learning budget of 1,000 USD per year for courses, books and conferences. Language courses are covered up to 300 USD per year. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 39.4
+    },
+    {
+      "id": "f28",
+      "category": "factual",
+      "question": "How often is data protection training mandatory?",
+      "standalone_question": "How often is data protection training mandatory?",
+      "answer": "# Mandatory Training\n\nSecurity awareness training is mandatory every year. Anti-bribery training is mandatory every year. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.8
+    },
+    {
+      "id": "f29",
+      "category": "factual",
+      "question": "How long is the probation period?",
+      "standalone_question": "How long is the probation period?",
+      "answer": "# Probation\n\nThe probation period is 6 months. The notice period during probation is 2 weeks. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.7
+    },
+    {
+      "id": "f30",
+      "category": "factual",
+      "question": "Within how many days must new employees complete security awareness training?",
+      "standalone_question": "Within how many days must new employees complete security awareness training?",
+      "answer": "# Onboarding Training\n\nNew employees must complete security awareness training within 14 days of their start date. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.2
+    },
+    {
+      "id": "f31",
+      "category": "factual",
+      "question": "How long are application logs kept?",
+      "standalone_question": "How long are application logs kept?",
+      "answer": "# Logs\n\nApplication logs are kept for 30 days. Security audit logs are kept for 1 year. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.0
+    },
+    {
+      "id": "f32",
+      "category": "factual",
+      "question": "Who is the data protection officer?",
+      "standalone_question": "Who is the data protection officer?",
+      "answer": "# Data Subject Requests\n\nGDPR data subject requests must be answered within 30 days. The data protection officer is Sofia Marin, who can be reached at dpo@example.com. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 26.1
+    },
+    {
+      "id": "f33",
+      "category": "factual",
+      "question": "What is the first response time for Premium support?",
+      "standalone_question": "What is the first response time for Premium support?",
+      "answer": "# Premium Support\n\nPremium support includes phone, chat and email support 24 hours a day, 7 days a week. The first response time is 1 hour. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.6
+    },
+    {
+      "id": "f34",
+      "category": "factual",
+      "question": "How much does Premium support cost?",
+      "standalone_question": "How much does Premium support cost?",
+      "answer": "# Support Pricing\n\nPremium support costs 15% of the annual contract value. Standard support is included at no extra cost. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.7
+    },
+    {
+      "id": "f35",
+      "category": "factual",
+      "question": "What is the rate limit of the Orders API v2?",
+      "standalone_question": "What is the rate limit of the Orders API v2?",
+      "answer": "# Rate Limits\n\nThe Orders API v2 allows 600 requests per minute per API key. The legacy Orders API v1 allowed only 120 requests per minute. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 26.8
+    },
+    {
+      "id": "f36",
+      "category": "factual",
+      "question": "How many times are webhook deliveries retried?",
+      "standalone_question": "How many times are webhook deliveries retried?",
+      "answer": "# Webhooks\n\nWebhook deliveries are retried up to 6 times over 24 hours with exponential backoff. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.8
+    },
+    {
+      "id": "f37",
+      "category": "factual",
+      "question": "How many quotes are needed for purchases above 10,000 USD?",
+      "standalone_question": "How many quotes are needed for purchases above 10,000 USD?",
+      "answer": "# Purchase Orders\n\nEvery purchase above 1,000 USD needs a purchase order. Purchase order numbers use the format PO-YYYY-NNNNN, for example PO-2025-00418. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 26.3
+    },
+    {
+      "id": "f38",
+      "category": "factual",
+      "question": "What are the payment terms for vendor invoices?",
+      "standalone_question": "What are the payment terms for vendor invoices?",
+      "answer": "# Payment Terms\n\nVendor invoices are paid on net 45 day terms. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.8
+    },
+    {
+      "id": "f39",
+      "category": "factual",
+      "question": "What commission do sales representatives earn on new annual recurring revenue?",
+      "standalone_question": "What commission do sales representatives earn on new annual recurring revenue?",
+      "answer": "# Sales Commission\n\nSales representatives earn a commission of 8% of new annual recurring revenue, rising to 12% above quota. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.5
+    },
+    {
+      "id": "f40",
+      "category": "factual",
+      "question": "Who leads the EMEA sales region?",
+      "standalone_question": "Who leads the EMEA sales region?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 27.0
+    },
+    {
+      "id": "f41",
+      "category": "factual",
+      "question": "How often is the status page updated during a SEV1 incident?",
+      "standalone_question": "How often is the status page updated during a SEV1 incident?",
+      "answer": "# Severity Levels\n\nSEV1 is a customer-facing outage. The on-call engineer must respond within 5 minutes, and the status page is updated every 30 minutes. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 31.9
+    },
+    {
+      "id": "f42",
+      "category": "factual",
+      "question": "Which client does the company VPN use?",
+      "standalone_question": "Which client does the company VPN use?",
+      "answer": "# Installing the VPN Client\n\nThe company VPN uses the GlobalConnect client. Install GlobalConnect from the software center and connect to the server vpn.example.com. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "vpn_guide.md"
+      ],
+      "expected_sources": [
+        "vpn_guide.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.4
+    },
+    {
+      "id": "f43",
+      "category": "factual",
+      "question": "What is the current nightly hotel cap for business travel?",
+      "standalone_question": "What is the current nightly hotel cap for business travel?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 32.4
+    },
+    {
+      "id": "f44",
+      "category": "factual",
+      "question": "Who is the Chief Executive Officer?",
+      "standalone_question": "Who is the Chief Executive Officer?",
+      "answer": "# Leadership\n\nThe company is headquartered in London. The Chief Executive Officer is Elena Rossi. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "org_structure.md"
+      ],
+      "expected_sources": [
+        "org_structure.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 31.3
+    },
+    {
+      "id": "f45",
+      "category": "factual",
+      "question": "What was the daily meal allowance under the 2023 travel policy?",
+      "standalone_question": "What was the daily meal allowance under the 2023 travel policy?",
+      "answer": "# Meals and Hotels (2023)\n\nUnder the 2023 travel policy, the daily meal allowance was 45 USD. Hotel stays were capped at 150 USD per night. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "travel_policy_2023.md"
+      ],
+      "expected_sources": [
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 43.3
+    },
+    {
+      "id": "m01",
+      "category": "multihop",
+      "question": "Who leads the team that owns Project Atlas?",
+      "standalone_question": "Who leads the team that owns Project Atlas?",
+      "answer": "# Project Atlas\n\nProject Atlas is the company's new analytics warehouse. Project Atlas is owned by the Data Platform team and is scheduled to launch in Q3. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 39.9
+    },
+    {
+      "id": "m02",
+      "category": "multihop",
+      "question": "In which office is the team that owns Project Beacon based?",
+      "standalone_question": "In which office is the team that owns Project Beacon based?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 36.1
+    },
+    {
+      "id": "m03",
+      "category": "multihop",
+      "question": "Who leads the team responsible for Project Cedar?",
+      "standalone_question": "Who leads the team responsible for Project Cedar?",
+      "answer": "# Project Cedar\n\nProject Cedar migrates billing to a new payment provider. Project Cedar is owned by the Payments team. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.9
+    },
+    {
+      "id": "m04",
+      "category": "multihop",
+      "question": "Who leads the team that owns Project Delta?",
+      "standalone_question": "Who leads the team that owns Project Delta?",
+      "answer": "# Project Delta\n\nProject Delta is the new employee self-service portal for leave requests and payslips. Project Delta is owned by the People Systems team. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.9
+    },
+    {
+      "id": "m05",
+      "category": "multihop",
+      "question": "In which office is the team that owns Project Delta based?",
+      "standalone_question": "In which office is the team that owns Project Delta based?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 25.0
+    },
+    {
+      "id": "m06",
+      "category": "multihop",
+      "question": "What is the street address of the office where the Mobile team is based?",
+      "standalone_question": "What is the street address of the office where the Mobile team is based?",
+      "answer": "# Mobile Team\n\nThe Mobile team is led by Tom Becker. The Mobile team is based in the Lisbon office. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "offices.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.6
+    },
+    {
+      "id": "m07",
+      "category": "multihop",
+      "question": "Who is the office manager where the Payments team is based?",
+      "standalone_question": "Who is the office manager where the Payments team is based?",
+      "answer": "# Payments Team\n\nThe Payments team is led by Amara Okafor. The Payments team is based in the London office. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "offices.md",
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.4
+    },
+    {
+      "id": "m08",
+      "category": "multihop",
+      "question": "How many desks does the office of the team that owns Project Atlas have?",
+      "standalone_question": "How many desks does the office of the team that owns Project Atlas have?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "offices.md",
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.667,
+      "mrr": 1.0,
+      "context_recall": 0.333,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 33.1
+    },
+    {
+      "id": "m09",
+      "category": "multihop",
+      "question": "What is the name of the person who must approve expenses above 5,000 USD?",
+      "standalone_question": "What is the name of the person who must approve expenses above 5,000 USD?",
+      "answer": "# Approvals\n\nExpenses above 500 USD require manager approval. Expenses above 5,000 USD also require approval from the Chief Financial Officer. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md",
+        "org_structure.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 31.2
+    },
+    {
+      "id": "m10",
+      "category": "multihop",
+      "question": "Who heads the department that the Mobile team belongs to?",
+      "standalone_question": "Who heads the department that the Mobile team belongs to?",
+      "answer": "# Mobile Team\n\nThe Mobile team is led by Tom Becker. The Mobile team is based in the Lisbon office. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "org_structure.md",
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 24.6
+    },
+    {
+      "id": "m11",
+      "category": "multihop",
+      "question": "Who leads the team that reviews access to production systems?",
+      "standalone_question": "Who leads the team that reviews access to production systems?",
+      "answer": "# Access Control\n\nMulti-factor authentication is mandatory for every employee account. Passwords must be at least 14 characters long. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.9
+    },
+    {
+      "id": "m12",
+      "category": "multihop",
+      "question": "Which internal phone extension should I call to report a lost laptop?",
+      "standalone_question": "Which internal phone extension should I call to report a lost laptop?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "org_structure.md",
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 26.4
+    },
+    {
+      "id": "m13",
+      "category": "multihop",
+      "question": "How much does the laptop that new engineers receive cost?",
+      "standalone_question": "How much does the laptop that new engineers receive cost?",
+      "answer": "# Equipment for New Hires\n\nEngineers receive the LAP-14-PRO laptop. All other new employees receive the LAP-13-AIR laptop. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md",
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.3
+    },
+    {
+      "id": "m14",
+      "category": "multihop",
+      "question": "What is the price of the laptop given to new employees who are not engineers?",
+      "standalone_question": "What is the price of the laptop given to new employees who are not engineers?",
+      "answer": "# Equipment for New Hires\n\nEngineers receive the LAP-14-PRO laptop. All other new employees receive the LAP-13-AIR laptop. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md",
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.1
+    },
+    {
+      "id": "m15",
+      "category": "multihop",
+      "question": "Who leads the team that led the response to incident INC-2024-031?",
+      "standalone_question": "Who leads the team that led the response to incident INC-2024-031?",
+      "answer": "# Incident INC-2024-031\n\nINC-2024-031 was a SEV1 payments outage on 14 March 2024 that lasted 47 minutes. The root cause was an expired TLS certificate on the payment gateway. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.1
+    },
+    {
+      "id": "m16",
+      "category": "multihop",
+      "question": "Which release fixed the defect behind incident INC-2024-058?",
+      "standalone_question": "Which release fixed the defect behind incident INC-2024-058?",
+      "answer": "# Incident INC-2024-058\n\nINC-2024-058 was a SEV2 incident on 2 September 2024 in which CSV exports timed out for 6 hours. The underlying defect was tracked as BUG-1893. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md",
+        "release_notes.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 25.1
+    },
+    {
+      "id": "m17",
+      "category": "multihop",
+      "question": "Which team owns the project that the analytics dashboard from version 2.4.0 is built on?",
+      "standalone_question": "Which team owns the project that the analytics dashboard from version 2.4.0 is built on?",
+      "answer": "# Version 2.4.0\n\nVersion 2.4.0 was released on 7 April 2025. It added the new analytics dashboard, which is built on Project Atlas, and increased webhook retries to 6 attempts. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 38.8
+    },
+    {
+      "id": "m18",
+      "category": "multihop",
+      "question": "Who leads the team that performs security reviews of vendors that process customer data?",
+      "standalone_question": "Who leads the team that performs security reviews of vendors that process customer data?",
+      "answer": "# Vendor Security Review\n\nAny vendor that will process customer data must pass a security review by the Security team before the contract is signed. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md",
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.1
+    },
+    {
+      "id": "m19",
+      "category": "multihop",
+      "question": "Which team owns the project that the 2025 Objective 2 says to launch?",
+      "standalone_question": "Which team owns the project that the 2025 Objective 2 says to launch?",
+      "answer": "# Objective 2: Ship the Data Platform\n\nLaunch Project Atlas in Q3 2025 and move all reporting onto it. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "okrs_2025.md"
+      ],
+      "expected_sources": [
+        "okrs_2025.md",
+        "projects.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.9
+    },
+    {
+      "id": "m20",
+      "category": "multihop",
+      "question": "What is the budget of the project owned by the team that Tom Becker leads?",
+      "standalone_question": "What is the budget of the project owned by the team that Tom Becker leads?",
+      "answer": "# Project Harbor\n\nProject Harbor is the consolidation of monitoring dashboards. Project Harbor is owned by the Notifications team. [2]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "project_portfolio_1.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.8
+    },
+    {
+      "id": "m21",
+      "category": "multihop",
+      "question": "When is the project owned by the London-based engineering team scheduled to launch?",
+      "standalone_question": "When is the project owned by the London-based engineering team scheduled to launch?",
+      "answer": "# Project Granite\n\nProject Granite is a translation memory service. Project Granite is owned by the Field Engineering team. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "project_portfolio_1.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.0,
+      "mrr": 0.0,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 34.3
+    },
+    {
+      "id": "m22",
+      "category": "multihop",
+      "question": "Who is the office manager of the office where Nadia Ivanova's team is based?",
+      "standalone_question": "Who is the office manager of the office where Nadia Ivanova's team is based?",
+      "answer": "# People Systems Team\n\nThe People Systems team is led by Nadia Ivanova and builds internal HR tools. The People Systems team is based in the Berlin office and is part of the Human Resources department. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "offices.md",
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.1
+    },
+    {
+      "id": "m23",
+      "category": "multihop",
+      "question": "Which executive heads the department of the team that owns Project Delta?",
+      "standalone_question": "Which executive heads the department of the team that owns Project Delta?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "org_structure.md",
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.333,
+      "mrr": 1.0,
+      "context_recall": 0.333,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 27.8
+    },
+    {
+      "id": "m24",
+      "category": "multihop",
+      "question": "What device do new employees collect on their first day that every VPN connection requires?",
+      "standalone_question": "What device do new employees collect on their first day that every VPN connection requires?",
+      "answer": "# Security Keys\n\nEvery VPN connection requires a hardware security key. New employees receive a YubiKey on their first day. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "vpn_guide.md"
+      ],
+      "expected_sources": [
+        "onboarding.md",
+        "vpn_guide.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.9
+    },
+    {
+      "id": "m25",
+      "category": "multihop",
+      "question": "Which version deprecated the API version that allowed only 120 requests per minute?",
+      "standalone_question": "Which version deprecated the API version that allowed only 120 requests per minute?",
+      "answer": "# Rate Limits\n\nThe Orders API v2 allows 600 requests per minute per API key. The legacy Orders API v1 allowed only 120 requests per minute. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md",
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 33.8
+    },
+    {
+      "id": "c01",
+      "category": "comparison",
+      "question": "Which health plan has the lower annual deductible, Essential or Plus?",
+      "standalone_question": "Which health plan has the lower annual deductible, Essential or Plus?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 28.7
+    },
+    {
+      "id": "c02",
+      "category": "comparison",
+      "question": "Does the Essential plan or the Plus plan include vision coverage?",
+      "standalone_question": "Does the Essential plan or the Plus plan include vision coverage?",
+      "answer": "# Essential Plan\n\nThe Essential plan is fully paid by the company. Its annual deductible is 1,200 USD. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "benefits_health.md"
+      ],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 26.4
+    },
+    {
+      "id": "c03",
+      "category": "comparison",
+      "question": "Which office has more desks, Berlin or London?",
+      "standalone_question": "Which office has more desks, Berlin or London?",
+      "answer": "# Berlin Office\n\nThe Berlin office is located at Torstrasse 120, 10119 Berlin. It has 180 desks and opened in 2019. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 25.1
+    },
+    {
+      "id": "c04",
+      "category": "comparison",
+      "question": "Which office opened earlier, Lisbon or London?",
+      "standalone_question": "Which office opened earlier, Lisbon or London?",
+      "answer": "# Lisbon Office\n\nThe Lisbon office is located at Avenida da Liberdade 45, Lisbon. It has 90 desks and opened in 2021. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.4
+    },
+    {
+      "id": "c05",
+      "category": "comparison",
+      "question": "How does parental leave for primary caregivers compare with secondary caregivers?",
+      "standalone_question": "How does parental leave for primary caregivers compare with secondary caregivers?",
+      "answer": "# Parental Leave\n\nPrimary caregivers receive 16 weeks of fully paid parental leave. Secondary caregivers receive 4 weeks of fully paid parental leave. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.1
+    },
+    {
+      "id": "c06",
+      "category": "comparison",
+      "question": "How did the daily meal allowance change from the 2023 travel policy to the current policy?",
+      "standalone_question": "How did the daily meal allowance change from the 2023 travel policy to the current policy?",
+      "answer": "# Meals and Hotels (2023)\n\nUnder the 2023 travel policy, the daily meal allowance was 45 USD. Hotel stays were capped at 150 USD per night. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "travel_policy_2023.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md",
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 31.0
+    },
+    {
+      "id": "c07",
+      "category": "comparison",
+      "question": "How did the hotel cap per night change between the 2023 travel policy and the current one?",
+      "standalone_question": "How did the hotel cap per night change between the 2023 travel policy and the current one?",
+      "answer": "# Meals and Hotels (2023)\n\nUnder the 2023 travel policy, the daily meal allowance was 45 USD. Hotel stays were capped at 150 USD per night. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "travel_policy_2023.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md",
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 31.4
+    },
+    {
+      "id": "c08",
+      "category": "comparison",
+      "question": "How did the flight length that requires economy class change from 2023 to now?",
+      "standalone_question": "How did the flight length that requires economy class change from 2023 to now?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "expenses_policy.md",
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 33.1
+    },
+    {
+      "id": "c09",
+      "category": "comparison",
+      "question": "How does the rate limit of the Orders API v2 compare with v1?",
+      "standalone_question": "How does the rate limit of the Orders API v2 compare with v1?",
+      "answer": "# Rate Limits\n\nThe Orders API v2 allows 600 requests per minute per API key. The legacy Orders API v1 allowed only 120 requests per minute. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.6
+    },
+    {
+      "id": "c10",
+      "category": "comparison",
+      "question": "Which support tier has the faster first response time, Standard or Premium?",
+      "standalone_question": "Which support tier has the faster first response time, Standard or Premium?",
+      "answer": "# Standard Support\n\nStandard support includes email support from Monday to Friday, 09:00 to 17:00 CET. The first response time is 8 business hours. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.2
+    },
+    {
+      "id": "c11",
+      "category": "comparison",
+      "question": "Compare the uptime commitments of Standard and Premium support.",
+      "standalone_question": "Compare the uptime commitments of Standard and Premium support.",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 25.4
+    },
+    {
+      "id": "c12",
+      "category": "comparison",
+      "question": "Which sales region has the highest 2025 revenue target?",
+      "standalone_question": "Which sales region has the highest 2025 revenue target?",
+      "answer": "# EMEA Region\n\nThe EMEA region is led by Sophie Laurent and has a 2025 revenue target of 24 million USD. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 31.5
+    },
+    {
+      "id": "c13",
+      "category": "comparison",
+      "question": "Which sales region has the smallest 2025 revenue target?",
+      "standalone_question": "Which sales region has the smallest 2025 revenue target?",
+      "answer": "# EMEA Region\n\nThe EMEA region is led by Sophie Laurent and has a 2025 revenue target of 24 million USD. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.7
+    },
+    {
+      "id": "c14",
+      "category": "comparison",
+      "question": "Which are kept longer, application logs or security audit logs?",
+      "standalone_question": "Which are kept longer, application logs or security audit logs?",
+      "answer": "# Logs\n\nApplication logs are kept for 30 days. Security audit logs are kept for 1 year. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.5
+    },
+    {
+      "id": "c15",
+      "category": "comparison",
+      "question": "Are invoices or employee records kept longer?",
+      "standalone_question": "Are invoices or employee records kept longer?",
+      "answer": "# Employee Records\n\nEmployee records are kept for 6 years after employment ends. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 35.6
+    },
+    {
+      "id": "c16",
+      "category": "comparison",
+      "question": "Which monitor costs more, the MON-27-4K or the MON-24-FHD?",
+      "standalone_question": "Which monitor costs more, the MON-27-4K or the MON-24-FHD?",
+      "answer": "# Monitors\n\nSKU MON-27-4K is the 27-inch 4K monitor and costs 420 USD. SKU MON-24-FHD is the 24-inch Full HD monitor and costs 180 USD. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 41.0
+    },
+    {
+      "id": "c17",
+      "category": "comparison",
+      "question": "How much more does the engineer laptop cost than the standard laptop for other roles?",
+      "standalone_question": "How much more does the engineer laptop cost than the standard laptop for other roles?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 30.6
+    },
+    {
+      "id": "c18",
+      "category": "comparison",
+      "question": "Which team has more engineers, Data Platform or Payments?",
+      "standalone_question": "Which team has more engineers, Data Platform or Payments?",
+      "answer": "# Data Platform Team\n\nThe Data Platform team is led by Priya Shah. The Data Platform team is based in the Berlin office. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 26.8
+    },
+    {
+      "id": "c19",
+      "category": "comparison",
+      "question": "Which project has the largest budget: Atlas, Beacon, Cedar or Delta?",
+      "standalone_question": "Which project has the largest budget: Atlas, Beacon, Cedar or Delta?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.75,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 28.1
+    },
+    {
+      "id": "c20",
+      "category": "comparison",
+      "question": "Which launches first, Project Cedar or Project Beacon?",
+      "standalone_question": "Which launches first, Project Cedar or Project Beacon?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 30.0
+    },
+    {
+      "id": "c21",
+      "category": "comparison",
+      "question": "How do the required response times for SEV1 and SEV2 incidents differ?",
+      "standalone_question": "How do the required response times for SEV1 and SEV2 incidents differ?",
+      "answer": "# Severity Levels\n\nSEV1 is a customer-facing outage. The on-call engineer must respond within 5 minutes, and the status page is updated every 30 minutes. [3]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 35.1
+    },
+    {
+      "id": "c22",
+      "category": "comparison",
+      "question": "Which is required more often, anti-bribery training or data protection training?",
+      "standalone_question": "Which is required more often, anti-bribery training or data protection training?",
+      "answer": "# Mandatory Training\n\nSecurity awareness training is mandatory every year. Anti-bribery training is mandatory every year. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.6
+    },
+    {
+      "id": "c23",
+      "category": "comparison",
+      "question": "Is the home office stipend enough to buy the 27-inch 4K monitor?",
+      "standalone_question": "Is the home office stipend enough to buy the 27-inch 4K monitor?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "product_catalog.md",
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 32.7
+    },
+    {
+      "id": "c24",
+      "category": "comparison",
+      "question": "How does the sales commission rate above quota compare with the rate below quota?",
+      "standalone_question": "How does the sales commission rate above quota compare with the rate below quota?",
+      "answer": "# Sales Commission\n\nSales representatives earn a commission of 8% of new annual recurring revenue, rising to 12% above quota. [2]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.3
+    },
+    {
+      "id": "c25",
+      "category": "comparison",
+      "question": "Which office is bigger, Lisbon or Berlin?",
+      "standalone_question": "Which office is bigger, Lisbon or Berlin?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 29.5
+    },
+    {
+      "id": "u01",
+      "category": "unanswerable",
+      "question": "What is the parking fee at the Berlin office?",
+      "standalone_question": "What is the parking fee at the Berlin office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 25.2
+    },
+    {
+      "id": "u02",
+      "category": "unanswerable",
+      "question": "Which company provides our dental insurance?",
+      "standalone_question": "Which company provides our dental insurance?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 23.5
+    },
+    {
+      "id": "u03",
+      "category": "unanswerable",
+      "question": "Are pets allowed in the office?",
+      "standalone_question": "Are pets allowed in the office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 28.9
+    },
+    {
+      "id": "u04",
+      "category": "unanswerable",
+      "question": "How large is the annual performance bonus?",
+      "standalone_question": "How large is the annual performance bonus?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 25.2
+    },
+    {
+      "id": "u05",
+      "category": "unanswerable",
+      "question": "What is on the cafeteria menu on Fridays?",
+      "standalone_question": "What is on the cafeteria menu on Fridays?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 24.4
+    },
+    {
+      "id": "u06",
+      "category": "unanswerable",
+      "question": "Who won the 2022 company hackathon?",
+      "standalone_question": "Who won the 2022 company hackathon?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 28.8
+    },
+    {
+      "id": "u07",
+      "category": "unanswerable",
+      "question": "What is the company's stock ticker symbol?",
+      "standalone_question": "What is the company's stock ticker symbol?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 31.4
+    },
+    {
+      "id": "u08",
+      "category": "unanswerable",
+      "question": "How many vacation days do contractors in Japan receive?",
+      "standalone_question": "How many vacation days do contractors in Japan receive?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 27.6
+    },
+    {
+      "id": "u09",
+      "category": "unanswerable",
+      "question": "What is the dental coverage limit on the Plus plan?",
+      "standalone_question": "What is the dental coverage limit on the Plus plan?",
+      "answer": "# Plus Plan\n\nThe Plus plan costs employees 45 USD per month. Its annual deductible is 400 USD. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "benefits_health.md"
+      ],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.4
+    },
+    {
+      "id": "u10",
+      "category": "unanswerable",
+      "question": "How many desks does the Madrid office have?",
+      "standalone_question": "How many desks does the Madrid office have?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 25.3
+    },
+    {
+      "id": "u11",
+      "category": "unanswerable",
+      "question": "What does error code E-9999 mean?",
+      "standalone_question": "What does error code E-9999 mean?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 28.7
+    },
+    {
+      "id": "u12",
+      "category": "unanswerable",
+      "question": "What is the rate limit of the Orders API v3?",
+      "standalone_question": "What is the rate limit of the Orders API v3?",
+      "answer": "# Rate Limits\n\nThe Orders API v2 allows 600 requests per minute per API key. The legacy Orders API v1 allowed only 120 requests per minute. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.2
+    },
+    {
+      "id": "u13",
+      "category": "unanswerable",
+      "question": "Who leads the APAC marketing team?",
+      "standalone_question": "Who leads the APAC marketing team?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 27.8
+    },
+    {
+      "id": "u14",
+      "category": "unanswerable",
+      "question": "What is the budget of Project Echo?",
+      "standalone_question": "What is the budget of Project Echo?",
+      "answer": "# Project Beacon\n\nProject Beacon is the customer mobile app rewrite. Project Beacon is owned by the Mobile team. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 33.7
+    },
+    {
+      "id": "u15",
+      "category": "unanswerable",
+      "question": "What was the root cause of incident INC-2024-099?",
+      "standalone_question": "What was the root cause of incident INC-2024-099?",
+      "answer": "# Incident INC-2024-012\n\nINC-2024-012 was a SEV3 incident on 25 January 2024 that lasted 18 minutes. The root cause was a DNS record that was deleted. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "postmortem_inc-2024-012.md"
+      ],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.2
+    },
+    {
+      "id": "u16",
+      "category": "unanswerable",
+      "question": "Which vendor has the ID VND-0500?",
+      "standalone_question": "Which vendor has the ID VND-0500?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 38.9
+    },
+    {
+      "id": "u17",
+      "category": "unanswerable",
+      "question": "What is the deductible of the Premium health plan?",
+      "standalone_question": "What is the deductible of the Premium health plan?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 29.6
+    },
+    {
+      "id": "u18",
+      "category": "unanswerable",
+      "question": "How many days of bereavement leave do employees get?",
+      "standalone_question": "How many days of bereavement leave do employees get?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.5
+    },
+    {
+      "id": "u19",
+      "category": "unanswerable",
+      "question": "What is the Wi-Fi password in the Lisbon office?",
+      "standalone_question": "What is the Wi-Fi password in the Lisbon office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 26.6
+    },
+    {
+      "id": "u20",
+      "category": "unanswerable",
+      "question": "When was version 3.0 released?",
+      "standalone_question": "When was version 3.0 released?",
+      "answer": "# Version 2.3.0\n\nVersion 2.3.0 was released on 10 February 2025. It added single sign-on with SAML and deprecated the Orders API v1. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.8
+    },
+    {
+      "id": "u21",
+      "category": "unanswerable",
+      "question": "What is the company's revenue target for 2026?",
+      "standalone_question": "What is the company's revenue target for 2026?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 27.1
+    },
+    {
+      "id": "u22",
+      "category": "unanswerable",
+      "question": "Who is the office manager of the Paris office?",
+      "standalone_question": "Who is the office manager of the Paris office?",
+      "answer": "# London Office\n\nThe London office is located at 12 Finsbury Square, London, and is the company headquarters. It has 140 desks and opened in 2017. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 25.6
+    },
+    {
+      "id": "u23",
+      "category": "unanswerable",
+      "question": "How much does the company pay towards mobile phone plans?",
+      "standalone_question": "How much does the company pay towards mobile phone plans?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 29.9
+    },
+    {
+      "id": "u24",
+      "category": "unanswerable",
+      "question": "How many employees does the company have in total?",
+      "standalone_question": "How many employees does the company have in total?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 32.4
+    },
+    {
+      "id": "u25",
+      "category": "unanswerable",
+      "question": "Which programming language is the mobile app written in?",
+      "standalone_question": "Which programming language is the mobile app written in?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 33.5
+    },
+    {
+      "id": "x01",
+      "category": "exact_id",
+      "question": "What does error code E-4012 mean?",
+      "standalone_question": "What does error code E-4012 mean?",
+      "answer": "# VPN Errors\n\nError E-4012 means the VPN certificate has expired. Re-enroll the device in the VPN portal to get a new certificate. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 42.7
+    },
+    {
+      "id": "x02",
+      "category": "exact_id",
+      "question": "What does error E-4021 mean?",
+      "standalone_question": "What does error E-4021 mean?",
+      "answer": "# VPN Errors\n\nError E-4012 means the VPN certificate has expired. Re-enroll the device in the VPN portal to get a new certificate. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 41.7
+    },
+    {
+      "id": "x03",
+      "category": "exact_id",
+      "question": "How do I fix error E-4102?",
+      "standalone_question": "How do I fix error E-4102?",
+      "answer": "# VPN Errors\n\nError E-4012 means the VPN certificate has expired. Re-enroll the device in the VPN portal to get a new certificate. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.0
+    },
+    {
+      "id": "x04",
+      "category": "exact_id",
+      "question": "What should I do about error E-5003?",
+      "standalone_question": "What should I do about error E-5003?",
+      "answer": "# Single Sign-On Errors\n\nError E-5003 means the SSO token does not match the session. Clear the browser cookies and sign in again. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.9
+    },
+    {
+      "id": "x05",
+      "category": "exact_id",
+      "question": "What does error E-5030 mean and what should I do?",
+      "standalone_question": "What does error E-5030 mean and what should I do?",
+      "answer": "# Single Sign-On Errors\n\nError E-5003 means the SSO token does not match the session. Clear the browser cookies and sign in again. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 33.7
+    },
+    {
+      "id": "x06",
+      "category": "exact_id",
+      "question": "What does E-6007 indicate?",
+      "standalone_question": "What does E-6007 indicate?",
+      "answer": "# Email Errors\n\nError E-6007 means the mailbox quota of 50 GB has been exceeded. Archive old messages to free space. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.6
+    },
+    {
+      "id": "x07",
+      "category": "exact_id",
+      "question": "What does printer error E-7110 mean?",
+      "standalone_question": "What does printer error E-7110 mean?",
+      "answer": "# Printing Errors\n\nError E-7101 means the printer is offline. Check the network cable and the power supply. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 26.6
+    },
+    {
+      "id": "x08",
+      "category": "exact_id",
+      "question": "What does E-7101 mean?",
+      "standalone_question": "What does E-7101 mean?",
+      "answer": "# Printing Errors\n\nError E-7101 means the printer is offline. Check the network cable and the power supply. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.5
+    },
+    {
+      "id": "x09",
+      "category": "exact_id",
+      "question": "Which product is SKU MON-27-4K?",
+      "standalone_question": "Which product is SKU MON-27-4K?",
+      "answer": "# Monitors\n\nSKU MON-27-4K is the 27-inch 4K monitor and costs 420 USD. SKU MON-24-FHD is the 24-inch Full HD monitor and costs 180 USD. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.4
+    },
+    {
+      "id": "x10",
+      "category": "exact_id",
+      "question": "How much does SKU DCK-USB-C cost?",
+      "standalone_question": "How much does SKU DCK-USB-C cost?",
+      "answer": "# Retired Accessories\n\nSKU DCK-USB-A was the USB-A docking station and cost 150 USD. SKU HDS-WR-100 was the wired headset and cost 45 USD. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "retired_hardware.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.3
+    },
+    {
+      "id": "x11",
+      "category": "exact_id",
+      "question": "What is SKU HDS-BT-200?",
+      "standalone_question": "What is SKU HDS-BT-200?",
+      "answer": "# Accessories\n\nSKU DCK-USB-C is the USB-C docking station and costs 210 USD. SKU HDS-BT-200 is the Bluetooth headset and costs 95 USD. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.3
+    },
+    {
+      "id": "x12",
+      "category": "exact_id",
+      "question": "How much does LAP-13-AIR cost?",
+      "standalone_question": "How much does LAP-13-AIR cost?",
+      "answer": "# Equipment for New Hires\n\nEngineers receive the LAP-14-PRO laptop. All other new employees receive the LAP-13-AIR laptop. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.6
+    },
+    {
+      "id": "x13",
+      "category": "exact_id",
+      "question": "What does ERR_ORDER_LOCKED mean?",
+      "standalone_question": "What does ERR_ORDER_LOCKED mean?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 31.1
+    },
+    {
+      "id": "x14",
+      "category": "exact_id",
+      "question": "What causes ERR_TOKEN_EXPIRED?",
+      "standalone_question": "What causes ERR_TOKEN_EXPIRED?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 25.3
+    },
+    {
+      "id": "x15",
+      "category": "exact_id",
+      "question": "What does DELETE /v2/orders/{order_id} do?",
+      "standalone_question": "What does DELETE /v2/orders/{order_id} do?",
+      "answer": "# Endpoints\n\nGET /v2/orders/{order_id} returns a single order. POST /v2/orders creates an order. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 34.4
+    },
+    {
+      "id": "x16",
+      "category": "exact_id",
+      "question": "Which vendor is VND-0042?",
+      "standalone_question": "Which vendor is VND-0042?",
+      "answer": "# Vendor Register 2025\n\nVND-0025 is TravelDesk, which provides payroll processing. VND-0497 is SnackBox, which provides translation. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "vendor_register_2025.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 25.7
+    },
+    {
+      "id": "x17",
+      "category": "exact_id",
+      "question": "What does vendor VND-0230 provide?",
+      "standalone_question": "What does vendor VND-0230 provide?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 32.5
+    },
+    {
+      "id": "x18",
+      "category": "exact_id",
+      "question": "Which release fixed BUG-1893?",
+      "standalone_question": "Which release fixed BUG-1893?",
+      "answer": "# Version 2.3.1\n\nVersion 2.3.1 was released on 24 February 2025. It fixed bug BUG-1893, which caused CSV exports to time out. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.9
+    },
+    {
+      "id": "x19",
+      "category": "exact_id",
+      "question": "Which version patched CVE-2025-1182?",
+      "standalone_question": "Which version patched CVE-2025-1182?",
+      "answer": "# Version 2.4.1\n\nVersion 2.4.1 was released on 21 April 2025. It is a security patch for CVE-2025-1182 in the PDF export. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 26.0
+    },
+    {
+      "id": "x20",
+      "category": "exact_id",
+      "question": "What was the root cause of INC-2024-031?",
+      "standalone_question": "What was the root cause of INC-2024-031?",
+      "answer": "# Incident INC-2024-031\n\nINC-2024-031 was a SEV1 payments outage on 14 March 2024 that lasted 47 minutes. The root cause was an expired TLS certificate on the payment gateway. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 33.5
+    },
+    {
+      "id": "x21",
+      "category": "exact_id",
+      "question": "How long did CSV exports time out during INC-2024-058?",
+      "standalone_question": "How long did CSV exports time out during INC-2024-058?",
+      "answer": "# Incident INC-2024-058\n\nINC-2024-058 was a SEV2 incident on 2 September 2024 in which CSV exports timed out for 6 hours. The underlying defect was tracked as BUG-1893. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.7
+    },
+    {
+      "id": "x22",
+      "category": "exact_id",
+      "question": "What format do purchase order numbers use?",
+      "standalone_question": "What format do purchase order numbers use?",
+      "answer": "# Purchase Orders\n\nEvery purchase above 1,000 USD needs a purchase order. Purchase order numbers use the format PO-YYYY-NNNNN, for example PO-2025-00418. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.7
+    },
+    {
+      "id": "x23",
+      "category": "exact_id",
+      "question": "Which header authenticates requests to the Orders API v2?",
+      "standalone_question": "Which header authenticates requests to the Orders API v2?",
+      "answer": "# Orders API v2\n\nThe Orders API v2 base URL is https://api.example.com/v2. Requests are authenticated with the X-Api-Token header. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 33.5
+    },
+    {
+      "id": "x24",
+      "category": "exact_id",
+      "question": "Which server address does the VPN client connect to?",
+      "standalone_question": "Which server address does the VPN client connect to?",
+      "answer": "# Installing the VPN Client\n\nThe company VPN uses the GlobalConnect client. Install GlobalConnect from the software center and connect to the server vpn.example.com. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "vpn_guide.md"
+      ],
+      "expected_sources": [
+        "vpn_guide.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.4
+    },
+    {
+      "id": "x25",
+      "category": "exact_id",
+      "question": "What is the IT helpdesk email address?",
+      "standalone_question": "What is the IT helpdesk email address?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "org_structure.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 36.9
+    },
+    {
+      "id": "fu01",
+      "category": "followup",
+      "question": "What about part-time staff?",
+      "standalone_question": "How many days of part-time staff?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.4
+    },
+    {
+      "id": "fu02",
+      "category": "followup",
+      "question": "And for secondary caregivers?",
+      "standalone_question": "How long is parental leave for for secondary caregivers?",
+      "answer": "# Parental Leave\n\nPrimary caregivers receive 16 weeks of fully paid parental leave. Secondary caregivers receive 4 weeks of fully paid parental leave. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.0
+    },
+    {
+      "id": "fu03",
+      "category": "followup",
+      "question": "Where is that team based?",
+      "standalone_question": "Where is that team based? (context: Who leads the Mobile team?)",
+      "answer": "# Mobile Team\n\nThe Mobile team is led by Tom Becker. The Mobile team is based in the Lisbon office. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27.0
+    },
+    {
+      "id": "fu04",
+      "category": "followup",
+      "question": "Who leads that team?",
+      "standalone_question": "Who leads that team? (context: Which team owns Project Cedar?)",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 0.0,
+      "mrr": 0.0,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 34.8
+    },
+    {
+      "id": "fu05",
+      "category": "followup",
+      "question": "What happens if I exceed it?",
+      "standalone_question": "What happens if I exceed it? (context: What is the rate limit of the Orders API v2?)",
+      "answer": "# Rate Limits\n\nThe Orders API v2 allows 600 requests per minute per API key. The legacy Orders API v1 allowed only 120 requests per minute. [2]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 36.6
+    },
+    {
+      "id": "fu06",
+      "category": "followup",
+      "question": "What is its deductible?",
+      "standalone_question": "What is its deductible? (context: How much does the Plus health plan cost?)",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 31.4
+    },
+    {
+      "id": "fu07",
+      "category": "followup",
+      "question": "How do I fix it?",
+      "standalone_question": "How do I fix it? (context: What does error E-4012 mean?)",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 34.0
+    },
+    {
+      "id": "fu08",
+      "category": "followup",
+      "question": "What is the contact email for that role?",
+      "standalone_question": "What is the contact email for that role? (context: Who is the data protection officer?)",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 32.8
+    },
+    {
+      "id": "fu09",
+      "category": "followup",
+      "question": "What was it under the 2023 policy?",
+      "standalone_question": "What was it under the 2023 policy? (context: What is the daily meal allowance when travelling?)",
+      "answer": "# Meals and Hotels (2023)\n\nUnder the 2023 travel policy, the daily meal allowance was 45 USD. Hotel stays were capped at 150 USD per night. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "travel_policy_2023.md"
+      ],
+      "expected_sources": [
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.4
+    },
+    {
+      "id": "fu10",
+      "category": "followup",
+      "question": "Who manages it?",
+      "standalone_question": "Who manages it? (context: Which office has the most desks?)",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 27.5
+    },
+    {
+      "id": "fu11",
+      "category": "followup",
+      "question": "And what uptime does it commit to?",
+      "standalone_question": "How much does Premium support cost for what uptime does it commit to?",
+      "answer": "# Premium Support\n\nPremium support includes phone, chat and email support 24 hours a day, 7 days a week. The first response time is 1 hour. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.7
+    },
+    {
+      "id": "fu12",
+      "category": "followup",
+      "question": "What about security audit logs?",
+      "standalone_question": "How long security audit logs kept?",
+      "answer": "# Logs\n\nApplication logs are kept for 30 days. Security audit logs are kept for 1 year. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 30.7
+    },
+    {
+      "id": "fu13",
+      "category": "followup",
+      "question": "What is that region's 2025 revenue target?",
+      "standalone_question": "What is that region's 2025 revenue target? (context: Who leads the EMEA sales region?)",
+      "answer": "# EMEA Region\n\nThe EMEA region is led by Sophie Laurent and has a 2025 revenue target of 24 million USD. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 39.2
+    },
+    {
+      "id": "fu14",
+      "category": "followup",
+      "question": "How much does it cost?",
+      "standalone_question": "How much does it cost? (context: What is SKU LAP-14-PRO?)",
+      "answer": "# Laptops\n\nSKU LAP-14-PRO is the 14-inch ProBook laptop. It costs 1,450 USD and is the standard laptop for engineers. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 35.3
+    },
+    {
+      "id": "fu15",
+      "category": "followup",
+      "question": "How long did it last?",
+      "standalone_question": "How long did it last? (context: What was incident INC-2024-031?)",
+      "answer": "# Incident INC-2024-031\n\nINC-2024-031 was a SEV1 payments outage on 14 March 2024 that lasted 47 minutes. The root cause was an expired TLS certificate on the payment gateway. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 33.8
+    },
+    {
+      "id": "fu16",
+      "category": "followup",
+      "question": "What did it add?",
+      "standalone_question": "What did it add? (context: When was version 2.4.0 released?)",
+      "answer": "# Version 2.4.0\n\nVersion 2.4.0 was released on 7 April 2025. It added the new analytics dashboard, which is built on Project Atlas, and increased webhook retries to 6 attempts. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.3
+    },
+    {
+      "id": "fu17",
+      "category": "followup",
+      "question": "On what payment terms are vendor invoices like theirs paid?",
+      "standalone_question": "On what payment terms are vendor invoices like theirs paid?",
+      "answer": "# Payment Terms\n\nVendor invoices are paid on net 45 day terms. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 28.4
+    },
+    {
+      "id": "fu18",
+      "category": "followup",
+      "question": "Are language courses covered too?",
+      "standalone_question": "Are language courses covered too?",
+      "answer": "# Learning Budget\n\nEvery employee has a learning budget of 1,000 USD per year for courses, books and conferences. Language courses are covered up to 300 USD per year. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 26.8
+    },
+    {
+      "id": "fu19",
+      "category": "followup",
+      "question": "What are the core hours then?",
+      "standalone_question": "What are the core hours then?",
+      "answer": "# Remote Work\n\nEmployees may work remotely up to 3 days per week. Core collaboration hours are 10:00 to 15:00 local time. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 29.0
+    },
+    {
+      "id": "fu20",
+      "category": "followup",
+      "question": "What is the notice period during it?",
+      "standalone_question": "What is the notice period during it? (context: How long is the probation period?)",
+      "answer": "# Probation\n\nThe probation period is 6 months. The notice period during probation is 2 weeks. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 32.0
+    }
+  ]
+}

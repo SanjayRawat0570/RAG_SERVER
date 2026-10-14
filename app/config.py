@@ -49,6 +49,13 @@ class Settings(BaseSettings):
     agent_timeout_s: float = 45.0
     agent_token_budget: int = 8000
 
+    # Embeddings for the knowledge base. "local-hash" is lexical and needs nothing;
+    # "bge-small-en-v1.5" is a local semantic model (fastembed/ONNX, ~64 MB, offline
+    # once downloaded). An unavailable model falls back to local-hash with a warning.
+    embedding_model: str = "bge-small-en-v1.5"
+    models_dir: str = "models"
+    allow_model_download: bool = True
+
     # Multimodal ingestion (per-tenant opt-in: tenant settings ``vision_enabled``).
     vision_provider: str = "gemini"
     vision_model: str = ""              # empty → gemini_model

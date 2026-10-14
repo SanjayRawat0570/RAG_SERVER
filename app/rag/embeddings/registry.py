@@ -12,6 +12,7 @@ local-hash                            always available (offline, deterministic)
 all-MiniLM-L6-v2                      sentence-transformers, 384 dims
 all-mpnet-base-v2                     sentence-transformers, 768 dims
 paraphrase-multilingual-MiniLM-L12-v2 sentence-transformers, 384 dims (multilingual)
+bge-small-en-v1.5                     fastembed/ONNX, 384 dims (local, offline after download)
 text-embedding-3-small                OpenAI, 512 dims  (API key required)
 text-embedding-3-large                OpenAI, 3072 dims (API key required)
 embed-english-v3.0                    Cohere, 1024 dims (API key + package)
@@ -20,9 +21,13 @@ embed-multilingual-v3.0               Cohere, 1024 dims (API key + package)
 from __future__ import annotations
 
 import hashlib
+import logging
+from functools import lru_cache
 from typing import Callable
 
 from app.rag.embeddings.base import Embedder, HashEmbedder
+
+log = logging.getLogger(__name__)
 
 DEFAULT_MODEL = "local-hash"
 DEFAULT_DIMENSION = 256
@@ -45,6 +50,7 @@ _MODEL_DIMS: dict[str, int] = {
     "text-embedding-ada-002":                 1536,
     "embed-english-light-v3.0":               384,
     "embed-multilingual-light-v3.0":          384,
+    "bge-small-en-v1.5":                      384,
 }
 
 _embedders: dict[tuple[str, int], Embedder] = {}
@@ -80,19 +86,25 @@ def embed_texts(
     texts: list[str],
     model: str = DEFAULT_MODEL,
     dimension: int | None = None,
+    kind: str = "passage",
 ) -> list[list[float]]:
     """Embed *texts* with caching for repeated content.
 
-    Cache key: (model, dimension, sha1(text)).  Identical texts are never
-    re-sent to the model, regardless of the calling context.
+    ``kind="query"`` uses the model's query encoding when it has one (BGE models
+    add a search instruction); otherwise queries and passages embed the same way.
+
+    Cache key: (model, dimension, sha1(text)) — plus the kind for query-aware
+    models. Identical texts are never re-sent to the model.
     """
     dim = dimension or _MODEL_DIMS.get(model, DEFAULT_DIMENSION)
     embedder = get_embedder(model, dim)
+    as_query = kind == "query" and hasattr(embedder, "embed_queries")
+    tag = f"{model}?q" if as_query else model
     results: list[list[float]] = [None] * len(texts)  # type: ignore[list-item]
     misses: list[int] = []
 
     for i, text in enumerate(texts):
-        ckey = (model, dim, hashlib.sha1(text.encode("utf-8")).hexdigest())
+        ckey = (tag, dim, hashlib.sha1(text.encode("utf-8")).hexdigest())
         cached = _cache.get(ckey)
         if cached is not None:
             results[i] = cached
@@ -101,14 +113,42 @@ def embed_texts(
             misses.append(i)
 
     if misses:
-        fresh = embedder.embed([texts[i] for i in misses])
+        batch = [texts[i] for i in misses]
+        fresh = embedder.embed_queries(batch) if as_query else embedder.embed(batch)
         for i, vec in zip(misses, fresh):
             results[i] = vec
-            ckey = (model, dim, hashlib.sha1(texts[i].encode("utf-8")).hexdigest())
+            ckey = (tag, dim, hashlib.sha1(texts[i].encode("utf-8")).hexdigest())
             _cache[ckey] = vec
             _cache_stats["misses"] += 1
 
     return results
+
+
+@lru_cache(maxsize=1)
+def active_embedding() -> tuple[str, int]:
+    """(model, dimension) the knowledge base is indexed and searched with.
+
+    ``settings.embedding_model``, or the hash embedder with a warning when that
+    model cannot be loaded — decided once, so indexing and search always agree.
+    """
+    from app.config import settings
+
+    name = settings.embedding_model or DEFAULT_MODEL
+    if name == DEFAULT_MODEL:
+        return DEFAULT_MODEL, DEFAULT_DIMENSION
+    try:
+        dim = _MODEL_DIMS[name]
+        get_embedder(name, dim).embed(["warm-up"])
+        return name, dim
+    except Exception as exc:  # noqa: BLE001 - any load failure degrades to hash
+        log.warning("embedding model %r unavailable (%s); using %s", name, exc, DEFAULT_MODEL)
+        return DEFAULT_MODEL, DEFAULT_DIMENSION
+
+
+def default_model(dimension: int | None = None) -> str:
+    """Model for a node that names only a dimension: the active model when it matches."""
+    name, dim = active_embedding()
+    return name if dimension in (None, dim) else DEFAULT_MODEL
 
 
 def clear_cache() -> None:
@@ -178,6 +218,15 @@ def _register_cohere() -> None:
         pass
 
 
+def _register_onnx() -> None:
+    from app.rag.embeddings import onnx_embed
+
+    if onnx_embed.available():
+        for model_name in onnx_embed.MODELS:
+            register_embedder(model_name, lambda dim, mn=model_name: onnx_embed.OnnxEmbedder(mn))
+
+
 _register_sentence_tf()
 _register_openai()
 _register_cohere()
+_register_onnx()

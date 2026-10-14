@@ -131,7 +131,7 @@ def recommend_documents(
     from app.rag.personalization.store import get_history, infer_interests
     from app.rag.vectorstore import lookup_store
     from app.rag.embeddings import embed_texts
-    from app.rag.embeddings.registry import DEFAULT_DIMENSION, DEFAULT_MODEL
+    from app.rag.embeddings.registry import active_embedding
 
     profile    = get_profile_fn(user_id)
     history    = get_history(user_id, limit=50)
@@ -149,8 +149,9 @@ def recommend_documents(
     if store is None:
         return []
 
-    dim       = DEFAULT_DIMENSION
-    query_vec = embed_texts([pseudo_query], DEFAULT_MODEL, dim)[0]
+    # Same model and dimension the knowledge base was indexed with.
+    model, dim = active_embedding()
+    query_vec = embed_texts([pseudo_query], model, dim, kind="query")[0]
     raw_hits  = store.search(query_vec, top_k=top_k * 2, namespace=namespace)
 
     hits = [{"id": h.id, "score": h.score, "metadata": h.metadata} for h in raw_hits]

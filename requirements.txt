@@ -27,3 +27,6 @@ supabase==2.7.4
 mcp==1.30.0
 pytest==8.2.2
 pytest-asyncio==0.23.7
+# Local semantic embeddings / reranking on ONNX Runtime (no torch). Models are
+# fetched once into MODELS_DIR: python -m app.rag.embeddings.onnx_embed download
+fastembed==0.9.0

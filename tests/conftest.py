@@ -14,6 +14,8 @@ os.environ.update({
     "SUPABASE_URL": "",
     "SUPABASE_KEY": "",
     "OTEL_EXPORTER_ENDPOINT": "",
+    # Deterministic, instant hash embeddings in tests (semantic models are tested explicitly).
+    "EMBEDDING_MODEL": "local-hash",
     # Persisted state (API keys, tenant settings) goes to a throwaway directory.
     "DATA_DIR": tempfile.mkdtemp(prefix="rag-test-data-"),
 })

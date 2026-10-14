@@ -24,7 +24,7 @@ from app.engine.context import ExecutionContext
 from app.engine.nodes.base import Node
 from app.engine.nodes.processing import _single_upstream
 from app.engine.nodes.registry import register
-from app.rag.embeddings import DEFAULT_DIMENSION, DEFAULT_MODEL, embed_texts
+from app.rag.embeddings import DEFAULT_DIMENSION, default_model, embed_texts
 from app.rag.vectorstore import get_store
 
 
@@ -34,7 +34,8 @@ class VectorSearchNode(Node):
 
     async def run(self, ctx: ExecutionContext, upstream: dict[str, Any]) -> Any:
         dimension = int(self.config.get("dimension", DEFAULT_DIMENSION))
-        model = self.config.get("model", DEFAULT_MODEL)
+        # No model named: the knowledge base's active model when the dimension matches.
+        model = self.config.get("model") or default_model(dimension)
         vector = self._resolve_vector(ctx, upstream, model, dimension)
 
         store = get_store(self.config.get("store", "default"), dimension)
@@ -51,9 +52,9 @@ class VectorSearchNode(Node):
         if "vector" in self.config:
             return ctx.resolve(self.config["vector"])
         if "query" in self.config:
-            return embed_texts([str(ctx.resolve(self.config["query"]))], model, dimension)[0]
+            return embed_texts([str(ctx.resolve(self.config["query"]))], model, dimension, kind="query")[0]
         # Fall back to the upstream output: a precomputed embedding or text.
         source = _single_upstream(upstream) if upstream else ""
         if isinstance(source, dict) and "embedding" in source:
             return source["embedding"]
-        return embed_texts([str(source)], model, dimension)[0]
+        return embed_texts([str(source)], model, dimension, kind="query")[0]

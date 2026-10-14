@@ -17,7 +17,7 @@ from app.engine.context import ExecutionContext
 from app.engine.nodes.base import Node
 from app.engine.nodes.processing import _single_upstream
 from app.engine.nodes.registry import register
-from app.rag.embeddings import DEFAULT_DIMENSION, DEFAULT_MODEL, embed_texts
+from app.rag.embeddings import DEFAULT_DIMENSION, default_model, embed_texts
 
 
 @register
@@ -25,8 +25,9 @@ class EmbedNode(Node):
     type = "embed"
 
     async def run(self, ctx: ExecutionContext, upstream: dict[str, Any]) -> Any:
-        model = self.config.get("model", DEFAULT_MODEL)
         dimension = int(self.config.get("dimension", DEFAULT_DIMENSION))
+        # No model named: the knowledge base's active model when the dimension matches.
+        model = self.config.get("model") or default_model(dimension)
         field = self.config.get("text_field", "text")
 
         source = (
