@@ -36,15 +36,16 @@ def build_context(hits: list[dict], config: dict[str, Any] | None = None) -> dic
         marker = f"[{len(included) + 1}]"
         heading = meta.get("heading")
         source = meta.get("source")
-        label = " ".join(filter(None, [marker, heading, f"({source})" if source else None]))
+        page = meta.get("page")
+        where = f"({source}, p. {page})" if source and page else (f"({source})" if source else None)
+        label = " ".join(filter(None, [marker, heading, where]))
         parts.append(f"{label}\n{text}")
-        citations.append(
-            {"marker": marker, "id": hit["id"], "heading": heading, "source": source}
-        )
-        documents.append(
-            {"marker": marker, "id": hit["id"], "heading": heading,
-             "source": source, "text": text}
-        )
+        citation = {"marker": marker, "id": hit["id"], "heading": heading, "source": source}
+        # Page and origin (text layer vs. Gemini vision) only when known, so
+        # citations of plain-text documents keep their original shape.
+        citation.update({k: meta[k] for k in ("page", "source_type") if meta.get(k) is not None})
+        citations.append(citation)
+        documents.append({**citation, "text": text})
         included.append(hit["id"])
         total += est
 

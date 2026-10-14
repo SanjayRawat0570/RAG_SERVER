@@ -71,10 +71,25 @@ async def _process(
         fmt = detect_format(filename)
         if fmt not in PARSERS:
             raise ValueError(f"Unsupported file type '{os.path.splitext(filename)[1]}'.")
-        _, parser = PARSERS[fmt]
+        format_name, parser = PARSERS[fmt]
         text, parser_meta = parser(content, filename)
+
+        # Scanned pages, figures and images → Gemini vision (per-tenant opt-in).
+        if format_name in ("pdf", "image"):
+            from app.rag.ingestion import vision
+            if vision.availability(tenant) == "ok":
+                _set(exec_id, progress=20, step="extract",
+                     message="Reading scanned pages and figures with Gemini vision…")
+            text, parser_meta = await vision.enrich(content, format_name, text, parser_meta,
+                                                    tenant=tenant, user_id=user_id)
         if not text.strip():
-            raise ValueError("No readable text found in the file.")
+            status = parser_meta.get("vision", {}).get("status")
+            hint = {
+                "disabled":   " It looks scanned: turn on vision ingestion in Settings → AI Settings.",
+                "no_api_key": " It looks scanned, and vision ingestion needs GEMINI_API_KEY on the server.",
+                "failed":     " Gemini vision could not read it; try again later.",
+            }.get(status or "", "")
+            raise ValueError("No readable text found in the file." + hint)
 
         words = len(text.split())
 
@@ -107,7 +122,8 @@ async def _process(
              message="Indexing into knowledge base…")
         executor = WorkflowExecutor(build_index_workflow())
         result   = await executor.run(
-            {"tenant": tenant, "text": text, "filename": filename}
+            {"tenant": tenant, "text": text, "filename": filename,
+             "segments": parser_meta.get("segments")}
         )
         if result.status != "success":
             raise RuntimeError("Indexing pipeline returned failure status.")
@@ -133,13 +149,17 @@ async def _process(
 
         # ── Done ─────────────────────────────────────────────────────────────
         quality_note = f" ⚠ {quality.note}" if quality.action == "warn" else ""
+        vision_meta = parser_meta.get("vision")
+        vision_note = (f" Gemini vision read {vision_meta['images']} scanned page(s)/figure(s)."
+                       if vision_meta and vision_meta.get("images") else "")
         _set(exec_id,
              progress=100,
              step="done",
              status="completed",
-             message=f"Done! {chunks} chunks indexed from {words:,} words.{quality_note}",
+             message=f"Done! {chunks} chunks indexed from {words:,} words.{vision_note}{quality_note}",
              chunks_indexed=chunks,
-             quality=quality_meta)
+             quality=quality_meta,
+             vision=vision_meta)
 
     except Exception as exc:  # noqa: BLE001
         _set(exec_id, status="failed", progress=0,

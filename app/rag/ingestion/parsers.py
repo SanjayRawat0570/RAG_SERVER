@@ -14,7 +14,7 @@ Format          Library         Notes
 .html / .htm    stdlib          Script/style tags stripped
 .json           stdlib          Flattened to key: value lines
 .xml            stdlib          Text content extracted
-.pdf            pypdf           Searchable text; scanned PDFs need OCR
+.pdf            pypdf           Text per page; scanned pages/figures via Gemini vision (vision.py)
 .docx           python-docx     Paragraphs + flattened tables
 .xlsx           openpyxl        Each sheet as a section
 .pptx           python-pptx     Each slide as a section
@@ -31,6 +31,9 @@ from html.parser import HTMLParser
 from typing import Any, Callable
 
 ParseResult = tuple[str, dict[str, Any]]
+
+# A PDF page with less extractable text than this is treated as scanned.
+SCANNED_MAX_CHARS = 40
 
 
 class MissingDependencyError(RuntimeError):
@@ -119,12 +122,21 @@ def parse_pdf(content: bytes, filename: str | None) -> ParseResult:
         raise MissingDependencyError("PDF parsing requires 'pypdf'") from exc
     import io
 
+    from app.rag.ingestion.cleaning import clean_text
+
     reader = PdfReader(io.BytesIO(content))
-    pages = [page.extract_text() or "" for page in reader.pages]
-    meta: dict[str, Any] = {"pages": len(pages)}
+    pages = [clean_text(page.extract_text() or "") for page in reader.pages]
+    meta: dict[str, Any] = {
+        "pages": len(pages),
+        # One segment per page, so every chunk knows its page (citations, get_document).
+        "segments": [{"text": t, "page": i, "source_type": "text"}
+                     for i, t in enumerate(pages, start=1) if t],
+        # Pages with (almost) no text layer: scanned, or pure images/charts.
+        "scanned_pages": [i for i, t in enumerate(pages, start=1) if len(t) < SCANNED_MAX_CHARS],
+    }
     if reader.metadata and reader.metadata.title:
         meta["title"] = reader.metadata.title
-    return "\n\n".join(pages), meta
+    return "\n\n".join(t for t in pages if t), meta
 
 
 def parse_docx(content: bytes, filename: str | None) -> ParseResult:

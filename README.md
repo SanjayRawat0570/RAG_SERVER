@@ -189,6 +189,31 @@ per-provider circuit breaker, per-tenant budget guard, cost ledger, Prometheus
 usage and an OpenTelemetry `llm.call` span. A provider without an API key is
 rejected up front and the pipeline degrades to the extractive answer.
 
+## Vision ingestion (multimodal)
+
+Uploaded PDFs are split per page, so every chunk and citation carries its `page`.
+When **vision ingestion** is on for a workspace (*Settings → AI Settings*, or
+`PUT /api/v1/tenant-settings/{tenant}` with `{"vision_enabled": true}`, admins only):
+
+* a **scanned page** (under 40 characters of extractable text) has its page image
+  sent to Gemini, which returns the page's text and a one-sentence description;
+* a **figure or chart** embedded in a text page is described ("bar chart of …,
+  rising from 22 to 25") with any labels and numbers it contains;
+* a standalone **image upload** (`.png`, `.jpg`, …) is read the same way.
+
+Results are stored as normal chunks with `source_type: "vision"` and the page
+number, so they are searched, reranked and cited like text. Each image is one
+gateway call (`operation="vision"`: circuit breaker, budget, cost ledger, span).
+
+Limits and degradation: images under 150 px are ignored (icons, logos), at most
+`VISION_MAX_IMAGES` (20) per document, sent at ≤ 1536 px. With vision off or no
+`GEMINI_API_KEY`, ingestion keeps the text layer, logs why images were skipped,
+and a scan-only file fails with a message saying how to enable it. One failing
+image never fails the upload. Images are taken from the PDF's embedded images;
+charts drawn as vector graphics aren't seen (that needs a page renderer such as
+PyMuPDF). The free tier allows few `gemini-2.5-flash` requests per day; set
+`VISION_MODEL` to a lite model for large scans.
+
 ## MCP server
 
 `app/mcp_server.py` exposes the knowledge base to any MCP client (Claude Desktop,
@@ -250,6 +275,7 @@ from `backend/`. To try it without a client, run `mcp dev app/mcp_server.py` (op
 | **Chain of thought** | The agent reasons before acting, but the reasoning stays internal: Gemini's thought parts are dropped, and the UI only receives the `steps` trace — tool calls, query rewrites, evidence coverage and why it stopped. | `app/rag/agent/planner.py` (`_step`), `app/rag/llm/gemini.py` |
 | **Conversation memory** | Short-term: the last 5 turns per conversation, keyed by tenant + user + `conversation_id`. Before retrieval a follow-up is rewritten into a standalone question ("what about part-time staff?" → "What is the leave policy for part-time staff?") by the LLM, or by a heuristic offline; the rewrite appears as a `memory_rewrite` step in the trace. Long-term: topics of the sources cited in each answer go into the user's history, and inferred interests feed the personalization boosts through a new `personalize` node. `/conversations` lists, opens and clears chats; GDPR export/erase include memory. Anonymous callers get no memory. | `app/rag/memory/` (`store.py`, `rewriter.py`, `service.py`), `app/engine/nodes/personalize.py`, `app/api/conversations.py`, `app/rag/security/gdpr.py`, `tests/test_memory.py` |
 | **Few-shot prompting** | Two example question → cited-answer pairs (one answerable, one "I don't know") are rendered into the system prompt in the exact JSON shape the model must return. Examples are configurable per tenant (`GET/PUT /api/v1/tenant-settings/{tenant}`) and can be toggled per request (`few_shot: false`). `eval/run_eval.py --compare-fewshot` measures their effect. | `app/rag/tenants/ai_settings.py`, `app/rag/context/prompt.py` (`render_examples`), `app/api/tenant_settings.py`, `eval/results/fewshot_comparison_*.json`, `tests/test_few_shot.py` |
+| **Multimodal input** | Scanned PDF pages, embedded figures/charts and image uploads are sent to Gemini's vision input (inline image + JSON schema `{text, description}`). The output becomes ordinary chunks with `source_type: "vision"` and the page number, so citations point to the page. Opt-in per tenant (cost); skipped with a logged warning when there is no API key. | `app/rag/ingestion/vision.py`, `app/rag/ingestion/parsers.py` (per-page segments), `app/rag/chunking/strategies.py` (page-aware chunks), `app/api/upload.py`, `app/rag/llm/gateway.py` (image token budget), `tests/test_vision.py` |
 | **MCP** | An MCP server (official Python SDK, stdio) exposes `search_knowledge_base(query, top_k)` and `ask(question)`. It authenticates with an API key scoped to one tenant and role, and calls the REST API with it, so the same RBAC check (`rbac.authorize`) and tenant isolation apply. Keys are hashed and persisted so a key made in the web UI works for the MCP process. | `app/mcp_server.py`, `app/rag/security/rbac.py`, `app/rag/security/apikeys.py`, `app/api/deps.py` (`require_tenant`), `tests/test_mcp.py` |
 | **Structured output** | The answer is JSON `{answer, citations, confidence, answerable}` validated by Pydantic. Gemini runs in JSON-schema mode; invalid replies are retried once with the validation error, then fall back to the extractive answer. SSE streams the `answer` field and finishes with a `sources` event. | `app/rag/llm/structured.py`, `app/rag/llm/gemini.py` (`build_payload`), `app/engine/nodes/generate.py`, `app/api/stream.py`, `tests/test_structured_output.py` |
 
@@ -308,9 +334,12 @@ With Gemini (`gemini-3.1-flash-lite`) the model plans its own hops, e.g. for
 (ingest → chunk → embed → upsert → query → hybrid search → RRF → rerank →
 augment → generate). End-to-end, offline, with tracing/metrics on every node.
 
-**Also done:** F17 caching & F24 cost/token controls.
+**Also done:** F17 caching · F18 multi-tenancy · F19 incremental indexing ·
+F20 hybrid-search weighting · F21 knowledge graph · F22 personalization ·
+F23 feedback loop · F24 cost/token controls · F25 security & compliance.
 
-**Next:** F18 multi-tenancy quotas · F19 incremental indexing · F20 hybrid-search
-weighting · F21 knowledge graph · F22 personalization · F23 feedback loop ·
-F25 security & RBAC.
+**AI concepts:** structured output · few-shot prompting · tool calling and an
+agentic mode (agents, chain of thought) · conversation memory · MCP server with
+tenant-scoped keys and RBAC · multimodal (vision) ingestion. See
+[Concepts demonstrated](#concepts-demonstrated).
 # RAG_SERVER

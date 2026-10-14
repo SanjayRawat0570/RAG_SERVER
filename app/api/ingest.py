@@ -67,7 +67,7 @@ def _build_analyze_response(
         "word_count":     len(words),
         "token_estimate": estimate_tokens(text),
         "title":          parser_meta.get("title") or derive_title(text),
-        "parser_meta":    {k: v for k, v in parser_meta.items() if k != "title"},
+        "parser_meta":    {k: v for k, v in parser_meta.items() if k not in ("title", "segments")},
         "quality":        quality.model_dump(),
         "preview":        text[:500].strip() if text else "",
     }

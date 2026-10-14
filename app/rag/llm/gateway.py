@@ -102,6 +102,18 @@ def _prompt_text(request: dict[str, Any]) -> str:
     return "\n".join(str(m.get("content", "")) for m in request.get("messages", []))
 
 
+# Gemini bills an image as 258 tokens per 768-px tile; vision.py sends at most
+# 1536 px (2×2 tiles). Used only for the budget reservation — accounting uses
+# the provider's reported usage.
+IMAGE_TOKENS_ESTIMATE = 4 * 258
+
+
+def _prompt_tokens(request: dict[str, Any]) -> int:
+    images = sum(1 for m in request.get("messages", []) for p in m.get("parts") or []
+                 if isinstance(p, dict) and ("inline_data" in p or "inlineData" in p))
+    return count_tokens(_prompt_text(request)) + images * IMAGE_TOKENS_ESTIMATE
+
+
 def _preflight(provider, request, config, tenant, budget_limit, span):
     """Configuration, breaker and budget checks shared by both call styles."""
     if not is_configured(provider, config):
@@ -111,7 +123,7 @@ def _preflight(provider, request, config, tenant, budget_limit, span):
         span.set_attribute("llm.circuit", "open")
         raise LLMUnavailableError(f"circuit 'llm:{provider}' is open")
     model = model_name(provider, config)
-    in_est = count_tokens(_prompt_text(request))
+    in_est = _prompt_tokens(request)
     limit = _budget_limit(tenant, budget_limit)
     if limit is not None:
         reserve(tenant, limit, estimate_cost(model, in_est, int(config.get("max_tokens", 512))))

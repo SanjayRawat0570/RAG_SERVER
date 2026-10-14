@@ -34,15 +34,25 @@ class IngestNode(Node):
         content = self._load_content(ctx, upstream)
         filename = ctx.resolve(self.config.get("filename"))
         fmt = self.config.get("format")
-        extra = ctx.resolve(self.config.get("metadata")) if "metadata" in self.config else None
+        extra = self._metadata(ctx)
         document = ingest(
             content,
             filename=filename,
             fmt=fmt,
             document_id=ctx.resolve(self.config.get("document_id")),
-            extra_metadata=extra if isinstance(extra, dict) else None,
+            extra_metadata=extra,
         )
         return document.model_dump()
+
+    def _metadata(self, ctx: ExecutionContext) -> dict[str, Any] | None:
+        """``metadata`` may be a reference or a dict whose values are references;
+        values that resolve to None (an input not supplied) are left out."""
+        raw = self.config.get("metadata")
+        if isinstance(raw, dict):
+            resolved = {k: ctx.resolve(v) for k, v in raw.items()}
+            return {k: v for k, v in resolved.items() if v is not None}
+        value = ctx.resolve(raw)
+        return value if isinstance(value, dict) else None
 
     def _load_content(self, ctx: ExecutionContext, upstream: dict[str, Any]) -> bytes:
         if "content_base64" in self.config:

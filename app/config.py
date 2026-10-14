@@ -46,6 +46,12 @@ class Settings(BaseSettings):
     agent_timeout_s: float = 45.0
     agent_token_budget: int = 8000
 
+    # Multimodal ingestion (per-tenant opt-in: tenant settings ``vision_enabled``).
+    vision_provider: str = "gemini"
+    vision_model: str = ""              # empty → gemini_model
+    vision_max_images: int = 20         # per document — bounds cost and free-tier quota
+    vision_min_image_px: int = 150      # skip icons, logos and rules smaller than this
+
     # Directory for state shared across processes (API keys, tenant AI settings).
     data_dir: str = "data"
 

@@ -40,7 +40,8 @@ def build_index_workflow() -> WorkflowDef:
             {"id": "ingest", "type": "ingest",
              "config": {"text": "$.inputs.text", "filename": "$.inputs.filename",
                         "format": "text",
-                        "metadata": {"tenant": "$.inputs.tenant"}}},
+                        # Optional per-page segments (PDFs, vision) → page-aware chunks.
+                        "metadata": {"tenant": "$.inputs.tenant", "segments": "$.inputs.segments"}}},
             {"id": "chunk", "type": "chunk",
              "config": {"strategy": "structure", "chunk_size": 512, "size_unit": "tokens"}},
             # Entities/relations → the tenant's knowledge graph (agent's lookup_entity).

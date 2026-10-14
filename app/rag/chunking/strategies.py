@@ -23,6 +23,9 @@ from typing import Any, Callable
 
 from app.rag.models import CHARS_PER_TOKEN, Chunk, Document, estimate_tokens
 
+# Per-segment provenance copied onto each chunk (see chunk_document).
+SEGMENT_KEYS = ("page", "source_type", "vision_kind", "description")
+
 _SENTENCE = re.compile(r"(?<=[.!?])\s+")
 _HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
 
@@ -234,6 +237,8 @@ def chunk_document(
     - ``language`` — propagated from the document's quality assessment (F9)
     - ``quality_score`` — document-level quality score (F9)
     - ``chunk_position`` — ``"first"`` | ``"middle"`` | ``"last"`` | ``"only"``
+    - ``page`` / ``source_type`` (``"text"`` | ``"vision"``) / ``vision_kind`` /
+      ``description`` — when the document has ``metadata["segments"]`` (PDF pages)
     """
     config = config or {}
     if strategy not in STRATEGIES:
@@ -246,7 +251,18 @@ def chunk_document(
     size_chars = max(1, int(config.get("chunk_size", 512)) * factor)
     overlap_chars = max(0, int(config.get("overlap", 0)) * factor)
 
-    pieces = STRATEGIES[strategy](document.text, size_chars, overlap_chars)
+    split = STRATEGIES[strategy]
+    segments = document.metadata.get("segments")
+    if segments:
+        # Page-aware: split each segment on its own so no chunk spans two pages,
+        # and every chunk carries the segment's page / source_type (vision).
+        pieces = [
+            (text, {**extra, **{k: seg[k] for k in SEGMENT_KEYS if seg.get(k) is not None}})
+            for seg in segments if str(seg.get("text", "")).strip()
+            for text, extra in split(str(seg["text"]), size_chars, overlap_chars)
+        ]
+    else:
+        pieces = split(document.text, size_chars, overlap_chars)
 
     # Propagate language and quality from the F9 quality assessment block.
     doc_quality = document.metadata.get("quality") or {}

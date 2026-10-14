@@ -1,0 +1,464 @@
+{
+  "provider": "stub",
+  "model": null,
+  "mode": "fast",
+  "few_shot": null,
+  "chunks_indexed": 18,
+  "metrics": {
+    "questions": 28,
+    "citation_rate": 0.9,
+    "citation_precision": 1.0,
+    "answer_accuracy": 0.7,
+    "multihop_accuracy": 0.0,
+    "idk_accuracy": 1.0,
+    "false_idk_rate": 0.1,
+    "fallback_rate": 0.0,
+    "latency_ms_mean": 3.6,
+    "latency_ms_p95": 3.5
+  },
+  "rows": [
+    {
+      "id": "a01",
+      "type": "answerable",
+      "question": "How many days of annual leave do full-time employees get?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 20.1
+    },
+    {
+      "id": "a02",
+      "type": "answerable",
+      "question": "How is annual leave calculated for part-time staff?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 3.3
+    },
+    {
+      "id": "a03",
+      "type": "answerable",
+      "question": "How many unused leave days can be carried over?",
+      "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 2.9
+    },
+    {
+      "id": "a04",
+      "type": "answerable",
+      "question": "How many days of paid sick leave do employees receive?",
+      "answer": "# Sick Leave\n\nEmployees receive 10 days of paid sick leave per year. A doctor's note is required for absences longer than 3 consecutive days. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 2.9
+    },
+    {
+      "id": "a05",
+      "type": "answerable",
+      "question": "How long is parental leave for primary caregivers?",
+      "answer": "# Parental Leave\n\nPrimary caregivers receive 16 weeks of fully paid parental leave. Secondary caregivers receive 4 weeks of fully paid parental leave. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 2.9
+    },
+    {
+      "id": "a06",
+      "type": "answerable",
+      "question": "How is customer data encrypted at rest?",
+      "answer": "# Encryption\n\nAll customer data is encrypted at rest with AES-256. Data in transit is protected with TLS 1.3. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 3.5
+    },
+    {
+      "id": "a07",
+      "type": "answerable",
+      "question": "How often are encryption keys rotated?",
+      "answer": "# Encryption\n\nAll customer data is encrypted at rest with AES-256. Data in transit is protected with TLS 1.3. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "keywords_ok": false,
+      "idk": false,
+      "latency_ms": 3.1
+    },
+    {
+      "id": "a08",
+      "type": "answerable",
+      "question": "What is the minimum password length?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "keywords_ok": false,
+      "idk": true,
+      "latency_ms": 3.2
+    },
+    {
+      "id": "a09",
+      "type": "answerable",
+      "question": "Within how many hours must a security incident be reported?",
+      "answer": "# Incident Reporting\n\nSuspected security incidents must be reported to security@example.com within 24 hours of discovery. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 3.0
+    },
+    {
+      "id": "a10",
+      "type": "answerable",
+      "question": "What is the daily meal allowance when travelling?",
+      "answer": "# Travel Expenses\n\nBusiness travel must be booked through the corporate travel portal. Economy class is required for flights shorter than 6 hours. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "keywords_ok": false,
+      "idk": false,
+      "latency_ms": 3.0
+    },
+    {
+      "id": "a11",
+      "type": "answerable",
+      "question": "Above what amount are receipts required for expenses?",
+      "answer": "# Expense Claims\n\nReceipts are required for every expense above 25 USD. Expense claims must be submitted within 30 days of the purchase. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 3.0
+    },
+    {
+      "id": "a12",
+      "type": "answerable",
+      "question": "Which expenses need approval from the Chief Financial Officer?",
+      "answer": "# Approvals\n\nExpenses above 500 USD require manager approval. Expenses above 5,000 USD also require approval from the Chief Financial Officer. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 3.3
+    },
+    {
+      "id": "a13",
+      "type": "answerable",
+      "question": "How many days per week can employees work remotely?",
+      "answer": "# Remote Work\n\nEmployees may work remotely up to 3 days per week. Core collaboration hours are 10:00 to 15:00 local time. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 3.0
+    },
+    {
+      "id": "a14",
+      "type": "answerable",
+      "question": "How much is the home office stipend?",
+      "answer": "# Home Office Stipend\n\nNew employees receive a one-time home office stipend of 500 USD to buy a desk, chair or monitor. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 2.8
+    },
+    {
+      "id": "a15",
+      "type": "answerable",
+      "question": "How often are company laptops refreshed?",
+      "answer": "# Laptops\n\nCompany laptops are refreshed every 3 years. Lost or stolen laptops must be reported to the IT helpdesk immediately. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 2.7
+    },
+    {
+      "id": "a16",
+      "type": "answerable",
+      "question": "Which team owns Project Atlas?",
+      "answer": "# Project Atlas\n\nProject Atlas is the company's new analytics warehouse. Project Atlas is owned by the Data Platform team and is scheduled to launch in Q3. [1]",
+      "provider": "stub",
+      "confidence": "high",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 3.0
+    },
+    {
+      "id": "a17",
+      "type": "answerable",
+      "question": "Who leads the Mobile team?",
+      "answer": "# Mobile Team\n\nThe Mobile team is led by Tom Becker. The Mobile team is based in the Lisbon office. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "keywords_ok": true,
+      "idk": false,
+      "latency_ms": 2.7
+    },
+    {
+      "id": "m01",
+      "type": "multihop",
+      "question": "Who leads the team that owns Project Atlas?",
+      "answer": "# Project Atlas\n\nProject Atlas is the company's new analytics warehouse. Project Atlas is owned by the Data Platform team and is scheduled to launch in Q3. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "keywords_ok": false,
+      "idk": false,
+      "latency_ms": 3.3
+    },
+    {
+      "id": "m02",
+      "type": "multihop",
+      "question": "In which office is the team that owns Project Beacon based?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "keywords_ok": false,
+      "idk": true,
+      "latency_ms": 2.9
+    },
+    {
+      "id": "m03",
+      "type": "multihop",
+      "question": "Who leads the team responsible for Project Cedar?",
+      "answer": "# Project Cedar\n\nProject Cedar migrates billing to a new payment provider. Project Cedar is owned by the Payments team. [1]",
+      "provider": "stub",
+      "confidence": "medium",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "keywords_ok": false,
+      "idk": false,
+      "latency_ms": 2.8
+    },
+    {
+      "id": "u01",
+      "type": "unanswerable",
+      "question": "What is the parking fee at the Berlin office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "keywords_ok": true,
+      "idk": true,
+      "latency_ms": 2.8
+    },
+    {
+      "id": "u02",
+      "type": "unanswerable",
+      "question": "Which company provides our dental insurance?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "keywords_ok": true,
+      "idk": true,
+      "latency_ms": 2.7
+    },
+    {
+      "id": "u03",
+      "type": "unanswerable",
+      "question": "Are pets allowed in the office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "keywords_ok": true,
+      "idk": true,
+      "latency_ms": 2.8
+    },
+    {
+      "id": "u04",
+      "type": "unanswerable",
+      "question": "How large is the annual performance bonus?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "keywords_ok": true,
+      "idk": true,
+      "latency_ms": 4.2
+    },
+    {
+      "id": "u05",
+      "type": "unanswerable",
+      "question": "What is on the cafeteria menu on Fridays?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "keywords_ok": true,
+      "idk": true,
+      "latency_ms": 3.0
+    },
+    {
+      "id": "u06",
+      "type": "unanswerable",
+      "question": "Who won the 2022 company hackathon?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "keywords_ok": true,
+      "idk": true,
+      "latency_ms": 3.1
+    },
+    {
+      "id": "u07",
+      "type": "unanswerable",
+      "question": "What is the company's stock ticker symbol?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "keywords_ok": true,
+      "idk": true,
+      "latency_ms": 2.7
+    },
+    {
+      "id": "u08",
+      "type": "unanswerable",
+      "question": "How many vacation days do contractors in Japan receive?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "stub",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "keywords_ok": true,
+      "idk": true,
+      "latency_ms": 3.0
+    }
+  ]
+}
