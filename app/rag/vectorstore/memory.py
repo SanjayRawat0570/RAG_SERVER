@@ -126,6 +126,26 @@ class InMemoryVectorStore:
             self._journal.delete(namespace, ids)
         return removed
 
+    def drop_stale_versions(self, records: list[VectorRecord], namespace: str = "default") -> int:
+        """Delete chunks of earlier versions of the documents in *records*.
+
+        Document ids are content hashes, so a re-uploaded file whose content
+        changed arrives with a new ``document_id``. Every chunk in *namespace*
+        with the same ``source`` (file name) but another ``document_id`` is a
+        stale version and is removed. Returns the number of chunks deleted.
+        """
+        current: dict[str, set[str]] = {}
+        for r in records:
+            src, doc = r.metadata.get("source"), r.metadata.get("document_id")
+            if src and doc:
+                current.setdefault(src, set()).add(doc)
+        ns = self._namespaces.get(namespace)
+        if not current or not ns:
+            return 0
+        stale = [rid for rid, md in zip(ns.ids, ns.metadata)
+                 if md.get("source") in current and md.get("document_id") not in current[md["source"]]]
+        return self.delete(stale, namespace) if stale else 0
+
     def list_records(self, namespace: str = "default") -> list[tuple[str, dict[str, Any]]]:
         """All (id, metadata) in a namespace — the corpus for keyword search (F13)."""
         _guard(namespace, "query", self.name)

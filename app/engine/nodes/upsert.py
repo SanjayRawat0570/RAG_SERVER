@@ -10,8 +10,13 @@ Config::
       "store": "default",
       "namespace": "$.inputs.tenant",   # per-tenant isolation
       "dimension": 256,
-      "id_field": "chunk_id"
+      "id_field": "chunk_id",
+      "replace_source": true            # a re-uploaded file replaces its old chunks
     }
+
+With ``replace_source`` the chunks of earlier versions of each uploaded file
+(same ``source``, different content-hash ``document_id``) are deleted first, so
+answers never cite text the file no longer contains.
 """
 from __future__ import annotations
 
@@ -62,10 +67,14 @@ class UpsertNode(Node):
                 )
             )
 
+        replaced = 0
+        if self.config.get("replace_source") and hasattr(store, "drop_stale_versions"):
+            replaced = store.drop_stale_versions(records, namespace)
         upserted = store.upsert(records, namespace=namespace)
         return {
             "store": store_name,
             "namespace": namespace,
             "upserted": upserted,
+            "replaced": replaced,
             "namespace_count": store.count(namespace),
         }

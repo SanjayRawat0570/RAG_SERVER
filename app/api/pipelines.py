@@ -52,7 +52,8 @@ def build_index_workflow() -> WorkflowDef:
             {"id": "graph", "type": "graph_index", "config": {"tenant": "$.inputs.tenant"}},
             {"id": "embed", "type": "embed", "config": {"dimension": DIM}},
             {"id": "upsert", "type": "upsert",
-             "config": {"store": STORE, "namespace": "$.inputs.tenant", "dimension": DIM}},
+             "config": {"store": STORE, "namespace": "$.inputs.tenant", "dimension": DIM,
+                        "replace_source": True}},
             {"id": "out", "type": "output", "config": {"value": "$.upsert"}},
         ],
         edges=[

@@ -6,6 +6,7 @@ Each step updates the task's progress and pushes an SSE event.
 from __future__ import annotations
 
 import asyncio
+import hashlib
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
@@ -112,12 +113,17 @@ async def _step_chunk_embed_upsert(task: "IndexingTask") -> None:
     await asyncio.sleep(0)
 
     store = get_store(task.store, dim)
+    # Content-hash document id (like the ingest pipeline): re-submitting the same
+    # file is idempotent, and a changed file replaces its earlier version.
+    document_id = hashlib.sha1(task.text.encode("utf-8")).hexdigest()[:16]
     records = [
         VectorRecord(
-            id=f"{task.id}:{i}",
+            id=f"{document_id}::{i}",
             vector=vecs[i],
             metadata={
                 "text":      c.text,
+                "source":    task.filename,
+                "document_id": document_id,
                 "doc_id":    task.id,
                 "filename":  task.filename,
                 "chunk_idx": i,
@@ -128,6 +134,7 @@ async def _step_chunk_embed_upsert(task: "IndexingTask") -> None:
         )
         for i, c in enumerate(chunks)
     ]
+    store.drop_stale_versions(records, namespace=task.namespace)
     store.upsert(records, namespace=task.namespace)
     task.chunks_done = len(records)
     task.push_event(step="upsert_done", upserted=task.chunks_done)
