@@ -220,3 +220,37 @@ def test_any_bearer_is_not_a_user_outside_development(monkeypatch):
     r = client.post("/api/v1/rag/ask", headers={"Authorization": "Bearer whatever"},
                     json={"tenant": "acme", "question": "hi"})
     assert r.status_code == 401
+
+
+# ── Organisation registry survives a restart (P0) ──────────────────────────────
+
+def test_registered_org_stays_closed_after_restart():
+    import os
+    import subprocess
+    import sys
+    import uuid
+
+    from app.rag import tenants
+    from app.rag.tenants import registry
+
+    slug = f"persist-{uuid.uuid4().hex[:6]}"
+    dev = {"Authorization": "Bearer dev"}
+    assert client.post("/api/v1/tenants", headers=dev, json={"slug": slug, "name": "P"}).status_code == 201
+    outsider = _key("someone-else-tenant")
+
+    # Restart in-process: drop the in-memory registry and load it from disk.
+    registry._orgs.clear()
+    registry._teams.clear()
+    registry._memberships.clear()
+    assert tenants.get_organization(slug) is None
+    tenants.load_registry()
+    assert tenants.get_organization(slug) is not None
+    assert tenants.is_member("dev", slug)
+    assert client.post("/api/v1/rag/ask", headers=outsider, json={"tenant": slug, "question": "x"}).status_code == 403
+
+    # A fresh interpreter (a real restart) sees the same organisation and owner.
+    code = ("from app.rag.tenants import get_organization, is_member;"
+            f"o = get_organization('{slug}'); print(o is not None and is_member('dev', '{slug}'))")
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, env=os.environ.copy(),
+                         cwd=os.path.dirname(os.path.dirname(__file__)), timeout=120)
+    assert out.stdout.strip().splitlines()[-1] == "True", out.stderr[-500:]

@@ -1,8 +1,11 @@
-"""In-memory tenant registry (F18).
+"""Tenant registry (F18).
 
-Stores Organizations, Teams, and Memberships.  In a production deployment
-these would live in Supabase tables with RLS policies; here we use dicts so
-the system stays offline-first with no external dependencies.
+Stores Organizations, Teams, and Memberships in memory, mirrored to
+``<DATA_DIR>/tenants.json`` on every change and loaded at startup. Persisting
+matters for security, not just convenience: RBAC treats a tenant that is not a
+registered organisation as an open workspace, so losing the registry on a
+restart would silently open every organisation (see app/rag/security/rbac.py).
+Usage counters are statistics and stay in memory.
 
 Key design:
 - Namespace for a user's personal data:  user_id
@@ -15,6 +18,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
+from app.rag.persist import load_json, save_json
 from app.rag.tenants.models import Membership, Organization, Team, UsageStat
 
 # ── In-memory stores ────────────────────────────────────────────────────────────
@@ -23,6 +27,8 @@ _orgs:        dict[str, Organization]     = {}   # slug → org
 _teams:       dict[str, dict[str, Team]]  = {}   # org_slug → (team_slug → team)
 _memberships: list[Membership]            = []
 _usage:       dict[str, UsageStat]        = {}   # "{org_slug}:{team_slug}:{user_id}" → stat
+
+_FILE = "tenants.json"
 
 _DEFAULT_ORG  = "dev-org"
 _DEFAULT_TEAM = "dev-team"
@@ -40,6 +46,32 @@ def _seed_dev() -> None:
                    team_slug=_DEFAULT_TEAM, role="owner")
 
 
+# ── Persistence ─────────────────────────────────────────────────────────────────
+
+def _save() -> None:
+    save_json(_FILE, {
+        "organizations": [o.model_dump(mode="json") for o in _orgs.values()],
+        "teams": [t.model_dump(mode="json") for teams in _teams.values() for t in teams.values()],
+        "memberships": [m.model_dump(mode="json") for m in _memberships],
+    })
+
+
+def load_registry() -> None:
+    """(Re)load organisations, teams and memberships from disk."""
+    global _memberships
+    data = load_json(_FILE, {})
+    _orgs.clear()
+    _teams.clear()
+    for o in data.get("organizations", []):
+        org = Organization.model_validate(o)
+        _orgs[org.slug] = org
+        _teams.setdefault(org.slug, {})
+    for t in data.get("teams", []):
+        team = Team.model_validate(t)
+        _teams.setdefault(team.org_slug, {})[team.slug] = team
+    _memberships = [Membership.model_validate(m) for m in data.get("memberships", [])]
+
+
 # ── Organisation CRUD ───────────────────────────────────────────────────────────
 
 def create_organization(slug: str, name: str, owner_id: str,
@@ -52,6 +84,7 @@ def create_organization(slug: str, name: str, owner_id: str,
     )
     _orgs[slug] = org
     _teams.setdefault(slug, {})
+    _save()
     return org
 
 
@@ -74,6 +107,7 @@ def delete_organization(slug: str) -> bool:
     _usage_keys = [k for k in _usage if k.startswith(f"{slug}:")]
     for k in _usage_keys:
         del _usage[k]
+    _save()
     return True
 
 
@@ -86,6 +120,7 @@ def create_team(org_slug: str, slug: str, name: str) -> Team:
         raise ValueError(f"Team '{slug}' already exists in '{org_slug}'")
     team = Team(id=str(uuid.uuid4()), org_slug=org_slug, slug=slug, name=name)
     _teams.setdefault(org_slug, {})[slug] = team
+    _save()
     return team
 
 
@@ -105,6 +140,7 @@ def delete_team(org_slug: str, team_slug: str) -> bool:
     del teams[team_slug]
     _memberships = [m for m in _memberships
                     if not (m.org_slug == org_slug and m.team_slug == team_slug)]
+    _save()
     return True
 
 
@@ -115,6 +151,7 @@ def add_member(user_id: str, org_slug: str, team_slug: str | None = None,
     m = Membership(user_id=user_id, org_slug=org_slug,
                    team_slug=team_slug, role=role)
     _memberships.append(m)
+    _save()
     return m
 
 
@@ -126,6 +163,8 @@ def remove_member(user_id: str, org_slug: str, team_slug: str | None = None) -> 
         if not (m.user_id == user_id and m.org_slug == org_slug
                 and (team_slug is None or m.team_slug == team_slug))
     ]
+    if len(_memberships) < before:
+        _save()
     return len(_memberships) < before
 
 
@@ -213,3 +252,7 @@ def reset_registry() -> None:
     _teams.clear()
     _memberships = []
     _usage.clear()
+    _save()
+
+
+load_registry()

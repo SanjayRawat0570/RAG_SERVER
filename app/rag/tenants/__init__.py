@@ -14,6 +14,7 @@ from app.rag.tenants.registry import (
     list_members,
     list_organizations,
     list_teams,
+    load_registry,
     org_namespace,
     record_usage,
     remove_member,
@@ -31,5 +32,5 @@ __all__ = [
     "add_member", "remove_member", "list_members", "get_user_orgs", "is_member",
     "user_namespace", "team_namespace", "org_namespace", "resolve_namespace",
     "record_usage", "get_usage", "reset_usage",
-    "reset_registry",
+    "reset_registry", "load_registry",
 ]
