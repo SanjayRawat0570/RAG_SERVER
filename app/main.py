@@ -1,6 +1,8 @@
 """FastAPI application entrypoint."""
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -41,7 +43,18 @@ from app.rag.security.rbac import AccessDenied
 configure_logging()
 init_tracing()
 
+
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    # Reopen the journalled vector stores so indexed documents survive restarts.
+    from app.rag.vectorstore import load_persisted_stores
+
+    load_persisted_stores()
+    yield
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="Enterprise RAG — Orchestration Engine",
     description="Workflow & orchestration engine (F1-F8): DAG execution, "
     "branching, chaining, merging, decision trees, streaming, resilience, "

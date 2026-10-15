@@ -9,13 +9,22 @@ Backend selection
 ``backend="hnsw"``    — HNSWVectorStore (sklearn BallTree, always available)
 ``backend="supabase"``— SupabaseVectorStore (pgvector, requires credentials)
 ``backend="auto"``    — "supabase" if configured, else "hnsw"
+
+Memory/HNSW stores are journalled to ``<DATA_DIR>/vectors/`` (``VECTOR_PERSIST``,
+on by default), so documents survive a restart; see ``journal.py``.
 """
 from __future__ import annotations
 
+import logging
+from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
+from app.config import settings
 from app.rag.embeddings import DEFAULT_DIMENSION
 from app.rag.vectorstore.memory import InMemoryVectorStore
+
+log = logging.getLogger(__name__)
 
 _stores: dict[str, Any] = {}  # name -> store instance
 
@@ -46,8 +55,6 @@ def get_store(
 
 
 def _create_store(name: str, dimension: int, backend: str):
-    from app.config import settings
-
     resolved = backend
     if backend == "auto":
         resolved = "supabase" if (settings.supabase_url and settings.supabase_key) else "hnsw"
@@ -62,10 +69,49 @@ def _create_store(name: str, dimension: int, backend: str):
 
     if resolved == "hnsw":
         from app.rag.vectorstore.indexing import HNSWVectorStore
-        return HNSWVectorStore(name=name, dimension=dimension)
+        return _attach_journal(HNSWVectorStore(name=name, dimension=dimension))
 
     # default: flat memory store
-    return InMemoryVectorStore(name=name, dimension=dimension)
+    return _attach_journal(InMemoryVectorStore(name=name, dimension=dimension))
+
+
+def _journal_root(name: str, dimension: int) -> Path:
+    # Keyed by dimension too: vectors from another embedding model never load.
+    return Path(settings.data_dir) / "vectors" / f"{quote(name, safe='')}-{dimension}"
+
+
+def _attach_journal(store: InMemoryVectorStore) -> InMemoryVectorStore:
+    """Replay the store's on-disk journal and keep journalling its writes (F12)."""
+    if not settings.vector_persist or store.name.startswith("__"):
+        return store
+    from app.rag.vectorstore.journal import Journal
+
+    journal = Journal(_journal_root(store.name, store.dimension))
+    loaded = journal.replay(store)
+    store._journal = journal
+    if loaded:
+        log.info("loaded %d vectors for store %r from %s", loaded, store.name, journal.root)
+    return store
+
+
+def load_persisted_stores() -> int:
+    """Open every journalled store (at startup), so counts and listings are right
+    before the first query. Stores for another embedding dimension are left alone."""
+    from urllib.parse import unquote
+
+    root = Path(settings.data_dir) / "vectors"
+    if not settings.vector_persist or not root.is_dir():
+        return 0
+    from app.rag.embeddings import active_embedding
+
+    dim = active_embedding()[1]
+    opened = 0
+    for d in root.iterdir():
+        name, _, suffix = d.name.rpartition("-")
+        if d.is_dir() and suffix == str(dim) and unquote(name) not in _stores:
+            get_store(unquote(name), dim)
+            opened += 1
+    return opened
 
 
 def store_stats() -> dict[str, Any]:

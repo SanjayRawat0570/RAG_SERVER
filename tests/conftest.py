@@ -18,6 +18,8 @@ os.environ.update({
     "EMBEDDING_MODEL": "local-hash",
     # Persisted state (API keys, tenant settings) goes to a throwaway directory.
     "DATA_DIR": tempfile.mkdtemp(prefix="rag-test-data-"),
+    # Tests share one process and reset stores freely; persistence is tested explicitly.
+    "VECTOR_PERSIST": "false",
 })
 
 import pytest  # noqa: E402

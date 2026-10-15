@@ -65,6 +65,9 @@ class InMemoryVectorStore:
         self.name = name
         self.dimension = dimension
         self._namespaces: dict[str, _Namespace] = {}
+        # On-disk journal (app/rag/vectorstore/journal.py), attached by the registry
+        # so writes survive a restart; None for internal/test stores.
+        self._journal = None
 
     def _ns(self, namespace: str) -> _Namespace:
         return self._namespaces.setdefault(namespace, _Namespace())
@@ -78,6 +81,9 @@ class InMemoryVectorStore:
                     f"Vector dim {len(record.vector)} != store dim {self.dimension}"
                 )
             ns.upsert_one(record)
+        if self._journal is not None:
+            self._journal.upsert(namespace, records)
+            self._journal.maybe_compact(self, namespace)
         return len(records)
 
     def search(
@@ -115,7 +121,10 @@ class InMemoryVectorStore:
     def delete(self, ids: list[str], namespace: str = "default") -> int:
         _guard(namespace, "ingest", self.name)
         ns = self._namespaces.get(namespace)
-        return ns.delete(ids) if ns else 0
+        removed = ns.delete(ids) if ns else 0
+        if removed and self._journal is not None:
+            self._journal.delete(namespace, ids)
+        return removed
 
     def list_records(self, namespace: str = "default") -> list[tuple[str, dict[str, Any]]]:
         """All (id, metadata) in a namespace — the corpus for keyword search (F13)."""

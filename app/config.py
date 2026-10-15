@@ -32,6 +32,9 @@ class Settings(BaseSettings):
     # Max Supabase log/audit rows waiting for the background writer; beyond it new
     # rows are dropped (and counted) instead of blocking requests or growing memory.
     supabase_write_queue: int = 5000
+    # Journal the in-process vector stores to <DATA_DIR>/vectors so indexed
+    # documents survive a restart (app/rag/vectorstore/journal.py).
+    vector_persist: bool = True
     # Output PII guardrail (app/rag/security/guardrails.py): phone numbers, personal
     # emails and fields the sources mark confidential are withheld from answers.
     # Functional mailboxes with these local parts are published contacts and kept.
