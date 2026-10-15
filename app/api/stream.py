@@ -300,7 +300,17 @@ async def _rag_pipeline_events(
     if stream_error:
         result["structured"]["errors"].insert(0, f"stream error: {stream_error}")
     result.pop("response", None)
+    # The streamed reply is validated without a new provider call, so "no response" does
+    # not mean failure here; the structured result says whether the fallback answered.
+    result["provider"] = "extractive-fallback" if result["structured"].get("fallback") else provider_name
     answer, guardrail = guard_answer(result["answer"], llm_request.get("documents") or [])
+    if not streamed.strip() and answer:
+        # Nothing was streamed (the provider failed or is not configured): stream the
+        # extractive fallback the same way, so the client renders it like any answer.
+        for sentence in _sentences(answer):
+            token_count += 1
+            yield {"event": "token", "token": sentence}
+        streamed = answer
 
     yield {"event": "step", "step": "generate", "status": "done",
            "token_count": token_count}
@@ -317,6 +327,7 @@ async def _rag_pipeline_events(
         "answerable":    result["answerable"],
         "structured":    result["structured"],
         "guardrail":     guardrail,
+        "provider":      result.get("provider"),   # "extractive-fallback" → model unavailable
     }
 
     # ── Complete ───────────────────────────────────────────────────────────────
@@ -340,13 +351,17 @@ async def _rag_pipeline_events(
     }
 
 
+def _sentences(text: str) -> list[str]:
+    """*text* split after sentence ends, whitespace kept, so the pieces join back exactly."""
+    return [s for s in re.split(r"(?<=[.!?])(?=\s)", text) if s]
+
+
 async def _cached_answer_events(cached: dict[str, Any]) -> AsyncIterator[dict[str, Any]]:
     """Replay a semantic-cache hit with the same event shape as a generated answer."""
     yield {"event": "step", "step": "generate", "status": "start",
            "message": "Reusing the answer to an equivalent recent question"}
-    for sentence in re.split(r"(?<=[.!?])\s+", str(cached.get("answer", ""))):
-        if sentence:
-            yield {"event": "token", "token": sentence + " "}
+    for sentence in _sentences(str(cached.get("answer", ""))):
+        yield {"event": "token", "token": sentence}
     yield {"event": "step", "step": "generate", "status": "done", "token_count": 0}
     citations = cached.get("citations") or []
     markers = cached.get("cited_markers") or []
