@@ -32,8 +32,13 @@ class _Namespace:
         self.vectors: list[np.ndarray] = []
         self.metadata: list[dict[str, Any]] = []
         self._pos: dict[str, int] = {}
+        # Keyword index over metadata["text"], maintained on every write (F13).
+        from app.rag.search.inverted import InvertedIndex  # app.rag.search imports this module
+
+        self.keywords = InvertedIndex()
 
     def upsert_one(self, record: VectorRecord) -> None:
+        self.keywords.add(record.id, str(record.metadata.get("text", "")))
         vec = _normalize(np.asarray(record.vector, dtype=np.float32))
         if record.id in self._pos:  # update in place
             i = self._pos[record.id]
@@ -49,6 +54,7 @@ class _Namespace:
         removed = 0
         for rid in ids:
             if rid in self._pos:
+                self.keywords.remove(rid)
                 i = self._pos.pop(rid)
                 self.ids.pop(i)
                 self.vectors.pop(i)
@@ -145,6 +151,29 @@ class InMemoryVectorStore:
         stale = [rid for rid, md in zip(ns.ids, ns.metadata)
                  if md.get("source") in current and md.get("document_id") not in current[md["source"]]]
         return self.delete(stale, namespace) if stale else 0
+
+    def keyword_search(self, query: str, top_k: int = 5, namespace: str = "default",
+                       text_field: str = "text") -> list[SearchHit]:
+        """BM25 over the chunk texts, from the namespace's incremental index.
+
+        Same scores and order as building :class:`app.rag.search.bm25.BM25` over
+        ``list_records`` (the previous per-query approach), without re-reading the
+        corpus. Only ``text_field="text"`` is indexed; other fields fall back.
+        """
+        _guard(namespace, "query", self.name)
+        ns = self._namespaces.get(namespace)
+        if not ns or not ns.ids:
+            return []
+        if text_field != "text":
+            from app.rag.search.bm25 import BM25, tokenize
+
+            bm25 = BM25([tokenize(str(md.get(text_field, ""))) for md in ns.metadata])
+            scores = bm25.scores(tokenize(query))
+            ranked = sorted(range(len(ns.ids)), key=lambda i: scores[i], reverse=True)[:top_k]
+            return [SearchHit(id=ns.ids[i], score=float(scores[i]), metadata=ns.metadata[i])
+                    for i in ranked if scores[i] > 0]
+        return [SearchHit(id=rid, score=float(score), metadata=ns.metadata[ns._pos[rid]])
+                for rid, score in ns.keywords.search(query, top_k, ns._pos)]
 
     def list_records(self, namespace: str = "default") -> list[tuple[str, dict[str, Any]]]:
         """All (id, metadata) in a namespace — the corpus for keyword search (F13)."""

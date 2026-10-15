@@ -1,8 +1,9 @@
 """Keyword search node — BM25 sparse retrieval (F13).
 
-Builds a BM25 index over the text of the records stored in a vector-store
-namespace (the store is the single source of truth) and ranks them against the
-query. Pairs with ``vector_search`` for hybrid retrieval via an ``rrf`` merge.
+Ranks the records of a vector-store namespace against the query with BM25,
+using the namespace's incremental keyword index (kept up to date on every
+upsert/delete), so a query does not re-read the corpus. Pairs with
+``vector_search`` for hybrid retrieval via an ``rrf`` merge.
 
 Config::
 
@@ -36,6 +37,9 @@ class KeywordSearchNode(Node):
             int(self.config.get("dimension", DEFAULT_DIMENSION)),
         )
         namespace = ctx.resolve(self.config.get("namespace", "default")) or "default"
+        if hasattr(store, "keyword_search"):
+            return [{"id": h.id, "score": h.score, "metadata": h.metadata}
+                    for h in store.keyword_search(query_text, top_k, namespace, text_field)]
         records = store.list_records(namespace)
         if not records:
             return []

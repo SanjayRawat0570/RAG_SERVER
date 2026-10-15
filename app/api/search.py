@@ -202,6 +202,16 @@ async def keyword(
         raise HTTPException(422, f"Store '{request.store}' does not support "
                                    "BM25 keyword search (in-memory stores only).")
 
+    if not request.filters and hasattr(store, "keyword_search"):
+        # The namespace's incremental BM25 index: no per-query corpus rebuild.
+        found = store.keyword_search(processed["expanded_query"], request.top_k,
+                                     request.namespace, request.text_field)
+        hits = [{"id": h.id, "score": round(h.score, 4), "metadata": h.metadata,
+                 "highlight": _keyword_highlight(str(h.metadata.get(request.text_field, "")),
+                                                 processed["keywords"])} for h in found]
+        return {"hits": hits, "query_analysis": processed, "total": len(hits),
+                "store": request.store, "namespace": request.namespace}
+
     records = store.list_records(request.namespace)
 
     # Metadata pre-filter

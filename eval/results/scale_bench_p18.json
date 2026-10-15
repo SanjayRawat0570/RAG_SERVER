@@ -1,0 +1,34 @@
+[
+  {
+    "chunks": 1000,
+    "dense_ms_median": 2.8,
+    "bm25_ms_median": 0.39,
+    "bm25_rebuild_ms_median": 17.0,
+    "insert_ms_per_1k_chunks": 65.3,
+    "rss_mb": 118.2
+  },
+  {
+    "chunks": 10000,
+    "dense_ms_median": 25.5,
+    "bm25_ms_median": 3.71,
+    "bm25_rebuild_ms_median": 219.2,
+    "insert_ms_per_1k_chunks": 51.4,
+    "rss_mb": 287.8
+  },
+  {
+    "chunks": 50000,
+    "dense_ms_median": 103.7,
+    "bm25_ms_median": 7.6,
+    "bm25_rebuild_ms_median": 930.5,
+    "insert_ms_per_1k_chunks": 60.0,
+    "rss_mb": 922.5
+  },
+  {
+    "chunks": 100000,
+    "dense_ms_median": 229.0,
+    "bm25_ms_median": 16.42,
+    "bm25_rebuild_ms_median": 2005.3,
+    "insert_ms_per_1k_chunks": 59.6,
+    "rss_mb": 1221.3
+  }
+]

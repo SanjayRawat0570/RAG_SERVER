@@ -1,0 +1,26 @@
+[
+  {
+    "chunks": 1000,
+    "dense_ms_median": 2.7,
+    "bm25_ms_median": 16.2,
+    "rss_mb": 116.5
+  },
+  {
+    "chunks": 10000,
+    "dense_ms_median": 27.7,
+    "bm25_ms_median": 225.3,
+    "rss_mb": 273.4
+  },
+  {
+    "chunks": 50000,
+    "dense_ms_median": 109.9,
+    "bm25_ms_median": 1097.3,
+    "rss_mb": 858.5
+  },
+  {
+    "chunks": 100000,
+    "dense_ms_median": 259.1,
+    "bm25_ms_median": 2383.1,
+    "rss_mb": 1132.9
+  }
+]

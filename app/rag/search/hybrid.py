@@ -132,7 +132,12 @@ def hybrid_search(
 
     # Sparse retrieval (BM25 over in-memory records)
     sparse_hits: list[dict[str, Any]] = []
-    if hasattr(store, "list_records"):
+    if not filters and hasattr(store, "keyword_search"):
+        # Unfiltered: the namespace's incremental BM25 index (no corpus re-read).
+        sparse_hits = [{"id": h.id, "score": h.score, "metadata": h.metadata}
+                       for h in store.keyword_search(processed["expanded_query"], fetch_k,
+                                                     namespace, text_field)]
+    elif hasattr(store, "list_records"):
         records = store.list_records(namespace)
         if records:
             # Apply metadata pre-filter manually
