@@ -11,6 +11,7 @@ explainability payload.
 
 Strategies:
 * ``cross_encoder`` — relevance = semantic cosine ⊕ lexical overlap (CE stand-in)
+* ``onnx_cross_encoder`` — neural ms-marco MiniLM cross-encoder on ONNX Runtime
 * ``mmr``           — Maximal Marginal Relevance for diversity
 * ``recency``       — exponential time decay on a date field
 * ``authority``     — per-source credibility weighting
@@ -172,8 +173,15 @@ def _load_neural():
         return None
 
 
+def _onnx_cross_encoder(query: str, candidates: list[dict], config: dict) -> list[dict]:
+    from app.rag.rerank.onnx_cross_encoder import onnx_cross_encoder  # lazy: loads the model
+
+    return onnx_cross_encoder(query, candidates, config)
+
+
 STRATEGIES: dict[str, Any] = {
     "cross_encoder":        cross_encoder,
+    "onnx_cross_encoder":   _onnx_cross_encoder,
     "mmr":                  mmr,
     "recency":              recency,
     "authority":            authority,

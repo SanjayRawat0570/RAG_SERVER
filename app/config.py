@@ -80,6 +80,12 @@ class Settings(BaseSettings):
     # "bge-small-en-v1.5" is a local semantic model (fastembed/ONNX, ~64 MB, offline
     # once downloaded). An unavailable model falls back to local-hash with a warning.
     embedding_model: str = "bge-small-en-v1.5"
+    # Reranker for the ask pipelines: "heuristic" (cosine + word overlap) or "onnx"
+    # (neural cross-encoder, app/rag/rerank/onnx_cross_encoder.py). RERANK_POOL is
+    # how many fused candidates are retrieved and reranked down to 3.
+    reranker: str = "heuristic"
+    reranker_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
+    rerank_pool: int = 5
     models_dir: str = "models"
     allow_model_download: bool = True
 

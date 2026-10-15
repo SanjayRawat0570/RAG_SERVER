@@ -24,6 +24,7 @@ from app.engine.merging import rrf
 from app.engine.nodes.registry import get_node  # registry module: safe during package init
 from app.models.workflow import NodeDef, NodeType
 from app.rag.graph import find_entities, neighbours
+from app.rag.rerank.onnx_cross_encoder import pipeline_method as rerank_method
 from app.rag.vectorstore import lookup_store
 
 RESERVED_ARGS = {"tenant", "tenant_id", "namespace", "org", "org_slug", "team", "team_slug", "user_id"}
@@ -118,7 +119,7 @@ async def hybrid_search(query: str, ctx: ToolContext, filters: dict[str, Any] | 
     if not merged:
         return []
     reranked = await _nd(NodeType.RERANK, "rerank",
-                         {"method": "cross_encoder", "query": "$.qp.normalized",
+                         {"method": rerank_method(), "query": "$.qp.normalized",
                           "top_n": ctx.top_k}).run(ectx, {"fuse": merged})
     return reranked if isinstance(reranked, list) else merged[:ctx.top_k]
 

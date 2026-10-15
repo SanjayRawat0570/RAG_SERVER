@@ -35,6 +35,7 @@ from pydantic import BaseModel
 
 from app.api.deps import get_current_user, get_optional_user, require_tenant
 from app.api.pipelines import DIM, STORE, build_agentic_retrieval_workflow, default_provider
+from app.config import settings
 from app.engine.context import ExecutionContext
 from app.engine.executor import WorkflowExecutor
 from app.engine.merging import rrf
@@ -43,6 +44,7 @@ from app.models.workflow import NodeDef, NodeType
 from app.rag.cost import BudgetExceededError
 from app.rag.cache import answers as answer_cache
 from app.rag.memory import service as memory
+from app.rag.rerank.onnx_cross_encoder import pipeline_method as rerank_method
 from app.rag.security.guardrails import StreamGuard, guard_answer
 from app.rag.tenants.ai_settings import effective_examples
 from app.rag.llm.gateway import redact, stream_llm
@@ -105,11 +107,11 @@ async def _fast_retrieval(
 
     dense_node = _nd(NodeType.VECTOR_SEARCH, "dense", {
         "store": STORE, "namespace": "$.inputs.tenant",
-        "query": "$.qp.normalized", "dimension": DIM, "top_k": 5,
+        "query": "$.qp.normalized", "dimension": DIM, "top_k": settings.rerank_pool,
     })
     sparse_node = _nd(NodeType.KEYWORD_SEARCH, "sparse", {
         "store": STORE, "namespace": "$.inputs.tenant",
-        "query": "$.qp.expanded_query", "dimension": DIM, "top_k": 5,
+        "query": "$.qp.expanded_query", "dimension": DIM, "top_k": settings.rerank_pool,
     })
     dense_out, sparse_out = await asyncio.gather(
         dense_node.run(ctx, {"qp": qp_out}),
@@ -120,7 +122,7 @@ async def _fast_retrieval(
 
     yield {"event": "progress", "step": "search", "pct": 70,
            "message": "Merging and deduplicating results..."}
-    merged = rrf([dense_out or [], sparse_out or []], {"top_n": 5})
+    merged = rrf([dense_out or [], sparse_out or []], {"top_n": settings.rerank_pool})
     ctx.set_output("fuse", merged)
     yield {"event": "step", "step": "search", "status": "done",
            "hit_count": len(merged)}
@@ -133,7 +135,7 @@ async def _fast_retrieval(
     yield {"event": "step", "step": "rerank", "status": "start",
            "message": "Reranking results by relevance..."}
     rerank_node = _nd(NodeType.RERANK, "rerank", {
-        "method": "cross_encoder", "query": "$.qp.normalized", "top_n": 3,
+        "method": rerank_method(), "query": "$.qp.normalized", "top_n": 3,
     })
     reranked = await rerank_node.run(ctx, {"fuse": merged})
     # Profile + long-term memory interests (no-op for anonymous users).

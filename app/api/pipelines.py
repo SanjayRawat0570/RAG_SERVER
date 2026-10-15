@@ -12,6 +12,7 @@ from typing import Any
 from app.config import settings
 from app.models.workflow import WorkflowDef
 from app.rag.embeddings import active_embedding
+from app.rag.rerank.onnx_cross_encoder import pipeline_method as rerank_method
 
 STORE = "kb"
 # The knowledge base's embedding dimension: 256 (hash) or the active model's
@@ -68,6 +69,7 @@ def build_index_workflow() -> WorkflowDef:
 
 
 def build_ask_workflow(provider: str, model: str | None = None) -> WorkflowDef:
+    pool = settings.rerank_pool  # candidates retrieved, fused and reranked down to 3
     return WorkflowDef(
         name="ui_ask",
         nodes=[
@@ -75,13 +77,13 @@ def build_ask_workflow(provider: str, model: str | None = None) -> WorkflowDef:
             {"id": "qp", "type": "query_process", "config": {"query": "$.inputs.question"}},
             {"id": "dense", "type": "vector_search",
              "config": {"store": STORE, "namespace": "$.inputs.tenant",
-                        "query": "$.qp.normalized", "dimension": DIM, "top_k": 5}},
+                        "query": "$.qp.normalized", "dimension": DIM, "top_k": pool}},
             {"id": "sparse", "type": "keyword_search",
              "config": {"store": STORE, "namespace": "$.inputs.tenant",
-                        "query": "$.qp.expanded_query", "dimension": DIM, "top_k": 5}},
-            {"id": "fuse", "type": "merge", "config": {"strategy": "rrf", "top_n": 5}},
+                        "query": "$.qp.expanded_query", "dimension": DIM, "top_k": pool}},
+            {"id": "fuse", "type": "merge", "config": {"strategy": "rrf", "top_n": pool}},
             {"id": "rerank", "type": "rerank",
-             "config": {"method": "cross_encoder", "query": "$.qp.normalized", "top_n": 3}},
+             "config": {"method": rerank_method(), "query": "$.qp.normalized", "top_n": 3}},
             # Profile + long-term memory interests re-rank (no-op without a profile).
             {"id": "personalize", "type": "personalize", "config": {"user_id": "$.inputs.user_id"}},
             {"id": "augment", "type": "augment",
