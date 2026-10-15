@@ -8,6 +8,9 @@ is fetched once into ``MODELS_DIR`` like the embedding model::
     python -m app.rag.rerank.onnx_cross_encoder download
 
 Selected with ``RERANKER=onnx`` (the pipelines read :func:`pipeline_method`).
+Off by default: on 90 eval questions with gemini-3.1-flash-lite it raised MRR
+(0.956 -> 0.977) and cut false "I don't know" (0.133 -> 0.107) but answer
+accuracy was unchanged (0.853), for ~100 ms more CPU per question.
 If the model cannot load, the heuristic ``cross_encoder`` is used instead and
 a warning is logged once — retrieval never fails because of the reranker.
 """

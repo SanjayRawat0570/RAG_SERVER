@@ -82,7 +82,9 @@ class Settings(BaseSettings):
     embedding_model: str = "bge-small-en-v1.5"
     # Reranker for the ask pipelines: "heuristic" (cosine + word overlap) or "onnx"
     # (neural cross-encoder, app/rag/rerank/onnx_cross_encoder.py). RERANK_POOL is
-    # how many fused candidates are retrieved and reranked down to 3.
+    # how many fused candidates are retrieved and reranked down to 3. "heuristic"
+    # stays the default: in a Gemini A/B the cross-encoder raised MRR but not answer
+    # accuracy (0.853 both; eval/results/p212_*_g31_pc15.json).
     reranker: str = "heuristic"
     reranker_model: str = "Xenova/ms-marco-MiniLM-L-6-v2"
     rerank_pool: int = 5
