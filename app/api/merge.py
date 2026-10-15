@@ -20,7 +20,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_tenant
 from app.api.pipelines import STORE, DIM, build_ask_workflow, default_provider
 from app.engine.executor import WorkflowExecutor
 from app.engine.merging import STRATEGIES, merge
@@ -152,6 +152,7 @@ async def merge_search(
     Runs up to 3 search methods (semantic, keyword, entity) in parallel,
     then merges all result lists using the requested strategy (default: rrf).
     """
+    require_tenant(user, request.tenant, "query")
     if request.strategy not in STRATEGIES:
         raise HTTPException(422, f"Unknown strategy '{request.strategy}'")
 
@@ -199,6 +200,7 @@ async def merge_answers(
     then merges them (default strategy: answer_merge) to find common ground,
     surface differences, and build a comprehensive response.
     """
+    require_tenant(user, request.tenant, "query")
     if request.strategy not in STRATEGIES:
         raise HTTPException(422, f"Unknown strategy '{request.strategy}'")
 

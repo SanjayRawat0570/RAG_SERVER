@@ -19,7 +19,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.deps import get_current_user
+from app.api.deps import can_access, get_current_user, require_tenant, visible_store_stats
 from app.rag.embeddings import embed_texts
 from app.rag.embeddings.registry import _MODEL_DIMS
 from app.rag.vectorstore import (
@@ -109,6 +109,7 @@ async def upsert_vectors(
     Use ``backend`` to choose ``"memory"`` (dev), ``"hnsw"`` (medium scale),
     or ``"supabase"`` (production pgvector).
     """
+    require_tenant(user, request.namespace, "ingest")
     if not request.records:
         raise HTTPException(422, "No records to upsert.")
 
@@ -142,6 +143,7 @@ async def search_vectors(
     Use ``filters`` to restrict results to records whose metadata matches
     all key-value pairs in the filter dict (exact-match AND logic).
     """
+    require_tenant(user, request.namespace, "query")
     store = lookup_store(request.store)
     if store is None:
         raise HTTPException(404, f"Store '{request.store}' not found.")
@@ -171,6 +173,7 @@ async def delete_vectors(
     Deletions are scoped to the ``namespace`` — the same ID in a different
     namespace is not affected.
     """
+    require_tenant(user, request.namespace, "ingest")
     store = lookup_store(request.store)
     if store is None:
         raise HTTPException(404, f"Store '{request.store}' not found.")
@@ -194,7 +197,7 @@ async def list_vector_stores(
     Shows store name, dimension, index type (flat/hnsw/pgvector), total vector
     count, and a per-namespace breakdown.
     """
-    stores = list_stores()
+    stores = visible_store_stats(user, list_stores())
     return {
         "stores":        stores,
         "count":         len(stores),
@@ -215,7 +218,8 @@ async def list_store_namespaces(
     - **Document types**: separate PDFs from spreadsheets
     - **Date ranges**: partition by ingestion month for time-scoped searches
     """
-    namespaces = list_namespaces(store_name)
+    # Only the namespaces the caller may read — tenant names are not public.
+    namespaces = [ns for ns in list_namespaces(store_name) if can_access(user, ns["namespace"])]
     total = sum(ns["count"] for ns in namespaces)
     return {
         "store":      store_name,
@@ -343,6 +347,7 @@ async def upsert_chunks(
     metadata.  The embedding model is called in batch (one API call per request)
     so this is significantly cheaper than embedding + upsert separately.
     """
+    require_tenant(user, request.namespace, "ingest")
     if not request.chunks:
         raise HTTPException(422, "No chunks provided.")
 

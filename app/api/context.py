@@ -15,7 +15,7 @@ from typing import Any, Literal
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.rag.context import (
     build_context,
     build_prompt,
@@ -174,8 +174,9 @@ async def select_context_chunks(req: SelectRequest, _: CurrentUser) -> dict[str,
 
 
 @router.post("/build")
-async def build_augmented_prompt(req: BuildRequest, _: CurrentUser) -> dict[str, Any]:
+async def build_augmented_prompt(req: BuildRequest, user: CurrentUser) -> dict[str, Any]:
     """Full pipeline: search the store → select → organize → build prompt."""
+    require_tenant(user, req.namespace, "query")
     store = lookup_store(req.store)
     if store is None:
         raise HTTPException(404, f"Store '{req.store}' not found.")

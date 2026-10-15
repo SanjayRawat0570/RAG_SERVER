@@ -56,6 +56,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.rag.vectorstore.base import SearchHit, VectorRecord
+from app.rag.vectorstore.memory import _guard
 
 _TABLE = "vector_chunks"
 
@@ -87,6 +88,7 @@ class SupabaseVectorStore:
     # ── upsert ────────────────────────────────────────────────────────────────
 
     def upsert(self, records: list[VectorRecord], namespace: str = "default") -> int:
+        _guard(namespace, "ingest", self.name)
         if not records:
             return 0
         rows = [
@@ -111,6 +113,7 @@ class SupabaseVectorStore:
         namespace: str = "default",
         metadata_filter: dict[str, Any] | None = None,
     ) -> list[SearchHit]:
+        _guard(namespace, "query", self.name)
         # Try RPC (HNSW-accelerated via pgvector index).
         try:
             result = self._client.rpc(
@@ -189,6 +192,7 @@ class SupabaseVectorStore:
     # ── delete ─────────────────────────────────────────────────────────────────
 
     def delete(self, ids: list[str], namespace: str = "default") -> int:
+        _guard(namespace, "ingest", self.name)
         if not ids:
             return 0
         (

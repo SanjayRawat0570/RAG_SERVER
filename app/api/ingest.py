@@ -15,7 +15,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_tenant
 from app.api.pipelines import build_index_workflow
 from app.engine.executor import WorkflowExecutor
 from app.rag.ingestion.cleaning import clean_text, derive_title
@@ -146,6 +146,7 @@ async def ingest_url(
     (when ``index=true``) indexes it into the vector store under ``tenant``.
     Returns the same quality + metadata response as ``POST /ingest/analyze``.
     """
+    require_tenant(user, request.tenant, "ingest")
     try:
         raw_text, parser_meta = await fetch_url(request.url)
     except Exception as exc:
@@ -190,6 +191,7 @@ async def ingest_text(
     (e.g., from a pipeline, a database export, or an API response).
     Set ``index=false`` to run analysis only.
     """
+    require_tenant(user, request.tenant, "ingest")
     text = clean_text(request.text)
     fmt = detect_format(request.filename)
     canonical_fmt = PARSERS.get(fmt, ("text", None))[0]

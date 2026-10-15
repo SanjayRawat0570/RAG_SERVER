@@ -23,7 +23,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query as QParam
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser, require_tenant
+from app.api.deps import CurrentUser, require_tenant, scoped_tenant
 from app.rag.security import (
     AuditAction, compliance_report,
     create_api_key, data_inventory, decrypt, delete_user_data,
@@ -71,6 +71,7 @@ class VerifyKeyRequest(BaseModel):
 
 @router.post("/audit/events", status_code=201)
 async def audit_log_event(req: LogEventRequest, user: CurrentUser) -> dict[str, Any]:
+    require_tenant(user, req.tenant, "query")
     event = log_event(
         user_id=user["id"],
         action=req.action,
@@ -90,12 +91,16 @@ async def audit_log_event(req: LogEventRequest, user: CurrentUser) -> dict[str, 
 
 @router.get("/audit/events")
 async def list_audit_events(
-    _:       CurrentUser,
+    user:    CurrentUser,
     user_id: str | None = QParam(None),
     action:  str | None = QParam(None),
     tenant:  str | None = QParam(None),
     limit:   int        = QParam(50, ge=1, le=500),
 ) -> dict[str, Any]:
+    # A tenant's audit trail is for its admins; without a tenant, your own events.
+    tenant = scoped_tenant(user, tenant, "manage")
+    if tenant is None:
+        user_id = user["id"]
     events = get_events(user_id=user_id, action=action, tenant=tenant, limit=limit)
     return {
         "total": len(events),

@@ -36,6 +36,7 @@ from app.engine.nodes import get_node
 from app.models.workflow import NodeResult, RunResponse, WorkflowDef
 from app.observability.metrics import record_node, record_workflow
 from app.observability.tracing import get_tracer
+from app.rag.security.rbac import AccessDenied
 
 logger = logging.getLogger("engine.executor")
 tracer = get_tracer("engine.executor")
@@ -243,6 +244,10 @@ class WorkflowExecutor:
                     node_id=node_id, type=definition.type, status="success",
                     output=output, attempts=attempts, duration_ms=duration_ms,
                 )
+            except AccessDenied:
+                # An authorization failure is not a node failure: no retry, no
+                # fallback — the whole request is refused (403).
+                raise
             except Exception as exc:  # noqa: BLE001 - node failures are data, not crashes
                 last_error = exc
                 # A CircuitOpenError means we never actually called the node, so

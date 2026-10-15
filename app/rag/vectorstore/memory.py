@@ -15,6 +15,12 @@ import numpy as np
 from app.rag.vectorstore.base import SearchHit, VectorRecord
 
 
+def _guard(namespace: str, permission: str, store: str) -> None:
+    """Tenant check for the current request (see app.rag.security.scope)."""
+    from app.rag.security.scope import guard
+    guard(namespace, permission, store)
+
+
 def _normalize(v: np.ndarray) -> np.ndarray:
     norm = np.linalg.norm(v)
     return v / norm if norm > 0 else v
@@ -64,6 +70,7 @@ class InMemoryVectorStore:
         return self._namespaces.setdefault(namespace, _Namespace())
 
     def upsert(self, records: list[VectorRecord], namespace: str = "default") -> int:
+        _guard(namespace, "ingest", self.name)
         ns = self._ns(namespace)
         for record in records:
             if len(record.vector) != self.dimension:
@@ -80,6 +87,7 @@ class InMemoryVectorStore:
         namespace: str = "default",
         metadata_filter: dict[str, Any] | None = None,
     ) -> list[SearchHit]:
+        _guard(namespace, "query", self.name)
         ns = self._namespaces.get(namespace)
         if not ns or not ns.ids:
             return []
@@ -105,11 +113,13 @@ class InMemoryVectorStore:
         ]
 
     def delete(self, ids: list[str], namespace: str = "default") -> int:
+        _guard(namespace, "ingest", self.name)
         ns = self._namespaces.get(namespace)
         return ns.delete(ids) if ns else 0
 
     def list_records(self, namespace: str = "default") -> list[tuple[str, dict[str, Any]]]:
         """All (id, metadata) in a namespace — the corpus for keyword search (F13)."""
+        _guard(namespace, "query", self.name)
         ns = self._namespaces.get(namespace)
         if not ns:
             return []

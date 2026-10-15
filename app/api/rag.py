@@ -18,7 +18,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.config import settings
 from app.rag.cache import SemanticCache, get_cache, cache_stats as _cache_stats
 from app.rag.cache.cache import MISS
@@ -281,6 +281,7 @@ async def ask(req: AskRequest, user: CurrentUser) -> dict[str, Any]:
                 user["id"], org_slug=req.org_slug, team_slug=req.team_slug
             )
         })
+    require_tenant(user, req.namespace, "query")
 
     try:
         result = await _run_pipeline(req)
@@ -306,8 +307,9 @@ async def ask(req: AskRequest, user: CurrentUser) -> dict[str, Any]:
 
 
 @router.post("/answer/stream")
-async def ask_stream(req: AskRequest, _: CurrentUser) -> StreamingResponse:
+async def ask_stream(req: AskRequest, user: CurrentUser) -> StreamingResponse:
     """Stream the LLM answer token by token as Server-Sent Events."""
+    require_tenant(user, req.namespace, "query")
     # Build context synchronously, then stream LLM tokens.
     store = lookup_store(req.store)
     if store is None:

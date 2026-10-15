@@ -10,7 +10,11 @@ GET  /graph/relations           List relations (filter by entity / predicate)
 POST /graph/search              Graph search — find entities matching query
 POST /graph/path                Shortest path between two entities
 GET  /graph/stats               Entity count, relation count, top connected
-DELETE /graph/reset             Clear the entire graph
+DELETE /graph/reset             Clear the tenant's graph
+
+Every endpoint works on one tenant's graph (``?tenant=``, default ``default``),
+checked with the same RBAC as the rest of the API: reads need ``query``,
+writes ``ingest``, reset ``manage``.
 """
 from __future__ import annotations
 
@@ -19,7 +23,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.rag.graph import (
     Entity, Relation, ENTITY_TYPES,
     add_entity, add_relation, extract_entities_from_text, extract_relations_from_text,
@@ -28,6 +32,8 @@ from app.rag.graph import (
 )
 
 router = APIRouter(prefix="/graph", tags=["graph"])
+
+Tenant = Query("default", description="Tenant whose graph to use")
 
 
 # ── Request models ─────────────────────────────────────────────────────────────
@@ -72,21 +78,20 @@ class AddRelationRequest(BaseModel):
 
 # ── Helpers ─────────────────────────────────────────────────────────────────────
 
-def _entity_with_neighbours(entity: Entity) -> dict[str, Any]:
-    return {
-        **entity.model_dump(),
-        "neighbours": neighbours(entity.id),
-        "degree":     len(neighbours(entity.id)),
-    }
+def _entity_with_neighbours(entity: Entity, tenant: str) -> dict[str, Any]:
+    near = neighbours(entity.id, tenant=tenant)
+    return {**entity.model_dump(), "neighbours": near, "degree": len(near)}
 
 
 # ── Ingestion endpoints ─────────────────────────────────────────────────────────
 
 @router.post("/ingest", status_code=201)
-async def ingest_text(_: CurrentUser, req: IngestRequest) -> dict[str, Any]:
+async def ingest_text(user: CurrentUser, req: IngestRequest,
+                     tenant: str = Tenant) -> dict[str, Any]:
     """Extract entities and relations from text and add them to the graph."""
-    result = ingest_document(req.text, req.doc_id)
-    s = stats()
+    require_tenant(user, tenant, "ingest")
+    result = ingest_document(req.text, req.doc_id, tenant=tenant)
+    s = stats(tenant=tenant)
     return {
         "extracted":       result,
         "graph_totals":    {"entities": s.entity_count, "relations": s.relation_count},
@@ -110,8 +115,10 @@ async def extract_only(_: CurrentUser, req: ExtractRequest) -> dict[str, Any]:
 # ── Manual graph mutations ──────────────────────────────────────────────────────
 
 @router.post("/entities", status_code=201)
-async def create_entity(_: CurrentUser, req: AddEntityRequest) -> dict[str, Any]:
+async def create_entity(user: CurrentUser, req: AddEntityRequest,
+                       tenant: str = Tenant) -> dict[str, Any]:
     """Manually add an entity to the graph."""
+    require_tenant(user, tenant, "ingest")
     if req.type.upper() not in ENTITY_TYPES:
         raise HTTPException(422, f"Unknown entity type '{req.type}'. "
                                   f"Valid: {sorted(ENTITY_TYPES)}")
@@ -120,18 +127,20 @@ async def create_entity(_: CurrentUser, req: AddEntityRequest) -> dict[str, Any]
     eid  = f"{req.type.upper()}:{slug}"
     entity = Entity(id=eid, name=req.name, type=req.type.upper(),
                     aliases=req.aliases, doc_ids=req.doc_ids, metadata=req.metadata)
-    added = add_entity(entity)
+    added = add_entity(entity, tenant=tenant)
     return added.model_dump()
 
 
 @router.post("/relations", status_code=201)
-async def create_relation(_: CurrentUser, req: AddRelationRequest) -> dict[str, Any]:
+async def create_relation(user: CurrentUser, req: AddRelationRequest,
+                         tenant: str = Tenant) -> dict[str, Any]:
     """Manually add a relation to the graph."""
+    require_tenant(user, tenant, "ingest")
     rid      = f"{req.subject_id}::{req.predicate}::{req.object_id}"
     relation = Relation(id=rid, subject_id=req.subject_id, predicate=req.predicate,
                         object_id=req.object_id, confidence=req.confidence,
                         doc_ids=req.doc_ids, metadata=req.metadata)
-    added = add_relation(relation)
+    added = add_relation(relation, tenant=tenant)
     return added.model_dump()
 
 
@@ -139,44 +148,51 @@ async def create_relation(_: CurrentUser, req: AddRelationRequest) -> dict[str, 
 
 @router.get("/entities")
 async def list_entities(
-    _:     CurrentUser,
+    user:  CurrentUser,
+    tenant: str = Tenant,
     name:  str | None = Query(None, description="Substring match on entity name"),
     type:  str | None = Query(None, description="Filter by entity type (PERSON, ORGANIZATION, …)"),
     doc_id: str | None = Query(None, description="Filter entities from a specific document"),
     limit: int = Query(50, ge=1, le=200),
 ) -> dict[str, Any]:
     """Search entities with optional name/type/document filters."""
-    entities = find_entities(name=name, entity_type=type, doc_id=doc_id, limit=limit)
+    require_tenant(user, tenant, "query")
+    entities = find_entities(name=name, entity_type=type, doc_id=doc_id, limit=limit, tenant=tenant)
     return {"total": len(entities), "entities": [e.model_dump() for e in entities]}
 
 
 @router.get("/entities/{entity_id:path}")
-async def get_entity_detail(_: CurrentUser, entity_id: str) -> dict[str, Any]:
+async def get_entity_detail(user: CurrentUser, entity_id: str, tenant: str = Tenant) -> dict[str, Any]:
     """Return an entity's full detail including its neighbours."""
-    entity = get_entity(entity_id)
+    require_tenant(user, tenant, "query")
+    entity = get_entity(entity_id, tenant=tenant)
     if entity is None:
         raise HTTPException(404, f"Entity '{entity_id}' not found")
-    return _entity_with_neighbours(entity)
+    return _entity_with_neighbours(entity, tenant)
 
 
 @router.get("/relations")
 async def list_relations(
-    _:          CurrentUser,
+    user:       CurrentUser,
+    tenant: str = Tenant,
     entity_id:  str | None = Query(None),
     predicate:  str | None = Query(None),
     direction:  str        = Query("out", pattern="^(in|out|both)$"),
     limit:      int        = Query(50, ge=1, le=200),
 ) -> dict[str, Any]:
     """List relations, optionally filtered by entity / predicate / direction."""
+    require_tenant(user, tenant, "query")
     rels = get_relations(entity_id=entity_id, predicate=predicate,
-                         direction=direction, limit=limit)
+                         direction=direction, limit=limit, tenant=tenant)
     return {"total": len(rels), "relations": [r.model_dump() for r in rels]}
 
 
 @router.post("/search")
-async def search_graph(_: CurrentUser, req: GraphSearchRequest) -> dict[str, Any]:
+async def search_graph(user: CurrentUser, req: GraphSearchRequest,
+                      tenant: str = Tenant) -> dict[str, Any]:
     """Graph-aware search — extract query entities and find connected subgraphs."""
-    results = graph_search(req.query, top_k=req.top_k)
+    require_tenant(user, tenant, "query")
+    results = graph_search(req.query, top_k=req.top_k, tenant=tenant)
     return {
         "query":   req.query,
         "total":   len(results),
@@ -185,14 +201,15 @@ async def search_graph(_: CurrentUser, req: GraphSearchRequest) -> dict[str, Any
 
 
 @router.post("/path")
-async def find_path(_: CurrentUser, req: PathRequest) -> dict[str, Any]:
+async def find_path(user: CurrentUser, req: PathRequest, tenant: str = Tenant) -> dict[str, Any]:
     """Find the shortest path between two entities in the graph."""
-    if get_entity(req.source_id) is None:
+    require_tenant(user, tenant, "query")
+    if get_entity(req.source_id, tenant=tenant) is None:
         raise HTTPException(404, f"Source entity '{req.source_id}' not found")
-    if get_entity(req.target_id) is None:
+    if get_entity(req.target_id, tenant=tenant) is None:
         raise HTTPException(404, f"Target entity '{req.target_id}' not found")
 
-    path = shortest_path(req.source_id, req.target_id, max_depth=req.max_depth)
+    path = shortest_path(req.source_id, req.target_id, max_depth=req.max_depth, tenant=tenant)
     if path is None:
         return {
             "source_id": req.source_id,
@@ -211,13 +228,15 @@ async def find_path(_: CurrentUser, req: PathRequest) -> dict[str, Any]:
 
 
 @router.get("/stats")
-async def get_stats(_: CurrentUser) -> dict[str, Any]:
+async def get_stats(user: CurrentUser, tenant: str = Tenant) -> dict[str, Any]:
     """Return graph statistics — entity/relation counts, type breakdown, top nodes."""
-    return stats().model_dump()
+    require_tenant(user, tenant, "query")
+    return stats(tenant=tenant).model_dump()
 
 
 @router.delete("/reset")
-async def clear_graph(_: CurrentUser) -> dict[str, Any]:
-    """Clear the entire knowledge graph."""
-    reset_graph()
+async def clear_graph(user: CurrentUser, tenant: str = Tenant) -> dict[str, Any]:
+    """Clear this tenant's knowledge graph."""
+    require_tenant(user, tenant, "manage")
+    reset_graph(tenant=tenant)
     return {"status": "ok", "message": "Graph cleared"}

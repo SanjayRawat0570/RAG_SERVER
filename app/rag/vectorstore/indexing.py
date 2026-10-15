@@ -18,7 +18,7 @@ from typing import Any
 import numpy as np
 
 from app.rag.vectorstore.base import SearchHit, VectorRecord
-from app.rag.vectorstore.memory import InMemoryVectorStore, _Namespace, _normalize
+from app.rag.vectorstore.memory import InMemoryVectorStore, _guard, _Namespace, _normalize
 
 # Thresholds for automatic index selection.
 FLAT_MAX  =    10_000
@@ -187,6 +187,7 @@ class HNSWVectorStore(InMemoryVectorStore):
         namespace: str = "default",
         metadata_filter: dict[str, Any] | None = None,
     ) -> list[SearchHit]:
+        _guard(namespace, "query", self.name)
         ns = self._namespaces.get(namespace)
         if not ns or not ns.ids:
             return []

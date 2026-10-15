@@ -16,7 +16,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.rag.cache import cache_stats, get_cache, reset_caches
 from app.rag.cache.cache import MISS
 from app.rag.embeddings.registry import cache_stats as embedding_cache_stats
@@ -87,13 +87,14 @@ async def clear_cache(req: ClearRequest, _: CurrentUser) -> dict[str, Any]:
 
 
 @router.post("/invalidate")
-async def invalidate_document(req: InvalidateRequest, _: CurrentUser) -> dict[str, Any]:
+async def invalidate_document(req: InvalidateRequest, user: CurrentUser) -> dict[str, Any]:
     """Invalidate all cache entries related to a document.
 
     This removes the document's chunks from the vector store AND clears the
     L1 query cache for the affected store, forcing re-retrieval on next query.
     The semantic cache store is also wiped since answers may have changed.
     """
+    require_tenant(user, req.namespace, "ingest")
     removed_vectors = 0
     store = lookup_store(req.store)
     if store:
@@ -127,12 +128,13 @@ async def invalidate_document(req: InvalidateRequest, _: CurrentUser) -> dict[st
 
 
 @router.post("/warm")
-async def warm_cache(req: WarmRequest, _: CurrentUser) -> dict[str, Any]:
+async def warm_cache(req: WarmRequest, user: CurrentUser) -> dict[str, Any]:
     """Pre-populate the query cache by running a list of queries now.
 
     Useful after a deployment or document update so the first real users
     see cached results instead of cold-start latency.
     """
+    require_tenant(user, "default", "ingest")
     from app.api.rag import AskRequest, _run_pipeline
 
     results: list[dict[str, Any]] = []

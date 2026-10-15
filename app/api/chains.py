@@ -18,7 +18,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_tenant
 from app.api.pipelines import (
     build_ask_workflow,
     build_decompose_workflow,
@@ -83,6 +83,7 @@ async def run_document_chain(
       3. embed   → convert chunks to vectors
       4. upsert  → store in vector DB
     """
+    require_tenant(user, request.tenant, "ingest")
     chain = ChainDef(
         name="document_upload",
         description="Ingest, chunk, embed, and index a document",
@@ -112,6 +113,7 @@ async def run_ask_chain(
       5. augment        → build prompt context with citations
       6. generate       → LLM answer generation
     """
+    require_tenant(user, request.tenant, "query")
     provider = request.provider or default_provider()
     chain = ChainDef(
         name="rag_ask",
@@ -139,6 +141,7 @@ async def run_multihop_chain(
       Phase 2: answer     → run full RAG ask for EACH sub-question
       Phase 3: synthesize → merge all answers into one coherent response
     """
+    require_tenant(user, request.tenant, "query")
     provider = request.provider or default_provider()
     chain_id = str(uuid.uuid4())
     t0 = time.perf_counter()

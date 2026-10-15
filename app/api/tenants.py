@@ -36,13 +36,14 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
+from app.rag.security.rbac import ROLES, role_rank
 from app.rag.tenants import (
     Organization, Team,
     add_member, create_organization, create_team,
     delete_organization, delete_team,
     get_organization, get_team,
-    get_usage, get_user_orgs, is_member,
+    get_usage, get_user_orgs,
     list_members, list_organizations, list_teams,
     record_usage, remove_member, reset_usage, resolve_namespace,
     user_namespace,
@@ -79,9 +80,9 @@ def _require_org(slug: str) -> Organization:
     return org
 
 
-def _require_member(user_id: str, org_slug: str) -> None:
-    if not is_member(user_id, org_slug):
-        raise HTTPException(403, "You are not a member of this organisation")
+def _require_member(user: dict, org_slug: str, permission: str = "query") -> str:
+    """Membership (and for API keys, key scope) check; returns the caller's role."""
+    return require_tenant(user, org_slug, permission)
 
 
 def _org_response(org: Organization) -> dict[str, Any]:
@@ -99,6 +100,8 @@ def _org_response(org: Organization) -> dict[str, Any]:
 @router.post("", status_code=201)
 async def create_org(req: CreateOrgRequest, user: CurrentUser) -> dict[str, Any]:
     """Create a new organisation owned by the calling user."""
+    if user.get("auth") == "api_key":
+        raise HTTPException(403, "API keys are scoped to one tenant and cannot create organisations")
     try:
         org = create_organization(slug=req.slug, name=req.name,
                                   owner_id=user["id"], settings=req.settings)
@@ -145,13 +148,14 @@ async def my_namespace(
 @router.get("/{slug}")
 async def get_org(slug: str, user: CurrentUser) -> dict[str, Any]:
     org = _require_org(slug)
-    _require_member(user["id"], slug)
+    _require_member(user, slug)
     return _org_response(org)
 
 
 @router.delete("/{slug}")
 async def remove_org(slug: str, user: CurrentUser) -> dict[str, Any]:
     org = _require_org(slug)
+    _require_member(user, slug, "manage")
     # Only the owner can delete the org.
     if org.owner_id != user["id"]:
         raise HTTPException(403, "Only the owner can delete an organisation")
@@ -165,7 +169,7 @@ async def remove_org(slug: str, user: CurrentUser) -> dict[str, Any]:
 async def create_org_team(slug: str, req: CreateTeamRequest,
                           user: CurrentUser) -> dict[str, Any]:
     _require_org(slug)
-    _require_member(user["id"], slug)
+    _require_member(user, slug, "manage")
     try:
         team = create_team(org_slug=slug, slug=req.slug, name=req.name)
     except ValueError as exc:
@@ -176,7 +180,7 @@ async def create_org_team(slug: str, req: CreateTeamRequest,
 @router.get("/{slug}/teams")
 async def list_org_teams(slug: str, user: CurrentUser) -> dict[str, Any]:
     _require_org(slug)
-    _require_member(user["id"], slug)
+    _require_member(user, slug)
     teams = list_teams(slug)
     return {"total": len(teams), "teams": [t.model_dump() for t in teams]}
 
@@ -184,7 +188,7 @@ async def list_org_teams(slug: str, user: CurrentUser) -> dict[str, Any]:
 @router.delete("/{slug}/teams/{team_slug}")
 async def remove_org_team(slug: str, team_slug: str, user: CurrentUser) -> dict[str, Any]:
     org = _require_org(slug)
-    _require_member(user["id"], slug)
+    _require_member(user, slug)
     if org.owner_id != user["id"]:
         raise HTTPException(403, "Only the owner can delete teams")
     if not delete_team(slug, team_slug):
@@ -197,8 +201,12 @@ async def remove_org_team(slug: str, team_slug: str, user: CurrentUser) -> dict[
 @router.post("/{slug}/members", status_code=201)
 async def add_org_member(slug: str, req: AddMemberRequest,
                          user: CurrentUser) -> dict[str, Any]:
-    org = _require_org(slug)
-    _require_member(user["id"], slug)
+    _require_org(slug)
+    role = _require_member(user, slug, "manage")
+    if role_rank(req.role) < 0:
+        raise HTTPException(422, f"Unknown role '{req.role}'. Valid: {list(ROLES)}")
+    if role_rank(req.role) > role_rank(role):
+        raise HTTPException(403, f"you are '{role}' in '{slug}' and cannot grant '{req.role}'")
     if req.team_slug and not get_team(slug, req.team_slug):
         raise HTTPException(404, f"Team '{req.team_slug}' not found")
     m = add_member(user_id=req.user_id, org_slug=slug,
@@ -210,7 +218,7 @@ async def add_org_member(slug: str, req: AddMemberRequest,
 async def list_org_members(slug: str, user: CurrentUser,
                            team: str | None = Query(None)) -> dict[str, Any]:
     _require_org(slug)
-    _require_member(user["id"], slug)
+    _require_member(user, slug)
     members = list_members(slug, team_slug=team)
     return {
         "total":   len(members),
@@ -221,7 +229,7 @@ async def list_org_members(slug: str, user: CurrentUser,
 @router.delete("/{slug}/members/{uid}")
 async def remove_org_member(slug: str, uid: str, user: CurrentUser) -> dict[str, Any]:
     org = _require_org(slug)
-    _require_member(user["id"], slug)
+    _require_member(user, slug)
     # Only owner/admin can remove others; any user can remove themselves.
     if uid != user["id"] and org.owner_id != user["id"]:
         raise HTTPException(403, "Only the owner can remove other members")
@@ -236,7 +244,7 @@ async def remove_org_member(slug: str, uid: str, user: CurrentUser) -> dict[str,
 @router.get("/{slug}/usage")
 async def get_org_usage(slug: str, user: CurrentUser) -> dict[str, Any]:
     _require_org(slug)
-    _require_member(user["id"], slug)
+    _require_member(user, slug)
     stats = get_usage(slug)
     total_queries  = sum(s.total_queries  for s in stats)
     total_tokens   = sum(s.total_tokens   for s in stats)
@@ -257,6 +265,7 @@ async def get_org_usage(slug: str, user: CurrentUser) -> dict[str, Any]:
 async def reset_org_usage(slug: str, user: CurrentUser) -> dict[str, Any]:
     """Reset usage counters for the organisation (does not delete documents)."""
     org = _require_org(slug)
+    _require_member(user, slug, "manage")
     if org.owner_id != user["id"]:
         raise HTTPException(403, "Only the owner can reset usage")
     reset_usage(slug)

@@ -43,7 +43,11 @@ async def get_current_user(
     authorization: Annotated[str, Header(alias="authorization")] = "",
     x_api_key: Annotated[str, Header(alias="x-api-key")] = "",
 ) -> dict:
-    """Verify the caller and return the user dict.
+    """Verify the caller, record them as this request's principal, and return the user dict.
+
+    Recording the principal lets the data layer (vector stores, graph) refuse a
+    namespace the caller may not use, whichever route it arrived through.
+    See :mod:`app.rag.security.scope`.
 
     Accepts a Supabase JWT (``Authorization: Bearer <jwt>``) or an API key
     (``Authorization: Bearer sk-…`` or ``X-API-Key: sk-…``). API keys are always
@@ -54,6 +58,14 @@ async def get_current_user(
       - Supabase is not configured, OR
       - APP_ENV is development/test and the token is literally "dev"
     """
+    from app.rag.security.scope import set_principal
+
+    user = _resolve_user(authorization, x_api_key)
+    set_principal(user)
+    return user
+
+
+def _resolve_user(authorization: str, x_api_key: str) -> dict:
     if x_api_key:
         return _api_key_user(x_api_key.strip())
     if not authorization.startswith("Bearer "):
@@ -102,14 +114,58 @@ async def get_optional_user(
     except HTTPException:
         if x_api_key or authorization[7:].strip().startswith(API_KEY_PREFIX):
             raise
-        return {"id": "anonymous", "email": "", "username": "anonymous"}
+        from app.rag.security.scope import set_principal
+
+        user = {"id": "anonymous", "email": "", "username": "anonymous"}
+        set_principal(user)
+        return user
 
 
 def require_tenant(user: dict, tenant: str, permission: str = "query") -> str:
-    """RBAC gate for tenant data: 403 unless *user* may *permission* on *tenant*."""
-    from app.rag.security.rbac import AccessDenied, authorize
+    """RBAC gate for tenant data: 403 unless *user* may *permission* on *tenant*.
+
+    The one check every route uses before touching tenant data. *tenant* may be
+    a tenant or a namespace (``org/team`` → tenant ``org``; ``user:<id>`` → that
+    user only).
+    """
+    from app.rag.security.rbac import AccessDenied
+    from app.rag.security.scope import authorize_namespace
 
     try:
-        return authorize(user, tenant, permission)
+        return authorize_namespace(user, tenant, permission)
     except AccessDenied as exc:
         raise HTTPException(403, str(exc)) from exc
+
+
+def scoped_tenant(user: dict, tenant: str | None, permission: str = "query") -> str | None:
+    """Tenant filter for listing endpoints whose ``tenant`` filter is optional.
+
+    An API key always lists its own tenant (asking for another is 403). Anyone
+    else must be allowed on the tenant they name; with no tenant the caller
+    sees only their own records (the endpoint filters by user id).
+    """
+    if user.get("auth") == "api_key":
+        tenant = tenant or user.get("tenant")
+    if tenant:
+        require_tenant(user, tenant, permission)
+    return tenant
+
+
+def can_access(user: dict, namespace: str, permission: str = "query") -> bool:
+    from app.rag.security.rbac import AccessDenied
+    from app.rag.security.scope import authorize_namespace
+
+    try:
+        authorize_namespace(user, namespace, permission)
+        return True
+    except AccessDenied:
+        return False
+
+
+def visible_store_stats(user: dict, stores: list[dict]) -> list[dict]:
+    """Store statistics reduced to the namespaces *user* may read."""
+    out = []
+    for s in stores:
+        ns = {n: c for n, c in (s.get("namespaces") or {}).items() if can_access(user, n)}
+        out.append({**s, "namespaces": ns, "total": sum(ns.values())})
+    return out

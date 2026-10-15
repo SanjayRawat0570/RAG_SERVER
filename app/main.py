@@ -1,8 +1,9 @@
 """FastAPI application entrypoint."""
 from __future__ import annotations
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 from app import __version__
@@ -35,6 +36,7 @@ from app.api.stream import router as stream_router
 from app.api.upload import router as upload_router
 from app.config import configure_logging, settings
 from app.observability.tracing import init_tracing
+from app.rag.security.rbac import AccessDenied
 
 configure_logging()
 init_tracing()
@@ -55,6 +57,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.exception_handler(AccessDenied)
+async def access_denied(_: Request, exc: AccessDenied) -> JSONResponse:
+    """A tenant check deep in the data layer (vector stores, graph) refused the caller."""
+    return JSONResponse(status_code=403, content={"detail": str(exc)})
+
 
 # Auto-instrument HTTP requests so each call produces a trace spanning the
 # whole pipeline (F8).

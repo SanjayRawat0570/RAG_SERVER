@@ -22,7 +22,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query as QParam
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant, scoped_tenant
 from app.rag.cost import (
     BudgetExceededError,
     budget_stats,
@@ -145,6 +145,7 @@ async def check_reserve(req: ReserveRequest, _: CurrentUser) -> dict[str, Any]:
 
 @router.post("/usage", status_code=201)
 async def record(req: RecordUsageRequest, user: CurrentUser) -> dict[str, Any]:
+    require_tenant(user, req.tenant, "query")
     event = record_usage(
         user_id=user["id"],
         tenant=req.tenant,
@@ -166,13 +167,16 @@ async def record(req: RecordUsageRequest, user: CurrentUser) -> dict[str, Any]:
 
 @router.get("/usage")
 async def get_usage_endpoint(
-    _:         CurrentUser,
+    user:      CurrentUser,
     user_id:   str | None = QParam(None),
     tenant:    str | None = QParam(None),
     model:     str | None = QParam(None),
     operation: str | None = QParam(None),
     limit:     int        = QParam(50, ge=1, le=500),
 ) -> dict[str, Any]:
+    tenant = scoped_tenant(user, tenant)
+    if tenant is None:
+        user_id = user["id"]  # no tenant: only the caller's own usage
     events = get_usage(
         user_id=user_id, tenant=tenant, model=model, operation=operation, limit=limit
     )
@@ -198,10 +202,13 @@ async def get_usage_endpoint(
 
 @router.get("/summary")
 async def summary(
-    _:       CurrentUser,
+    user:    CurrentUser,
     user_id: str | None = QParam(None),
     tenant:  str | None = QParam(None),
 ) -> dict[str, Any]:
+    tenant = scoped_tenant(user, tenant)
+    if tenant is None:
+        user_id = user["id"]  # no tenant: only the caller's own usage
     return usage_summary(user_id=user_id, tenant=tenant)
 
 

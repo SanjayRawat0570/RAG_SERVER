@@ -32,7 +32,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_tenant
 from app.api.pipelines import (
     STORE, DIM,
     build_ask_workflow,
@@ -175,6 +175,7 @@ async def search_with_fallback(
     Returns results from the first method that finds anything, with a
     ``degraded=true`` flag and explanation when a fallback was used.
     """
+    require_tenant(user, request.tenant, "query")
     chain = FallbackChainDef(
         name="search_fallback",
         description="Cascade: semantic → keyword → entity",
@@ -227,6 +228,7 @@ async def ask_with_fallback(
       2. Fallback provider (e.g., stub)
       ... any additional providers in fallback_providers
     """
+    require_tenant(user, request.tenant, "query")
     primary = request.primary_provider or default_provider()
     fallback_list = request.fallback_providers or (
         ["stub"] if primary != "stub" else []
@@ -284,6 +286,7 @@ async def search_with_query_expansion(
 
     A ``partial_note`` explains which expansion was used.
     """
+    require_tenant(user, request.tenant, "query")
     chain = FallbackChainDef(
         name="query_expansion",
         description="Direct → expanded → entity cascade on empty results",
@@ -349,6 +352,7 @@ async def ingest_with_fallback(
     In this implementation the "OCR" option is simulated (it re-ingests the
     raw text as-is). In production replace with a real OCR node.
     """
+    require_tenant(user, request.tenant, "ingest")
     from app.api.pipelines import build_index_workflow
     from app.models.workflow import WorkflowDef
 

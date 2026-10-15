@@ -19,7 +19,7 @@ from typing import Any
 from fastapi import APIRouter, Query as QParam
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.rag.personalization import (
     QueryRecord, UserProfile,
     detect_topics, get_history, get_profile, infer_interests,
@@ -127,6 +127,7 @@ async def get_my_interests(
 async def personalized_search(req: PersonalizedSearchRequest,
                               user: CurrentUser) -> dict[str, Any]:
     """Hybrid search with results re-ranked by the caller's preference profile."""
+    require_tenant(user, req.namespace, "query")
     from app.rag.search.hybrid import hybrid_search
 
     result = hybrid_search(
@@ -172,6 +173,7 @@ async def get_recommendations(
     top_k:     int = QParam(5, ge=1, le=20),
 ) -> dict[str, Any]:
     """Documents recommended for this user based on their history and interests."""
+    require_tenant(user, namespace, "query")
     recs = recommend_documents(
         user_id=user["id"],
         store_name=store,

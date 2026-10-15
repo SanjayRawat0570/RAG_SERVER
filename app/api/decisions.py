@@ -27,7 +27,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_tenant
 from app.api.pipelines import (
     STORE, DIM,
     build_doc_type_router_workflow,
@@ -130,6 +130,7 @@ async def route_query(
         [entity]    use entity_search
         [hybrid]    use rrf_merge (all three)
     """
+    require_tenant(user, request.tenant, "query")
     from app.engine.nodes.entity_search import extract_entities
 
     wf  = build_search_strategy_workflow()
@@ -277,6 +278,7 @@ async def route_quality(
         [low    > 40%]  expand context and retry
         [none   ≤ 40%]  cannot answer confidently
     """
+    require_tenant(user, request.tenant, "query")
     wf  = build_confidence_router_workflow()
     run = await WorkflowExecutor(wf).run({
         "question": request.question,

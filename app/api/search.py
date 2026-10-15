@@ -15,7 +15,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
-from app.api.deps import get_current_user
+from app.api.deps import get_current_user, require_tenant
 from app.rag.embeddings.registry import _FACTORIES, DEFAULT_MODEL
 from app.rag.query import process_query
 from app.rag.rerank import STRATEGIES as RERANK_STRATEGIES, rerank
@@ -154,6 +154,7 @@ async def semantic(
     Set ``filters`` to restrict search to a subset of documents, e.g.
     ``{"year": 2024, "format": "pdf"}``.
     """
+    require_tenant(user, request.namespace, "query")
     if request.rerank and request.rerank not in RERANK_STRATEGIES:
         raise HTTPException(422, f"Unknown rerank method '{request.rerank}'. "
                                   f"Available: {sorted(RERANK_STRATEGIES)}")
@@ -187,6 +188,7 @@ async def keyword(
     query term are returned.  Best for exact-match queries, product codes, and
     queries where precise terminology matters.
     """
+    require_tenant(user, request.namespace, "query")
     processed = process_query(request.query, request.synonyms)
 
     store = lookup_store(request.store)
@@ -260,6 +262,7 @@ async def hybrid(
     ``dense_weight`` / ``sparse_weight`` control the relative importance.
     Higher ``rrf_k`` makes rankings more stable; lower values amplify top hits.
     """
+    require_tenant(user, request.namespace, "query")
     if request.rerank and request.rerank not in RERANK_STRATEGIES:
         raise HTTPException(422, f"Unknown rerank method '{request.rerank}'. "
                                   f"Available: {sorted(RERANK_STRATEGIES)}")
@@ -336,12 +339,13 @@ async def classify_query_type(
 @router.post("/compare")
 async def compare_profiles(
     request: CompareRequest,
-    _: dict = Depends(get_current_user),
+    user: dict = Depends(get_current_user),
 ) -> dict:
     """Run the same query under multiple weight profiles and compare results (F20).
 
     Useful for tuning: see which profile surfaces the best results for a query.
     """
+    require_tenant(user, request.namespace, "query")
     from app.rag.search.weights import PROFILES
 
     unknown = [p for p in request.profiles if p not in PROFILES]

@@ -13,6 +13,7 @@ Architecture
 from __future__ import annotations
 
 import asyncio
+import contextvars
 import heapq
 import itertools
 from datetime import datetime, timezone
@@ -152,7 +153,10 @@ async def start_workers(n: int = 3) -> None:
         return
     _running = True
     loop = asyncio.get_event_loop()
-    _workers = [loop.create_task(_drain_queue(i)) for i in range(n)]
+    # Workers outlive the request that starts them, so they must not inherit its
+    # principal: tasks are authorized when submitted (app/api/indexing.py).
+    ctx = contextvars.Context()
+    _workers = [loop.create_task(_drain_queue(i), context=ctx) for i in range(n)]
 
 
 def stop_workers() -> None:

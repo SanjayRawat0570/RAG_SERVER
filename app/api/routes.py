@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from app.api.deps import get_optional_user, require_tenant
+from app.api.deps import CurrentUser, can_access, get_optional_user, require_tenant, visible_store_stats
 from app.api.pipelines import (
     build_agentic_workflow,
     build_ask_workflow,
@@ -63,8 +63,12 @@ class AskRequest(BaseModel):
 
 
 @router.post("/workflows/run", response_model=RunResponse, tags=["workflows"])
-async def run_workflow(request: RunRequest) -> RunResponse:
-    """Execute a workflow definition against the provided inputs."""
+async def run_workflow(request: RunRequest, _: CurrentUser) -> RunResponse:
+    """Execute a workflow definition against the provided inputs.
+
+    Requires credentials: the nodes may name any store/namespace, and the data
+    layer checks each one against the caller (403 for another tenant's data).
+    """
     try:
         executor = WorkflowExecutor(request.workflow)
     except (WorkflowGraphError, ValueError) as exc:
@@ -73,7 +77,7 @@ async def run_workflow(request: RunRequest) -> RunResponse:
 
 
 @router.post("/workflows/stream", tags=["workflows"])
-async def stream_workflow(request: RunRequest) -> StreamingResponse:
+async def stream_workflow(request: RunRequest, _: CurrentUser) -> StreamingResponse:
     """Execute a workflow and stream results as Server-Sent Events (F6).
 
     Emits one SSE message per engine event (``workflow_start``,
@@ -220,9 +224,10 @@ async def metrics() -> Response:
 
 
 @router.get("/vectorstores", tags=["rag"])
-async def vectorstores() -> dict:
-    """Inspect vector stores: namespaces, counts, index type (F12)."""
-    return {"stores": store_stats()}
+async def vectorstores(user: CurrentUser) -> dict:
+    """Inspect vector stores: namespaces, counts, index type (F12) — the caller's namespaces only."""
+    visible = visible_store_stats(user, list(store_stats().values()))
+    return {"stores": {s["name"]: s for s in visible}}
 
 
 @router.get("/caches", tags=["rag"])
@@ -232,6 +237,6 @@ async def caches() -> dict:
 
 
 @router.get("/budgets", tags=["rag"])
-async def budgets() -> dict:
-    """Per-tenant spend vs. limit (F24)."""
-    return {"budgets": budget_stats()}
+async def budgets(user: CurrentUser) -> dict:
+    """Per-tenant spend vs. limit (F24) — the tenants the caller may read."""
+    return {"budgets": {t: b for t, b in budget_stats().items() if can_access(user, t)}}

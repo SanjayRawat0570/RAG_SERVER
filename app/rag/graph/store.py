@@ -39,6 +39,9 @@ _graphs: dict[str, _Graph] = {}
 
 
 def _g(tenant: str) -> _Graph:
+    from app.rag.security.scope import guard
+
+    guard(tenant or DEFAULT_TENANT)  # the request's principal must have access to this tenant
     return _graphs.setdefault(tenant or DEFAULT_TENANT, _Graph())
 
 

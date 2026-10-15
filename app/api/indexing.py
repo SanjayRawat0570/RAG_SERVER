@@ -22,7 +22,7 @@ from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser
+from app.api.deps import CurrentUser, require_tenant
 from app.rag.indexing import (
     IndexingTask, Priority, TaskStatus,
     cancel, get_task, list_tasks, queue_stats, start_workers, submit,
@@ -54,10 +54,14 @@ class BatchSubmitRequest(BaseModel):
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
 
-def _make_task(req: SubmitRequest, user_id: str, priority: int | None = None) -> IndexingTask:
+def _make_task(req: SubmitRequest, user: dict, priority: int | None = None) -> IndexingTask:
+    user_id = user["id"]
     ns = req.namespace
     if ns == "default" and (req.org_slug or req.team_slug):
         ns = resolve_namespace(user_id, org_slug=req.org_slug, team_slug=req.team_slug)
+    # Authorized here, at submit time: the workers run without a request principal.
+    require_tenant(user, ns, "ingest")
+    require_tenant(user, req.tenant, "ingest")
     return IndexingTask(
         id=str(uuid4()),
         user_id=user_id,
@@ -88,7 +92,7 @@ async def _ensure_workers() -> None:
 async def submit_document(req: SubmitRequest, user: CurrentUser) -> dict[str, Any]:
     """Submit a document for background indexing.  Returns immediately with a task ID."""
     await _ensure_workers()
-    task = _make_task(req, user["id"])
+    task = _make_task(req, user)
     submit(task)
     return {
         "task_id":  task.id,
@@ -103,7 +107,7 @@ async def submit_document(req: SubmitRequest, user: CurrentUser) -> dict[str, An
 async def submit_priority(req: SubmitRequest, user: CurrentUser) -> dict[str, Any]:
     """Submit with URGENT priority — document jumps to the front of the queue."""
     await _ensure_workers()
-    task = _make_task(req, user["id"], priority=Priority.URGENT)
+    task = _make_task(req, user, priority=Priority.URGENT)
     submit(task)
     return {
         "task_id":  task.id,
@@ -121,7 +125,7 @@ async def submit_batch(req: BatchSubmitRequest, user: CurrentUser) -> dict[str, 
     tasks = []
     for doc in req.documents:
         doc = doc.model_copy(update={"store": req.store, "tenant": req.tenant})
-        task = _make_task(doc, user["id"])
+        task = _make_task(doc, user)
         submit(task)
         tasks.append({"task_id": task.id, "filename": task.filename, "status": task.status})
     return {
