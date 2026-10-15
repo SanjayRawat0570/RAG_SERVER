@@ -110,7 +110,7 @@ def test_conversations_are_scoped_to_tenant_and_user():
 
 def _index(client: TestClient, tenant: str) -> None:
     for name in ("hr_leave_policy.md", "teams.md"):
-        client.post("/api/v1/rag/index", json={
+        client.post("/api/v1/rag/index", headers=AUTH, json={
             "tenant": tenant, "filename": name, "text": (CORPUS / name).read_text(encoding="utf-8")})
 
 
@@ -150,9 +150,19 @@ def test_agentic_mode_keeps_the_memory_step_before_agent_steps():
     assert "Amara Okafor" in follow["answer"]
 
 
-def test_anonymous_callers_get_no_memory():
+def test_callers_without_credentials_are_refused():
     from app.main import app
 
+    with TestClient(app) as client:
+        r = client.post("/api/v1/rag/ask", json={"tenant": "mem-anon", "question": "What is AI?"})
+    assert r.status_code == 401
+
+
+def test_anonymous_demo_callers_get_no_memory(monkeypatch):
+    from app.config import settings
+    from app.main import app
+
+    monkeypatch.setattr(settings, "demo_mode", True)
     with TestClient(app) as client:
         out = client.post("/api/v1/rag/ask", json={"tenant": "mem-anon", "question": "What is AI?"}).json()
     assert out["conversation_id"] is None

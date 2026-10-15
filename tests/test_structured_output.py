@@ -263,11 +263,12 @@ def test_rag_ask_returns_structured_fields():
     from app.main import app
 
     with TestClient(app) as client:
-        client.post("/api/v1/rag/index", json={
+        auth = {"Authorization": "Bearer dev"}
+        client.post("/api/v1/rag/index", headers=auth, json={
             "tenant": "so-api", "filename": "sec.md",
             "text": "# Encryption\nAll customer data is encrypted at rest with AES-256.",
         })
-        out = client.post("/api/v1/rag/ask", json={
+        out = client.post("/api/v1/rag/ask", headers=auth, json={
             "tenant": "so-api", "question": "How is customer data encrypted at rest?",
         }).json()
     assert out["answerable"] is True

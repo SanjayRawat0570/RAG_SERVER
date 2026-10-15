@@ -26,6 +26,9 @@ class Settings(BaseSettings):
 
     # JWT secret for auth tokens.
     jwt_secret: str = "rag-dev-secret-change-in-production"
+    # Demo mode: callers without credentials may *query* (never write) workspaces
+    # that are not registered organisations. Off: no credentials -> 401.
+    demo_mode: bool = False
 
     # LLM generation (F16). Default is the offline deterministic stub; the
     # Gemini adapter is used only when an API key is provided.

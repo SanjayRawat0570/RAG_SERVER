@@ -39,8 +39,8 @@ def tenants():
     a, b = f"mcp-a-{uuid.uuid4().hex[:6]}", f"mcp-b-{uuid.uuid4().hex[:6]}"
     with TestClient(app) as client:
         for tenant, text in ((a, DOC_A), (b, DOC_B)):
-            r = client.post("/api/v1/rag/index", json={"tenant": tenant, "text": text,
-                                                       "filename": f"{tenant}-falcon.md"})
+            r = client.post("/api/v1/rag/index", headers={"Authorization": "Bearer dev"},
+                            json={"tenant": tenant, "text": text, "filename": f"{tenant}-falcon.md"})
             assert r.status_code == 200, r.text
     return a, b
 
@@ -149,11 +149,15 @@ def test_websocket_applies_the_same_tenant_checks(tenants):
         with client.websocket_connect("/api/v1/rag/stream/ws?api_key=sk-bogus") as ws:
             assert ws.receive_json()["status"] == 401
 
-        # Anonymous callers can't reach a registered organisation.
+        # No credentials: refused at connect.
+        with client.websocket_connect("/api/v1/rag/stream/ws") as ws:
+            assert ws.receive_json()["status"] == 401
+
+        # A signed-in non-member can't reach a registered organisation.
         slug = f"org-{uuid.uuid4().hex[:6]}"
         create_organization(slug, "Org", owner_id="someone-else")
         try:
-            with client.websocket_connect("/api/v1/rag/stream/ws") as ws:
+            with client.websocket_connect("/api/v1/rag/stream/ws?token=dev") as ws:
                 ws.send_json({"type": "ask", "question": "x", "tenant": slug})
                 assert ws.receive_json()["status"] == 403
         finally:

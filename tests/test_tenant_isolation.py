@@ -186,3 +186,37 @@ def test_viewer_cannot_grant_itself_owner():
     r = client.post(f"/api/v1/tenants/{A}/members", headers=viewer,
                     json={"user_id": "someone", "role": "owner"})
     assert r.status_code == 403
+
+
+# ── No credentials (P0: anonymous access removed) ──────────────────────────────
+
+@pytest.mark.parametrize("method,path,route", ROUTES, ids=[f"{m} {p}" for m, p, _ in ROUTES])
+def test_no_credentials_is_401_on_every_tenant_route(method, path, route):
+    r = _request(method, route, {})
+    assert r.status_code == 401, f"{method} {path} -> {r.status_code}: {r.text[:200]}"
+
+
+def test_anonymous_write_and_read_are_refused():
+    planted = {"tenant": "acme", "filename": "planted.md", "text": "# Beacon\n\nOwned by the attacker."}
+    assert client.post("/api/v1/rag/index", json=planted).status_code == 401
+    assert client.post("/api/v1/rag/ask", json={"tenant": "acme", "question": "Who owns Beacon?"}).status_code == 401
+
+
+def test_demo_mode_is_opt_in_and_read_only(monkeypatch, key_a):
+    from app.config import settings
+
+    monkeypatch.setattr(settings, "demo_mode", True)
+    assert client.post("/api/v1/rag/ask", json={"tenant": "demo-ws", "question": "hi"}).status_code == 200
+    planted = {"tenant": "demo-ws", "filename": "x.md", "text": "# X\n\nPlanted."}
+    assert client.post("/api/v1/rag/index", json=planted).status_code == 403
+    # Registered organisations stay members-only, even in demo mode.
+    assert client.post("/api/v1/rag/ask", json={"tenant": B, "question": "hi"}).status_code == 403
+
+
+def test_any_bearer_is_not_a_user_outside_development(monkeypatch):
+    from app.config import settings
+
+    monkeypatch.setattr(settings, "app_env", "production")
+    r = client.post("/api/v1/rag/ask", headers={"Authorization": "Bearer whatever"},
+                    json={"tenant": "acme", "question": "hi"})
+    assert r.status_code == 401

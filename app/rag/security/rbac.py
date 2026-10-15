@@ -12,6 +12,8 @@ Who may act on tenant ``T``:
 * **Signed-in user, ``T`` is a free-form workspace name** (not an organisation) —
   allowed, as before roles existed. Register the workspace as an organisation
   (``POST /tenants``) to enforce membership.
+* **Anonymous demo user** (only with ``DEMO_MODE`` on) — ``query`` on free-form
+  workspaces, nothing else. Without demo mode there is no anonymous access.
 
 Roles and permissions::
 
@@ -53,6 +55,12 @@ def tenant_role(user: dict, tenant: str) -> str | None:
 
 def authorize(user: dict, tenant: str, permission: str) -> str:
     """Raise :class:`AccessDenied` unless *user* may *permission* on *tenant*; return the role."""
+    if user.get("auth") == "demo":
+        if permission != "query":
+            raise AccessDenied("anonymous demo access is read-only")
+        if tenant_role(user, tenant) is not None:  # raises: not a member
+            raise AccessDenied(f"not a member of tenant '{tenant}'")
+        return "viewer"
     if user.get("auth") == "api_key":
         if not user.get("tenant"):
             raise AccessDenied("this API key is not scoped to a tenant")

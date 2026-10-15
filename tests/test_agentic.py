@@ -221,12 +221,15 @@ def test_mode_is_selectable_per_request_and_fast_is_default():
     text = (CORPUS / "projects.md").read_text(encoding="utf-8") + "\n\n" + \
         (CORPUS / "teams.md").read_text(encoding="utf-8")
     with TestClient(app) as client:
-        client.post("/api/v1/rag/index", json={"tenant": "mode-t", "text": text, "filename": "org.md"})
+        auth = {"Authorization": "Bearer dev"}
+        client.post("/api/v1/rag/index", headers=auth,
+                    json={"tenant": "mode-t", "text": text, "filename": "org.md"})
         q = "Who leads the team that owns Project Beacon?"
-        fast = client.post("/api/v1/rag/ask", json={"tenant": "mode-t", "question": q}).json()
-        agentic = client.post("/api/v1/rag/ask", json={"tenant": "mode-t", "question": q,
-                                                       "mode": "agentic"}).json()
-        bad = client.post("/api/v1/rag/ask", json={"tenant": "mode-t", "question": q, "mode": "x"})
+        fast = client.post("/api/v1/rag/ask", headers=auth, json={"tenant": "mode-t", "question": q}).json()
+        agentic = client.post("/api/v1/rag/ask", headers=auth, json={"tenant": "mode-t", "question": q,
+                                                                     "mode": "agentic"}).json()
+        bad = client.post("/api/v1/rag/ask", headers=auth,
+                          json={"tenant": "mode-t", "question": q, "mode": "x"})
 
     assert fast["mode"] == "fast" and not fast.get("steps")
     assert agentic["mode"] == "agentic" and agentic["steps"]

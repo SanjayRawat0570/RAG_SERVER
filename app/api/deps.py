@@ -81,8 +81,11 @@ def _resolve_user(authorization: str, x_api_key: str) -> dict:
 
     sb = _client()
     if not sb:
-        # No Supabase configured — accept any bearer token as dev user.
-        return {"id": "dev", "email": "dev@local", "username": "Dev User"}
+        # No Supabase configured: in development/test any bearer token is the dev
+        # user; anywhere else user sign-in is unavailable and only API keys work.
+        if settings.app_env in ("development", "test"):
+            return {"id": "dev", "email": "dev@local", "username": "Dev User"}
+        raise HTTPException(401, "User sign-in is not configured on this server; use an API key")
 
     try:
         resp = sb.auth.get_user(token)
@@ -104,21 +107,20 @@ async def get_optional_user(
     authorization: Annotated[str, Header(alias="authorization")] = "",
     x_api_key: Annotated[str, Header(alias="x-api-key")] = "",
 ) -> dict:
-    """Like get_current_user but anonymous when no credentials are sent.
+    """Like get_current_user, but with ``DEMO_MODE`` on a caller without credentials
+    becomes a read-only anonymous demo user. With demo mode off (the default) no
+    credentials is a 401, exactly like get_current_user.
 
-    A presented-but-invalid API key is still rejected (401) rather than silently
+    Presented-but-invalid credentials are always rejected (401), never
     downgraded to anonymous.
     """
-    try:
+    if x_api_key or authorization or not settings.demo_mode:
         return await get_current_user(authorization, x_api_key)
-    except HTTPException:
-        if x_api_key or authorization[7:].strip().startswith(API_KEY_PREFIX):
-            raise
-        from app.rag.security.scope import set_principal
+    from app.rag.security.scope import set_principal
 
-        user = {"id": "anonymous", "email": "", "username": "anonymous"}
-        set_principal(user)
-        return user
+    user = {"id": "anonymous", "email": "", "username": "anonymous", "auth": "demo"}
+    set_principal(user)
+    return user
 
 
 def require_tenant(user: dict, tenant: str, permission: str = "query") -> str:

@@ -394,10 +394,11 @@ async def ws_rag_ask(ws: WebSocket) -> None:
     The connection stays open after completion so the client can ask follow-up
     questions. Send ``{"type": "close"}`` or disconnect to end the session.
 
-    Credentials (optional, like ``/rag/ask``): ``Authorization`` / ``X-API-Key``
-    headers, or ``?token=`` / ``?api_key=`` query parameters for browsers, which
-    cannot set WebSocket headers. Every ask is checked against its tenant with
-    the same RBAC as the REST API; invalid credentials close with code 4401.
+    Credentials (required, like ``/rag/ask``; anonymous only with ``DEMO_MODE``):
+    ``Authorization`` / ``X-API-Key`` headers, or ``?token=`` / ``?api_key=`` query
+    parameters for browsers, which cannot set WebSocket headers. Every ask is
+    checked against its tenant with the same RBAC as the REST API; missing or
+    invalid credentials close with code 4401.
     """
     await ws.accept()
     token = ws.query_params.get("token", "")

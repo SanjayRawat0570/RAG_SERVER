@@ -327,7 +327,7 @@ def test_f6_websocket_endpoint_returns_complete():
     from app.main import app
 
     with TestClient(app) as client:
-        with client.websocket_connect("/api/v1/rag/stream/ws") as ws:
+        with client.websocket_connect("/api/v1/rag/stream/ws?token=dev") as ws:
             ws.send_json({"type": "ask", "question": "What is AI?", "tenant": "f6ws"})
             events: list[dict] = []
             for _ in range(100):   # cap to avoid infinite loop in tests
@@ -346,7 +346,7 @@ def test_f6_websocket_cancel_stops_pipeline():
     from app.main import app
 
     with TestClient(app) as client:
-        with client.websocket_connect("/api/v1/rag/stream/ws") as ws:
+        with client.websocket_connect("/api/v1/rag/stream/ws?token=dev") as ws:
             ws.send_json({"type": "ask", "question": "Explain everything about AI", "tenant": "f6wscancel"})
             events: list[dict] = []
             seen_step = False
