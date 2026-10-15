@@ -11,7 +11,7 @@ import re
 from typing import Any
 
 from app.rag.embeddings import embed_texts
-from app.rag.embeddings.registry import _MODEL_DIMS, DEFAULT_DIMENSION, DEFAULT_MODEL
+from app.rag.embeddings.registry import model_for_store
 from app.rag.query import process_query
 from app.rag.rerank.rerankers import rerank
 from app.rag.search.bm25 import tokenize
@@ -51,7 +51,7 @@ def semantic_search(
     namespace: str = "default",
     top_k: int = 5,
     filters: dict[str, Any] | None = None,
-    embed_model: str = DEFAULT_MODEL,
+    embed_model: str | None = None,
     rerank_method: str | None = None,
     rerank_top_n: int | None = None,
     text_field: str = "text",
@@ -66,7 +66,7 @@ def semantic_search(
     namespace:      Partition / tenant namespace within the store.
     top_k:          Number of results to return after optional reranking.
     filters:        Exact-match metadata pre-filter (applied before scoring).
-    embed_model:    Embedding model to use for the query vector.
+    embed_model:    Embedding model for the query vector (default: the store's model).
     rerank_method:  Optional reranking strategy (see ``app.rag.rerank``).
     rerank_top_n:   Limit results after reranking (defaults to *top_k*).
     text_field:     Metadata key that holds chunk text (for highlights).
@@ -79,11 +79,7 @@ def semantic_search(
     # 1. Query understanding
     processed = process_query(query, expand_synonyms)
 
-    # 2. Embed the expanded query
-    dim = _MODEL_DIMS.get(embed_model, DEFAULT_DIMENSION)
-    query_vec = embed_texts([processed["expanded_query"]], embed_model, dim)[0]
-
-    # 3. Retrieve from vector store
+    # 2. Find the store, then embed the expanded query with the store's model
     store = lookup_store(store_name)
     if store is None:
         return {
@@ -94,6 +90,10 @@ def semantic_search(
             "namespace": namespace,
             "error": f"Store '{store_name}' not found.",
         }
+    embed_model = model_for_store(store.dimension, embed_model)
+    query_vec = embed_texts([processed["expanded_query"]], embed_model, store.dimension, kind="query")[0]
+
+    # 3. Retrieve from vector store
 
     # Fetch more candidates when reranking to improve final quality.
     fetch_k = (top_k * 3) if rerank_method else top_k

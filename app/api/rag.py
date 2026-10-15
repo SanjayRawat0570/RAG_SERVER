@@ -122,12 +122,13 @@ async def _run_pipeline(req: AskRequest) -> dict[str, Any]:
         raise HTTPException(404, f"Store '{req.store}' not found.")
 
     from app.rag.embeddings import embed_texts
-    from app.rag.embeddings.registry import _MODEL_DIMS, DEFAULT_DIMENSION, DEFAULT_MODEL
+    from app.rag.embeddings.registry import model_for_store
     from app.rag.query import process_query
 
+    # Embed the query with the model the store was indexed with (its dimension).
     processed   = process_query(req.query)
-    dim         = _MODEL_DIMS.get(DEFAULT_MODEL, DEFAULT_DIMENSION)
-    query_vec   = embed_texts([processed["expanded_query"]], DEFAULT_MODEL, dim)[0]
+    dim         = store.dimension
+    query_vec   = embed_texts([processed["expanded_query"]], model_for_store(dim), dim, kind="query")[0]
 
     # L2 — semantic cache (near-duplicate query reuses previous answer)
     sem_cache = None
@@ -328,12 +329,12 @@ async def ask_stream(req: AskRequest, user: CurrentUser) -> StreamingResponse:
     model_hint    = model_info.get("model", "")
 
     from app.rag.embeddings import embed_texts
-    from app.rag.embeddings.registry import _MODEL_DIMS, DEFAULT_DIMENSION, DEFAULT_MODEL
+    from app.rag.embeddings.registry import model_for_store
     from app.rag.query import process_query
 
     processed  = process_query(req.query)
-    dim        = _MODEL_DIMS.get(DEFAULT_MODEL, DEFAULT_DIMENSION)
-    query_vec  = embed_texts([processed["expanded_query"]], DEFAULT_MODEL, dim)[0]
+    dim        = store.dimension
+    query_vec  = embed_texts([processed["expanded_query"]], model_for_store(dim), dim, kind="query")[0]
     raw_hits   = store.search(query_vec, top_k=req.top_k, namespace=req.namespace)
 
     hits = [{"id": h.id, "score": h.score, "metadata": h.metadata} for h in raw_hits]

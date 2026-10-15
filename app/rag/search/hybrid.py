@@ -25,7 +25,7 @@ from __future__ import annotations
 from typing import Any
 
 from app.rag.embeddings import embed_texts
-from app.rag.embeddings.registry import _MODEL_DIMS, DEFAULT_DIMENSION, DEFAULT_MODEL
+from app.rag.embeddings.registry import model_for_store
 from app.rag.query import process_query
 from app.rag.rerank.rerankers import rerank
 from app.rag.search.bm25 import BM25, tokenize
@@ -78,7 +78,7 @@ def hybrid_search(
     namespace: str = "default",
     top_k: int = 5,
     filters: dict[str, Any] | None = None,
-    embed_model: str = DEFAULT_MODEL,
+    embed_model: str | None = None,       # default: the store's embedding model
     dense_weight: float = 1.0,
     sparse_weight: float = 1.0,
     rrf_k: int = 60,
@@ -123,8 +123,8 @@ def hybrid_search(
     fetch_k = top_k * 3
 
     # Dense retrieval
-    dim = _MODEL_DIMS.get(embed_model, DEFAULT_DIMENSION)
-    query_vec = embed_texts([processed["expanded_query"]], embed_model, dim)[0]
+    embed_model = model_for_store(store.dimension, embed_model)
+    query_vec = embed_texts([processed["expanded_query"]], embed_model, store.dimension, kind="query")[0]
     dense_raw = store.search(query_vec, top_k=fetch_k, namespace=namespace,
                              metadata_filter=filters)
     dense_hits = [{"id": h.id, "score": h.score, "metadata": h.metadata}

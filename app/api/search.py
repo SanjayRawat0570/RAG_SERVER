@@ -16,7 +16,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
 from app.api.deps import get_current_user, require_tenant
-from app.rag.embeddings.registry import _FACTORIES, DEFAULT_MODEL
+from app.rag.embeddings.registry import _FACTORIES
 from app.rag.query import process_query
 from app.rag.rerank import STRATEGIES as RERANK_STRATEGIES, rerank
 from app.rag.search import BM25, tokenize, hybrid_search, semantic_search
@@ -33,7 +33,7 @@ class SemanticSearchRequest(BaseModel):
     namespace:   str = "default"
     top_k:       int = Field(default=5, ge=1, le=50)
     filters:     dict[str, Any] | None = None
-    embed_model: str = DEFAULT_MODEL
+    embed_model: str | None = None   # default: the store's embedding model
     rerank:      str | None = None
     rerank_top_n: int | None = None
     text_field:  str = "text"
@@ -56,7 +56,7 @@ class HybridSearchRequest(BaseModel):
     namespace:      str = "default"
     top_k:          int = Field(default=5, ge=1, le=50)
     filters:        dict[str, Any] | None = None
-    embed_model:    str = DEFAULT_MODEL
+    embed_model:    str | None = None  # default: the store's embedding model
     dense_weight:   float = Field(default=0.6, ge=0.0)
     sparse_weight:  float = Field(default=0.4, ge=0.0)
     rrf_k:          int = Field(default=60, ge=1)
@@ -158,21 +158,24 @@ async def semantic(
     if request.rerank and request.rerank not in RERANK_STRATEGIES:
         raise HTTPException(422, f"Unknown rerank method '{request.rerank}'. "
                                   f"Available: {sorted(RERANK_STRATEGIES)}")
-    if request.embed_model not in _FACTORIES:
+    if request.embed_model and request.embed_model not in _FACTORIES:
         raise HTTPException(422, f"Unknown embedding model '{request.embed_model}'.")
 
-    result = semantic_search(
-        request.query,
-        store_name=request.store,
-        namespace=request.namespace,
-        top_k=request.top_k,
-        filters=request.filters,
-        embed_model=request.embed_model,
-        rerank_method=request.rerank,
-        rerank_top_n=request.rerank_top_n,
-        text_field=request.text_field,
-        expand_synonyms=request.synonyms,
-    )
+    try:
+        result = semantic_search(
+            request.query,
+            store_name=request.store,
+            namespace=request.namespace,
+            top_k=request.top_k,
+            filters=request.filters,
+            embed_model=request.embed_model,
+            rerank_method=request.rerank,
+            rerank_top_n=request.rerank_top_n,
+            text_field=request.text_field,
+            expand_synonyms=request.synonyms,
+        )
+    except ValueError as exc:  # embedding model does not match the store's vectors
+        raise HTTPException(422, str(exc)) from exc
     return result
 
 
@@ -276,26 +279,29 @@ async def hybrid(
     if request.rerank and request.rerank not in RERANK_STRATEGIES:
         raise HTTPException(422, f"Unknown rerank method '{request.rerank}'. "
                                   f"Available: {sorted(RERANK_STRATEGIES)}")
-    if request.embed_model not in _FACTORIES:
+    if request.embed_model and request.embed_model not in _FACTORIES:
         raise HTTPException(422, f"Unknown embedding model '{request.embed_model}'.")
 
-    return hybrid_search(
-        request.query,
-        store_name=request.store,
-        namespace=request.namespace,
-        top_k=request.top_k,
-        filters=request.filters,
-        embed_model=request.embed_model,
-        dense_weight=request.dense_weight,
-        sparse_weight=request.sparse_weight,
-        rrf_k=request.rrf_k,
-        rerank_method=request.rerank,
-        text_field=request.text_field,
-        expand_synonyms=request.synonyms,
-        weight_profile=request.weight_profile,
-        auto_weight=request.auto_weight,
-        explain=request.explain,
-    )
+    try:
+        return hybrid_search(
+            request.query,
+            store_name=request.store,
+            namespace=request.namespace,
+            top_k=request.top_k,
+            filters=request.filters,
+            embed_model=request.embed_model,
+            dense_weight=request.dense_weight,
+            sparse_weight=request.sparse_weight,
+            rrf_k=request.rrf_k,
+            rerank_method=request.rerank,
+            text_field=request.text_field,
+            expand_synonyms=request.synonyms,
+            weight_profile=request.weight_profile,
+            auto_weight=request.auto_weight,
+            explain=request.explain,
+        )
+    except ValueError as exc:  # embedding model does not match the store's vectors
+        raise HTTPException(422, str(exc)) from exc
 
 
 @router.get("/profiles")

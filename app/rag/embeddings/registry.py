@@ -151,6 +151,28 @@ def default_model(dimension: int | None = None) -> str:
     return name if dimension in (None, dim) else DEFAULT_MODEL
 
 
+def model_for_store(dimension: int, requested: str | None = None) -> str:
+    """Model to embed queries for a store whose vectors have *dimension*.
+
+    Query and stored vectors must come from the same model: the active model
+    when the dimension matches, the hash embedder for 256-d stores. A
+    *requested* model that produces another dimension is a ValueError (callers
+    turn it into a 422) instead of a matmul error deep in the search.
+    """
+    if requested:
+        dim = _MODEL_DIMS.get(requested, DEFAULT_DIMENSION)
+        if dim != dimension:
+            raise ValueError(f"embedding model {requested!r} makes {dim}-d vectors but this store "
+                             f"holds {dimension}-d vectors; omit embed_model to match the store")
+        return requested
+    name, dim = active_embedding()
+    if dimension == dim:
+        return name
+    if dimension == DEFAULT_DIMENSION:
+        return DEFAULT_MODEL
+    raise ValueError(f"no embedding model available for a {dimension}-d store")
+
+
 def clear_cache() -> None:
     """Clear the embedding cache and reset hit/miss counters."""
     _cache.clear()

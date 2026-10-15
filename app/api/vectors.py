@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 
 from app.api.deps import can_access, get_current_user, require_tenant, visible_store_stats
 from app.rag.embeddings import embed_texts
-from app.rag.embeddings.registry import _MODEL_DIMS
+from app.rag.embeddings.registry import _MODEL_DIMS, active_embedding, model_for_store
 from app.rag.vectorstore import (
     SearchHit,
     VectorRecord,
@@ -74,7 +74,7 @@ class IndexSuggestRequest(BaseModel):
 
 class UpsertChunksRequest(BaseModel):
     chunks:    list[dict[str, Any]]  # [{text: ..., metadata: ...}]
-    model:     str = "local-hash"
+    model:     str | None = None   # default: the store's model (else the active one)
     store:     str = "default"
     namespace: str = "default"
     backend:   str = "memory"
@@ -352,9 +352,15 @@ async def upsert_chunks(
         raise HTTPException(422, "No chunks provided.")
 
     texts = [c.get("text", "") for c in request.chunks]
-    dim   = _MODEL_DIMS.get(request.model, 256)
+    existing = lookup_store(request.store)
+    dim = (existing.dimension if existing is not None
+           else _MODEL_DIMS.get(request.model, 256) if request.model else active_embedding()[1])
     try:
-        vectors = embed_texts(texts, request.model, dim)
+        model = model_for_store(dim, request.model)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    try:
+        vectors = embed_texts(texts, model, dim)
     except RuntimeError as exc:
         raise HTTPException(424, str(exc)) from exc
 
@@ -372,7 +378,7 @@ async def upsert_chunks(
 
     return {
         "upserted":  n,
-        "model":     request.model,
+        "model":     model,
         "dimension": dim,
         "store":     request.store,
         "namespace": request.namespace,

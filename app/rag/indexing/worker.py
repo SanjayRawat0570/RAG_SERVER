@@ -77,7 +77,7 @@ async def _step_chunk_embed_upsert(task: "IndexingTask") -> None:
     from app.rag.chunking      import chunk_document
     from app.rag.embeddings    import embed_texts
     from app.rag.models        import Document
-    from app.rag.vectorstore   import VectorRecord, get_store
+    from app.rag.vectorstore   import VectorRecord, get_store, lookup_store
 
     # Chunk
     task.step     = "chunk"
@@ -100,9 +100,11 @@ async def _step_chunk_embed_upsert(task: "IndexingTask") -> None:
     task.push_event(step="embed", progress=65, message=task.message)
     await asyncio.sleep(0)
 
-    from app.rag.embeddings.registry import DEFAULT_DIMENSION, DEFAULT_MODEL
-    dim  = DEFAULT_DIMENSION
-    vecs = embed_texts(texts, DEFAULT_MODEL, dim)
+    from app.rag.embeddings.registry import active_embedding, model_for_store
+    # The knowledge base's model: an existing store's dimension, else the active model.
+    existing = lookup_store(task.store)
+    dim = existing.dimension if existing is not None else active_embedding()[1]
+    vecs = embed_texts(texts, model_for_store(dim), dim)
     task.push_event(step="embed_done", vectors=len(vecs), dimension=dim)
 
     # Upsert
