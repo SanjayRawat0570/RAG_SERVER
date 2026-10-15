@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import re
 import time
 import uuid
 from typing import Any, AsyncIterator, Literal
@@ -40,6 +41,7 @@ from app.engine.merging import rrf
 from app.engine.nodes import get_node
 from app.models.workflow import NodeDef, NodeType
 from app.rag.cost import BudgetExceededError
+from app.rag.cache import answers as answer_cache
 from app.rag.memory import service as memory
 from app.rag.security.guardrails import StreamGuard, guard_answer
 from app.rag.tenants.ai_settings import effective_examples
@@ -323,6 +325,9 @@ async def _rag_pipeline_events(
         "confidence":    result["confidence"],
         "answerable":    result["answerable"],
         "intent":        qp_out.get("intent"),
+        "provider":      result.get("provider"),
+        "structured":    result["structured"],
+        "guardrail":     guardrail,
         "hit_count":     retrieved["hit_count"],
         "mode":          mode,
         "steps":         retrieved.get("steps"),
@@ -330,6 +335,24 @@ async def _rag_pipeline_events(
         "duration_ms":   round((time.perf_counter() - t0) * 1000, 1),
         "run_id":        run_id,
     }
+
+
+async def _cached_answer_events(cached: dict[str, Any]) -> AsyncIterator[dict[str, Any]]:
+    """Replay a semantic-cache hit with the same event shape as a generated answer."""
+    yield {"event": "step", "step": "generate", "status": "start",
+           "message": "Reusing the answer to an equivalent recent question"}
+    for sentence in re.split(r"(?<=[.!?])\s+", str(cached.get("answer", ""))):
+        if sentence:
+            yield {"event": "token", "token": sentence + " "}
+    yield {"event": "step", "step": "generate", "status": "done", "token_count": 0}
+    citations = cached.get("citations") or []
+    markers = cached.get("cited_markers") or []
+    yield {"event": "sources", "answer": cached.get("answer"), "replaced": False,
+           "citations": [c for c in citations if c.get("marker") in markers],
+           "cited_markers": markers, "confidence": cached.get("confidence"),
+           "answerable": cached.get("answerable"), "structured": cached.get("structured"),
+           "guardrail": cached.get("guardrail")}
+    yield {**cached, "event": "complete", "duration_ms": 0.0, "run_id": None}
 
 
 # ── SSE endpoint ───────────────────────────────────────────────────────────────
@@ -364,12 +387,17 @@ async def stream_rag_ask(
             first = {"event": "memory", "conversation_id": mem.conversation_id,
                      "standalone_question": mem.standalone, "steps": mem.steps}
             yield f"event: memory\ndata: {json.dumps(first)}\n\n"
-            async for ev in _rag_pipeline_events(mem.standalone, body.tenant, provider,
-                                                 few_shot=body.few_shot, mode=body.mode,
-                                                 user_id=user["id"]):
+            fast = body.mode != "agentic"
+            cached = answer_cache.lookup(body.tenant, mem.standalone, provider) if fast else None
+            source = (_cached_answer_events(cached) if cached else
+                      _rag_pipeline_events(mem.standalone, body.tenant, provider, few_shot=body.few_shot,
+                                           mode=body.mode, user_id=user["id"]))
+            async for ev in source:
                 if await http_request.is_disconnected():
                     break
                 if ev["event"] == "complete":
+                    if fast and not cached:
+                        answer_cache.store(body.tenant, mem.standalone, provider, ev)
                     memory.after(mem, tenant=body.tenant, user_id=user["id"], out=ev,
                                  provider=provider)
                     ev = memory.present(mem, ev)

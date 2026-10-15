@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import time
 from typing import Annotated, Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Response
@@ -22,6 +23,7 @@ from app.models.workflow import RunRequest, RunResponse, WorkflowDef
 from app.observability.metrics import render_latest
 from app.observability.query_log import log_query
 from app.observability.tracing import current_trace_id
+from app.rag.cache import answers as answer_cache
 from app.rag.cache import cache_stats
 from app.rag.cost import budget_stats
 from app.rag.memory import service as memory
@@ -146,18 +148,27 @@ async def rag_ask(
     memory_ctx = await memory.before(tenant=request.tenant, user_id=user["id"],
                                      conversation_id=request.conversation_id,
                                      question=request.question, provider=provider)
-    build = build_agentic_workflow if request.mode == "agentic" else build_ask_workflow
-    executor = WorkflowExecutor(build(provider))
-    examples = effective_examples(request.tenant, request.few_shot)
-    result = await executor.run({
-        "tenant": request.tenant,
-        "question": memory_ctx.standalone,
-        "user_id": user["id"],
-        "few_shot": [e.model_dump() for e in examples],
-    })
-    if result.status != "success":
-        raise HTTPException(status_code=500, detail="answering failed")
-    out = result.outputs.get("out", {})
+    t0 = time.perf_counter()
+    fast = request.mode != "agentic"
+    # Semantic answer cache (fast mode): same meaning, same tenant -> same answer.
+    out = answer_cache.lookup(request.tenant, memory_ctx.standalone, provider) if fast else None
+    run_id = None
+    if out is None:
+        build = build_ask_workflow if fast else build_agentic_workflow
+        executor = WorkflowExecutor(build(provider))
+        examples = effective_examples(request.tenant, request.few_shot)
+        result = await executor.run({
+            "tenant": request.tenant,
+            "question": memory_ctx.standalone,
+            "user_id": user["id"],
+            "few_shot": [e.model_dump() for e in examples],
+        })
+        if result.status != "success":
+            raise HTTPException(status_code=500, detail="answering failed")
+        out, run_id = result.outputs.get("out", {}), result.run_id
+        if fast:
+            answer_cache.store(request.tenant, memory_ctx.standalone, provider, out)
+    duration_ms = round((time.perf_counter() - t0) * 1000, 1)
     memory.after(memory_ctx, tenant=request.tenant, user_id=user["id"], out=out, provider=provider)
     out = memory.present(memory_ctx, out)
     # Log query for F8 monitoring (best-effort, never fails the request).
@@ -168,13 +179,13 @@ async def rag_ask(
             answer=out.get("answer", ""),
             confidence=_CONFIDENCE_SCORE.get(out.get("confidence"), 0.0),
             sources_count=len(out.get("sources", [])),
-            duration_ms=result.duration_ms,
+            duration_ms=duration_ms,
             trace_id=current_trace_id(),
             provider=provider,
         )
     except Exception:
         pass
-    return {**out, "run_id": result.run_id, "duration_ms": result.duration_ms}
+    return {**out, "run_id": run_id, "duration_ms": duration_ms}
 
 
 @router.post("/rag/search", tags=["rag"])

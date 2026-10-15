@@ -21,6 +21,13 @@ def _guard(namespace: str, permission: str, store: str) -> None:
     guard(namespace, permission, store)
 
 
+def _changed(namespace: str, store: str) -> None:
+    """A tenant's documents changed: cached answers built on them are now stale."""
+    if not store.startswith("__"):
+        from app.rag.cache.semantic import bump_kb_version
+        bump_kb_version(namespace)
+
+
 def _normalize(v: np.ndarray) -> np.ndarray:
     norm = np.linalg.norm(v)
     return v / norm if norm > 0 else v
@@ -87,6 +94,7 @@ class InMemoryVectorStore:
                     f"Vector dim {len(record.vector)} != store dim {self.dimension}"
                 )
             ns.upsert_one(record)
+        _changed(namespace, self.name)
         if self._journal is not None:
             self._journal.upsert(namespace, records)
             self._journal.maybe_compact(self, namespace)
@@ -128,6 +136,8 @@ class InMemoryVectorStore:
         _guard(namespace, "ingest", self.name)
         ns = self._namespaces.get(namespace)
         removed = ns.delete(ids) if ns else 0
+        if removed:
+            _changed(namespace, self.name)
         if removed and self._journal is not None:
             self._journal.delete(namespace, ids)
         return removed

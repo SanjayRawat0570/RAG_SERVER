@@ -1,0 +1,918 @@
+{
+  "sweep": {
+    "model": "bge-small-en-v1.5",
+    "paraphrase_sims": [
+      0.623,
+      0.784,
+      0.847,
+      0.865,
+      0.876,
+      0.895,
+      0.912,
+      0.919,
+      0.927,
+      0.927,
+      0.933,
+      0.938,
+      0.939,
+      0.942,
+      0.946,
+      0.946,
+      0.949,
+      0.977,
+      0.978,
+      0.98,
+      0.98,
+      0.982,
+      0.983,
+      0.984,
+      0.987,
+      0.988,
+      0.989,
+      0.989,
+      0.99,
+      0.996
+    ],
+    "near_miss_sims": [
+      0.606,
+      0.62,
+      0.623,
+      0.633,
+      0.663,
+      0.675,
+      0.686,
+      0.759,
+      0.765,
+      0.782,
+      0.806,
+      0.806,
+      0.819,
+      0.82,
+      0.82,
+      0.826,
+      0.893,
+      0.893,
+      0.916,
+      0.956
+    ],
+    "by_threshold": {
+      "0.8": {
+        "paraphrase_hit_rate": 0.933,
+        "near_miss_false_hit_rate": 0.5,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.833,
+          "near_miss_false_hit_rate": 0.1
+        }
+      },
+      "0.85": {
+        "paraphrase_hit_rate": 0.9,
+        "near_miss_false_hit_rate": 0.2,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.8,
+          "near_miss_false_hit_rate": 0.0
+        }
+      },
+      "0.88": {
+        "paraphrase_hit_rate": 0.833,
+        "near_miss_false_hit_rate": 0.2,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.733,
+          "near_miss_false_hit_rate": 0.0
+        }
+      },
+      "0.9": {
+        "paraphrase_hit_rate": 0.8,
+        "near_miss_false_hit_rate": 0.1,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.733,
+          "near_miss_false_hit_rate": 0.0
+        }
+      },
+      "0.92": {
+        "paraphrase_hit_rate": 0.733,
+        "near_miss_false_hit_rate": 0.05,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.667,
+          "near_miss_false_hit_rate": 0.0
+        }
+      },
+      "0.94": {
+        "paraphrase_hit_rate": 0.567,
+        "near_miss_false_hit_rate": 0.05,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.5,
+          "near_miss_false_hit_rate": 0.0
+        }
+      },
+      "0.95": {
+        "paraphrase_hit_rate": 0.433,
+        "near_miss_false_hit_rate": 0.05,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.4,
+          "near_miss_false_hit_rate": 0.0
+        }
+      },
+      "0.96": {
+        "paraphrase_hit_rate": 0.433,
+        "near_miss_false_hit_rate": 0.0,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.4,
+          "near_miss_false_hit_rate": 0.0
+        }
+      },
+      "0.97": {
+        "paraphrase_hit_rate": 0.433,
+        "near_miss_false_hit_rate": 0.0,
+        "with_specifics_guard": {
+          "paraphrase_hit_rate": 0.4,
+          "near_miss_false_hit_rate": 0.0
+        }
+      }
+    },
+    "pairs": [
+      {
+        "type": "paraphrase",
+        "seed": "How many days of annual leave do full-time employees get?",
+        "asked": "For full-time staff, what is the yearly vacation entitlement in days?",
+        "similarity": 0.7838
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How many unused leave days can be carried over?",
+        "asked": "What is the maximum number of leave days I can carry into next year?",
+        "similarity": 0.8759
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How many days of paid sick leave do employees receive?",
+        "asked": "How much paid sick time does an employee get per year?",
+        "similarity": 0.8653
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How is customer data encrypted at rest?",
+        "asked": "What encryption protects customer data that is stored at rest?",
+        "similarity": 0.9424
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How often are encryption keys rotated?",
+        "asked": "How frequently do we rotate our encryption keys?",
+        "similarity": 0.9783
+      },
+      {
+        "type": "paraphrase",
+        "seed": "What is the minimum password length?",
+        "asked": "How long does a password have to be at minimum?",
+        "similarity": 0.9266
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Within how many hours must a security incident be reported?",
+        "asked": "How quickly do I need to report a security incident?",
+        "similarity": 0.9118
+      },
+      {
+        "type": "paraphrase",
+        "seed": "What is the current daily meal allowance when travelling?",
+        "asked": "What is the daily food allowance on business trips now?",
+        "similarity": 0.8951
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Above what amount are receipts required for expenses?",
+        "asked": "From what amount do I need to keep receipts for expenses?",
+        "similarity": 0.939
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How many days per week can employees work remotely?",
+        "asked": "How many remote work days per week are allowed?",
+        "similarity": 0.927
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How much is the home office stipend?",
+        "asked": "What is the amount of the home office stipend?",
+        "similarity": 0.9829
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Which team owns Project Atlas?",
+        "asked": "Which team is the owner of Project Atlas?",
+        "similarity": 0.9804
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Who leads the Mobile team?",
+        "asked": "Who is the lead of the Mobile team?",
+        "similarity": 0.9795
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How much does the Plus health plan cost employees each month?",
+        "asked": "What is the monthly employee cost of the Plus health plan?",
+        "similarity": 0.9766
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How much is the monthly gym reimbursement?",
+        "asked": "How much does the company reimburse for the gym each month?",
+        "similarity": 0.9457
+      },
+      {
+        "type": "paraphrase",
+        "seed": "What is the address of the Berlin office?",
+        "asked": "Where is the Berlin office located?",
+        "similarity": 0.9489
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Who is the office manager of the London office?",
+        "asked": "Who manages the London office?",
+        "similarity": 0.9378
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How large is the yearly learning budget per employee?",
+        "asked": "What is each employee's annual learning budget?",
+        "similarity": 0.9192
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How long is the probation period?",
+        "asked": "How many months does the probation period last?",
+        "similarity": 0.9462
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Who is the data protection officer?",
+        "asked": "Who is our DPO?",
+        "similarity": 0.6229
+      },
+      {
+        "type": "paraphrase",
+        "seed": "What is the rate limit of the Orders API v2?",
+        "asked": "What's the rate limit for Orders API v2?",
+        "similarity": 0.9965
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How many times are webhook deliveries retried?",
+        "asked": "How many retries do webhook deliveries get?",
+        "similarity": 0.9329
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Which client does the company VPN use?",
+        "asked": "What VPN client does the company use?",
+        "similarity": 0.9889
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Who is the Chief Executive Officer?",
+        "asked": "Who is the CEO of the company?",
+        "similarity": 0.8465
+      },
+      {
+        "type": "paraphrase",
+        "seed": "What does error code E-4012 mean?",
+        "asked": "What is the meaning of error code E-4012?",
+        "similarity": 0.9901
+      },
+      {
+        "type": "paraphrase",
+        "seed": "How much does SKU DCK-USB-C cost?",
+        "asked": "What is the price of SKU DCK-USB-C?",
+        "similarity": 0.9835
+      },
+      {
+        "type": "paraphrase",
+        "seed": "What causes ERR_TOKEN_EXPIRED?",
+        "asked": "Why does ERR_TOKEN_EXPIRED happen?",
+        "similarity": 0.987
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Which vendor is VND-0042?",
+        "asked": "Which company is vendor VND-0042?",
+        "similarity": 0.9892
+      },
+      {
+        "type": "paraphrase",
+        "seed": "Which version patched CVE-2025-1182?",
+        "asked": "In which version was CVE-2025-1182 patched?",
+        "similarity": 0.9818
+      },
+      {
+        "type": "paraphrase",
+        "seed": "What is the IT helpdesk email address?",
+        "asked": "What email address does the IT helpdesk use?",
+        "similarity": 0.9879
+      },
+      {
+        "type": "near_miss",
+        "seed": "What does error code E-4012 mean?",
+        "asked": "What does error E-4021 mean?",
+        "similarity": 0.8055
+      },
+      {
+        "type": "near_miss",
+        "seed": "What does error E-4021 mean?",
+        "asked": "What does error code E-4012 mean?",
+        "similarity": 0.8055
+      },
+      {
+        "type": "near_miss",
+        "seed": "What does printer error E-7110 mean?",
+        "asked": "What does E-7101 mean?",
+        "similarity": 0.6752
+      },
+      {
+        "type": "near_miss",
+        "seed": "How do I fix error E-4102?",
+        "asked": "What should I do about error E-5003?",
+        "similarity": 0.8256
+      },
+      {
+        "type": "near_miss",
+        "seed": "What is the current daily meal allowance when travelling?",
+        "asked": "What was the daily meal allowance under the 2023 travel policy?",
+        "similarity": 0.8931
+      },
+      {
+        "type": "near_miss",
+        "seed": "What was the daily meal allowance under the 2023 travel policy?",
+        "asked": "What is the current daily meal allowance when travelling?",
+        "similarity": 0.8931
+      },
+      {
+        "type": "near_miss",
+        "seed": "How is customer data encrypted at rest?",
+        "asked": "How often are encryption keys rotated?",
+        "similarity": 0.6858
+      },
+      {
+        "type": "near_miss",
+        "seed": "How many unused leave days can be carried over?",
+        "asked": "By when must carried-over leave days be used?",
+        "similarity": 0.9162
+      },
+      {
+        "type": "near_miss",
+        "seed": "How many days of annual leave do full-time employees get?",
+        "asked": "How is annual leave calculated for part-time staff?",
+        "similarity": 0.8197
+      },
+      {
+        "type": "near_miss",
+        "seed": "How many days of paid sick leave do employees receive?",
+        "asked": "After how many consecutive days of absence is a doctor's note required?",
+        "similarity": 0.6631
+      },
+      {
+        "type": "near_miss",
+        "seed": "How many days per week can employees work remotely?",
+        "asked": "How much is the home office stipend?",
+        "similarity": 0.6197
+      },
+      {
+        "type": "near_miss",
+        "seed": "How many days per week can employees work remotely?",
+        "asked": "What are the core collaboration hours for remote employees?",
+        "similarity": 0.7818
+      },
+      {
+        "type": "near_miss",
+        "seed": "What is the address of the Berlin office?",
+        "asked": "Who is the office manager of the London office?",
+        "similarity": 0.606
+      },
+      {
+        "type": "near_miss",
+        "seed": "What is the first response time for Premium support?",
+        "asked": "How much does Premium support cost?",
+        "similarity": 0.8204
+      },
+      {
+        "type": "near_miss",
+        "seed": "How much does the Plus health plan cost employees each month?",
+        "asked": "When does open enrollment for health insurance take place?",
+        "similarity": 0.6232
+      },
+      {
+        "type": "near_miss",
+        "seed": "Above what amount are receipts required for expenses?",
+        "asked": "Which expenses need approval from the Chief Financial Officer?",
+        "similarity": 0.759
+      },
+      {
+        "type": "near_miss",
+        "seed": "What is the rate limit of the Orders API v2?",
+        "asked": "How does the rate limit of the Orders API v2 compare with v1?",
+        "similarity": 0.9561
+      },
+      {
+        "type": "near_miss",
+        "seed": "Which product is SKU MON-27-4K?",
+        "asked": "Which monitor costs more, the MON-27-4K or the MON-24-FHD?",
+        "similarity": 0.7652
+      },
+      {
+        "type": "near_miss",
+        "seed": "Who leads the Mobile team?",
+        "asked": "Which team owns Project Atlas?",
+        "similarity": 0.6328
+      },
+      {
+        "type": "near_miss",
+        "seed": "What is the current nightly hotel cap for business travel?",
+        "asked": "How did the hotel cap per night change between the 2023 travel policy and the current one?",
+        "similarity": 0.8189
+      }
+    ]
+  },
+  "eval_collisions": [
+    {
+      "a": "f38",
+      "b": "fu17",
+      "similarity": 0.9705,
+      "questions": [
+        "What are the payment terms for vendor invoices?",
+        "On what payment terms are vendor invoices like theirs paid?"
+      ]
+    }
+  ],
+  "end_to_end": {
+    "threshold": 0.92,
+    "provider": "stub",
+    "paraphrase": {
+      "n": 30,
+      "hit_rate": 0.667,
+      "accuracy_with_cache": 0.533,
+      "accuracy_without_cache": 0.533,
+      "hits_made_wrong": 1,
+      "hits_made_right": 1
+    },
+    "near_miss": {
+      "n": 20,
+      "hit_rate": 0.0,
+      "accuracy_with_cache": 0.65,
+      "accuracy_without_cache": 0.65,
+      "hits_made_wrong": 0,
+      "hits_made_right": 0
+    },
+    "rows": [
+      {
+        "type": "paraphrase",
+        "asked": "For full-time staff, what is the yearly vacation entitlement in days?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What is the maximum number of leave days I can carry into next year?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "How much paid sick time does an employee get per year?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What encryption protects customer data that is stored at rest?",
+        "cache_hit": true,
+        "similarity": 0.9424,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Encryption\n\nAll customer data is encrypted at rest with AES-256. Data in transit is protected with TLS 1.3. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "How frequently do we rotate our encryption keys?",
+        "cache_hit": true,
+        "similarity": 0.9783,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# Encryption\n\nAll customer data is encrypted at rest with AES-256. Data in transit is protected with TLS 1.3. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "How long does a password have to be at minimum?",
+        "cache_hit": true,
+        "similarity": 0.9266,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "paraphrase",
+        "asked": "How quickly do I need to report a security incident?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What is the daily food allowance on business trips now?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "paraphrase",
+        "asked": "From what amount do I need to keep receipts for expenses?",
+        "cache_hit": true,
+        "similarity": 0.939,
+        "correct": true,
+        "correct_without_cache": false,
+        "answer": "# Expense Claims\n\nReceipts are required for every expense above 25 USD. Expense claims must be submitted within 30 days of the purchase. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "How many remote work days per week are allowed?",
+        "cache_hit": true,
+        "similarity": 0.927,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Remote Work\n\nEmployees may work remotely up to 3 days per week. Core collaboration hours are 10:00 to 15:00 local time. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What is the amount of the home office stipend?",
+        "cache_hit": true,
+        "similarity": 0.9829,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Home Office Stipend\n\nNew employees receive a one-time home office stipend of 500 USD to buy a desk, chair or monitor. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "Which team is the owner of Project Atlas?",
+        "cache_hit": true,
+        "similarity": 0.9804,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Project Atlas\n\nProject Atlas is the company's new analytics warehouse. Project Atlas is owned by the Data Platform team and is scheduled to launch in Q3. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "Who is the lead of the Mobile team?",
+        "cache_hit": true,
+        "similarity": 0.9795,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Mobile Team\n\nThe Mobile team is led by Tom Becker. The Mobile team is based in the Lisbon office. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What is the monthly employee cost of the Plus health plan?",
+        "cache_hit": true,
+        "similarity": 0.9766,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# Health Insurance Plans\n\nEmployees can choose between two health insurance plans: the Essential plan and the Plus plan. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "How much does the company reimburse for the gym each month?",
+        "cache_hit": true,
+        "similarity": 0.9457,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "paraphrase",
+        "asked": "Where is the Berlin office located?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Berlin Office\n\nThe Berlin office is located at Torstrasse 120, 10119 Berlin. It has 180 desks and opened in 2019. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "Who manages the London office?",
+        "cache_hit": true,
+        "similarity": 0.9378,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# London Office\n\nThe London office is located at 12 Finsbury Square, London, and is the company headquarters. It has 140 desks and opened in 2017. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What is each employee's annual learning budget?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "paraphrase",
+        "asked": "How many months does the probation period last?",
+        "cache_hit": true,
+        "similarity": 0.9462,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Probation\n\nThe probation period is 6 months. The notice period during probation is 2 weeks. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "Who is our DPO?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Data Subject Requests\n\nGDPR data subject requests must be answered within 30 days. The data protection officer is Sofia Marin, who can be reached at dpo@examp"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What's the rate limit for Orders API v2?",
+        "cache_hit": true,
+        "similarity": 0.9965,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Rate Limits\n\nThe Orders API v2 allows 600 requests per minute per API key. The legacy Orders API v1 allowed only 120 requests per minute. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "How many retries do webhook deliveries get?",
+        "cache_hit": true,
+        "similarity": 0.9329,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Webhooks\n\nWebhook deliveries are retried up to 6 times over 24 hours with exponential backoff. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What VPN client does the company use?",
+        "cache_hit": true,
+        "similarity": 0.9889,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Installing the VPN Client\n\nThe company VPN uses the GlobalConnect client. Install GlobalConnect from the software center and connect to the server vpn.example"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "Who is the CEO of the company?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What is the meaning of error code E-4012?",
+        "cache_hit": true,
+        "similarity": 0.9901,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# VPN Errors\n\nError E-4012 means the VPN certificate has expired. Re-enroll the device in the VPN portal to get a new certificate. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What is the price of SKU DCK-USB-C?",
+        "cache_hit": true,
+        "similarity": 0.9835,
+        "correct": false,
+        "correct_without_cache": true,
+        "answer": "# Retired Accessories\n\nSKU DCK-USB-A was the USB-A docking station and cost 150 USD. SKU HDS-WR-100 was the wired headset and cost 45 USD. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "Why does ERR_TOKEN_EXPIRED happen?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "paraphrase",
+        "asked": "Which company is vendor VND-0042?",
+        "cache_hit": true,
+        "similarity": 0.9892,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# Vendor Register 2025\n\nVND-0025 is TravelDesk, which provides payroll processing. VND-0497 is SnackBox, which provides translation. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "In which version was CVE-2025-1182 patched?",
+        "cache_hit": true,
+        "similarity": 0.9818,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Version 2.4.1\n\nVersion 2.4.1 was released on 21 April 2025. It is a security patch for CVE-2025-1182 in the PDF export. [1]"
+      },
+      {
+        "type": "paraphrase",
+        "asked": "What email address does the IT helpdesk use?",
+        "cache_hit": true,
+        "similarity": 0.9879,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "near_miss",
+        "asked": "What does error E-4021 mean?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# VPN Errors\n\nError E-4012 means the VPN certificate has expired. Re-enroll the device in the VPN portal to get a new certificate. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "What does error code E-4012 mean?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# VPN Errors\n\nError E-4012 means the VPN certificate has expired. Re-enroll the device in the VPN portal to get a new certificate. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "What does E-7101 mean?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Printing Errors\n\nError E-7101 means the printer is offline. Check the network cable and the power supply. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "What should I do about error E-5003?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Single Sign-On Errors\n\nError E-5003 means the SSO token does not match the session. Clear the browser cookies and sign in again. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "What was the daily meal allowance under the 2023 travel policy?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Meals and Hotels (2023)\n\nUnder the 2023 travel policy, the daily meal allowance was 45 USD. Hotel stays were capped at 150 USD per night. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "What is the current daily meal allowance when travelling?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# Travel Expenses\n\nBusiness travel must be booked through the corporate travel portal. Economy class is required for flights shorter than 6 hours. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "How often are encryption keys rotated?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# Encryption\n\nAll customer data is encrypted at rest with AES-256. Data in transit is protected with TLS 1.3. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "By when must carried-over leave days be used?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave"
+      },
+      {
+        "type": "near_miss",
+        "asked": "How is annual leave calculated for part-time staff?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Annual Leave\n\nFull-time employees receive 25 days of paid annual leave per calendar year, in addition to public holidays. Part-time staff receive annual leave"
+      },
+      {
+        "type": "near_miss",
+        "asked": "After how many consecutive days of absence is a doctor's note required?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Sick Leave\n\nEmployees receive 10 days of paid sick leave per year. A doctor's note is required for absences longer than 3 consecutive days. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "How much is the home office stipend?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Home Office Stipend\n\nNew employees receive a one-time home office stipend of 500 USD to buy a desk, chair or monitor. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "What are the core collaboration hours for remote employees?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Remote Work\n\nEmployees may work remotely up to 3 days per week. Core collaboration hours are 10:00 to 15:00 local time. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "Who is the office manager of the London office?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# London Office\n\nThe London office is located at 12 Finsbury Square, London, and is the company headquarters. It has 140 desks and opened in 2017. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "How much does Premium support cost?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Support Pricing\n\nPremium support costs 15% of the annual contract value. Standard support is included at no extra cost. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "When does open enrollment for health insurance take place?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "I don't know based on the provided context."
+      },
+      {
+        "type": "near_miss",
+        "asked": "Which expenses need approval from the Chief Financial Officer?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Approvals\n\nExpenses above 500 USD require manager approval. Expenses above 5,000 USD also require approval from the Chief Financial Officer. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "How does the rate limit of the Orders API v2 compare with v1?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Rate Limits\n\nThe Orders API v2 allows 600 requests per minute per API key. The legacy Orders API v1 allowed only 120 requests per minute. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "Which monitor costs more, the MON-27-4K or the MON-24-FHD?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Monitors\n\nSKU MON-27-4K is the 27-inch 4K monitor and costs 420 USD. SKU MON-24-FHD is the 24-inch Full HD monitor and costs 180 USD. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "Which team owns Project Atlas?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": true,
+        "correct_without_cache": true,
+        "answer": "# Project Atlas\n\nProject Atlas is the company's new analytics warehouse. Project Atlas is owned by the Data Platform team and is scheduled to launch in Q3. [1]"
+      },
+      {
+        "type": "near_miss",
+        "asked": "How did the hotel cap per night change between the 2023 travel policy and the current one?",
+        "cache_hit": false,
+        "similarity": null,
+        "correct": false,
+        "correct_without_cache": false,
+        "answer": "# Meals and Hotels (2023)\n\nUnder the 2023 travel policy, the daily meal allowance was 45 USD. Hotel stays were capped at 150 USD per night. [1]"
+      }
+    ]
+  }
+}

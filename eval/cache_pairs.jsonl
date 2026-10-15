@@ -1,0 +1,50 @@
+{"type": "paraphrase", "seed": "f01", "question": "For full-time staff, what is the yearly vacation entitlement in days?"}
+{"type": "paraphrase", "seed": "f03", "question": "What is the maximum number of leave days I can carry into next year?"}
+{"type": "paraphrase", "seed": "f04", "question": "How much paid sick time does an employee get per year?"}
+{"type": "paraphrase", "seed": "f06", "question": "What encryption protects customer data that is stored at rest?"}
+{"type": "paraphrase", "seed": "f07", "question": "How frequently do we rotate our encryption keys?"}
+{"type": "paraphrase", "seed": "f08", "question": "How long does a password have to be at minimum?"}
+{"type": "paraphrase", "seed": "f09", "question": "How quickly do I need to report a security incident?"}
+{"type": "paraphrase", "seed": "f10", "question": "What is the daily food allowance on business trips now?"}
+{"type": "paraphrase", "seed": "f11", "question": "From what amount do I need to keep receipts for expenses?"}
+{"type": "paraphrase", "seed": "f13", "question": "How many remote work days per week are allowed?"}
+{"type": "paraphrase", "seed": "f14", "question": "What is the amount of the home office stipend?"}
+{"type": "paraphrase", "seed": "f16", "question": "Which team is the owner of Project Atlas?"}
+{"type": "paraphrase", "seed": "f17", "question": "Who is the lead of the Mobile team?"}
+{"type": "paraphrase", "seed": "f21", "question": "What is the monthly employee cost of the Plus health plan?"}
+{"type": "paraphrase", "seed": "f23", "question": "How much does the company reimburse for the gym each month?"}
+{"type": "paraphrase", "seed": "f24", "question": "Where is the Berlin office located?"}
+{"type": "paraphrase", "seed": "f25", "question": "Who manages the London office?"}
+{"type": "paraphrase", "seed": "f27", "question": "What is each employee's annual learning budget?"}
+{"type": "paraphrase", "seed": "f29", "question": "How many months does the probation period last?"}
+{"type": "paraphrase", "seed": "f32", "question": "Who is our DPO?"}
+{"type": "paraphrase", "seed": "f35", "question": "What's the rate limit for Orders API v2?"}
+{"type": "paraphrase", "seed": "f36", "question": "How many retries do webhook deliveries get?"}
+{"type": "paraphrase", "seed": "f42", "question": "What VPN client does the company use?"}
+{"type": "paraphrase", "seed": "f44", "question": "Who is the CEO of the company?"}
+{"type": "paraphrase", "seed": "x01", "question": "What is the meaning of error code E-4012?"}
+{"type": "paraphrase", "seed": "x10", "question": "What is the price of SKU DCK-USB-C?"}
+{"type": "paraphrase", "seed": "x14", "question": "Why does ERR_TOKEN_EXPIRED happen?"}
+{"type": "paraphrase", "seed": "x16", "question": "Which company is vendor VND-0042?"}
+{"type": "paraphrase", "seed": "x19", "question": "In which version was CVE-2025-1182 patched?"}
+{"type": "paraphrase", "seed": "x25", "question": "What email address does the IT helpdesk use?"}
+{"type": "near_miss", "seed": "x01", "other": "x02"}
+{"type": "near_miss", "seed": "x02", "other": "x01"}
+{"type": "near_miss", "seed": "x07", "other": "x08"}
+{"type": "near_miss", "seed": "x03", "other": "x04"}
+{"type": "near_miss", "seed": "f10", "other": "f45"}
+{"type": "near_miss", "seed": "f45", "other": "f10"}
+{"type": "near_miss", "seed": "f06", "other": "f07"}
+{"type": "near_miss", "seed": "f03", "other": "f19"}
+{"type": "near_miss", "seed": "f01", "other": "f02"}
+{"type": "near_miss", "seed": "f04", "other": "f18"}
+{"type": "near_miss", "seed": "f13", "other": "f14"}
+{"type": "near_miss", "seed": "f13", "other": "f20"}
+{"type": "near_miss", "seed": "f24", "other": "f25"}
+{"type": "near_miss", "seed": "f33", "other": "f34"}
+{"type": "near_miss", "seed": "f21", "other": "f22"}
+{"type": "near_miss", "seed": "f11", "other": "f12"}
+{"type": "near_miss", "seed": "f35", "other": "c09"}
+{"type": "near_miss", "seed": "x09", "other": "c16"}
+{"type": "near_miss", "seed": "f17", "other": "f16"}
+{"type": "near_miss", "seed": "f43", "other": "c07"}

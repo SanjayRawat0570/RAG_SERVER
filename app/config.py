@@ -35,6 +35,12 @@ class Settings(BaseSettings):
     # Journal the in-process vector stores to <DATA_DIR>/vectors so indexed
     # documents survive a restart (app/rag/vectorstore/journal.py).
     vector_persist: bool = True
+    # Semantic answer cache for /rag/ask and /rag/stream/ask (fast mode): a question
+    # whose meaning matches a recent one in the same tenant reuses its answer.
+    semantic_cache: bool = True
+    semantic_cache_threshold: float = 0.92
+    semantic_cache_ttl: float = 3600.0
+    semantic_cache_max_entries: int = 2000
     # Output PII guardrail (app/rag/security/guardrails.py): phone numbers, personal
     # emails and fields the sources mark confidential are withheld from answers.
     # Functional mailboxes with these local parts are published contacts and kept.
