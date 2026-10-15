@@ -65,6 +65,7 @@ class StreamAskRequest(BaseModel):
     few_shot: bool | None = None   # None → tenant setting
     mode: Literal["fast", "agentic"] = "fast"
     conversation_id: str | None = None
+    new_conversation: bool = False   # start a stored conversation (see /rag/ask)
 
 
 # ── Pipeline helpers ───────────────────────────────────────────────────────────
@@ -383,7 +384,8 @@ async def stream_rag_ask(
         try:
             mem = await memory.before(tenant=body.tenant, user_id=user["id"],
                                       conversation_id=body.conversation_id,
-                                      question=body.question, provider=provider)
+                                      question=body.question, provider=provider,
+                                      new_conversation=body.new_conversation)
             first = {"event": "memory", "conversation_id": mem.conversation_id,
                      "standalone_question": mem.standalone, "steps": mem.steps}
             yield f"event: memory\ndata: {json.dumps(first)}\n\n"

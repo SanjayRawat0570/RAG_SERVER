@@ -39,8 +39,15 @@ class MemoryContext:
 
 
 async def before(*, tenant: str, user_id: str, conversation_id: str | None, question: str,
-                 provider: str, model: str | None = None) -> MemoryContext:
-    if not user_id or user_id == ANONYMOUS:
+                 provider: str, model: str | None = None,
+                 new_conversation: bool = False) -> MemoryContext:
+    """Load (or, when asked, start) the caller's conversation and resolve a follow-up.
+
+    A conversation is stored only when the client continues one
+    (``conversation_id``) or asks to start one (``new_conversation``); a plain
+    stateless question leaves nothing behind.
+    """
+    if not user_id or user_id == ANONYMOUS or not (conversation_id or new_conversation):
         return MemoryContext(question=question, standalone=question)
     conv = store.get_or_create(tenant, user_id, conversation_id)
     result = await rewrite_follow_up(question, store.history(conv), provider=provider,

@@ -120,7 +120,8 @@ def test_follow_up_through_api_shows_rewritten_query_in_trace():
     with TestClient(app) as client:
         _index(client, "mem-api")
         first = client.post("/api/v1/rag/ask", headers=AUTH, json={
-            "tenant": "mem-api", "question": "How is annual leave calculated for full-time employees?"}).json()
+            "tenant": "mem-api", "question": "How is annual leave calculated for full-time employees?",
+            "new_conversation": True}).json()
         conv_id = first["conversation_id"]
         assert conv_id and first["standalone_question"] == first["original_question"]
 
@@ -141,7 +142,7 @@ def test_agentic_mode_keeps_the_memory_step_before_agent_steps():
     with TestClient(app) as client:
         _index(client, "mem-ag")
         first = client.post("/api/v1/rag/ask", headers=AUTH, json={
-            "tenant": "mem-ag", "question": "Who leads the Mobile team?"}).json()
+            "tenant": "mem-ag", "question": "Who leads the Mobile team?", "new_conversation": True}).json()
         follow = client.post("/api/v1/rag/ask", headers=AUTH, json={
             "tenant": "mem-ag", "question": "and the Payments team?", "mode": "agentic",
             "conversation_id": first["conversation_id"]}).json()
@@ -196,7 +197,8 @@ def test_sse_stream_uses_memory():
     with TestClient(app) as client:
         _index(client, "mem-sse")
         first = client.post("/api/v1/rag/ask", headers=AUTH, json={
-            "tenant": "mem-sse", "question": "What is the leave policy for full-time staff?"}).json()
+            "tenant": "mem-sse", "question": "What is the leave policy for full-time staff?",
+            "new_conversation": True}).json()
         with client.stream("POST", "/api/v1/rag/stream/ask", headers=AUTH, json={
                 "tenant": "mem-sse", "question": "what about part-time staff?",
                 "conversation_id": first["conversation_id"]}) as resp:
@@ -219,7 +221,8 @@ def test_cited_topics_become_interests_and_boost_ranking():
         _index(client, "mem-lt")
         for q in ("How many days of paid sick leave do employees receive?",
                   "How long is parental leave for primary caregivers?"):
-            client.post("/api/v1/rag/ask", headers=AUTH, json={"tenant": "mem-lt", "question": q})
+            client.post("/api/v1/rag/ask", headers=AUTH,
+                        json={"tenant": "mem-lt", "question": q, "new_conversation": True})
 
     assert infer_interests("dev")[0]["topic"] == "HR"   # leave policy text → HR topic
     assert "HR" in effective_profile("dev").content.interests
@@ -275,7 +278,7 @@ def test_gdpr_erase_endpoint_clears_memory():
     with TestClient(app) as client:
         _index(client, "mem-gdpr")
         client.post("/api/v1/rag/ask", headers=AUTH, json={
-            "tenant": "mem-gdpr", "question": "Who leads the Mobile team?"})
+            "tenant": "mem-gdpr", "question": "Who leads the Mobile team?", "new_conversation": True})
         assert client.get("/api/v1/conversations?tenant=mem-gdpr", headers=AUTH).json()["total"] == 1
         client.delete("/api/v1/security/gdpr/data", headers=AUTH)
         assert client.get("/api/v1/conversations?tenant=mem-gdpr", headers=AUTH).json()["total"] == 0

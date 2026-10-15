@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     semantic_cache_threshold: float = 0.92
     semantic_cache_ttl: float = 3600.0
     semantic_cache_max_entries: int = 2000
+    # Conversation memory bounds (app/rag/memory/store.py).
+    conversation_ttl_hours: float = 168.0
+    conversation_max_per_user: int = 50
     # Output PII guardrail (app/rag/security/guardrails.py): phone numbers, personal
     # emails and fields the sources mark confidential are withheld from answers.
     # Functional mailboxes with these local parts are published contacts and kept.

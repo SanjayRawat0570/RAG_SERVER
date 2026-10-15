@@ -79,6 +79,8 @@ class RAGClient:
         body: dict[str, Any] = {"tenant": await self.tenant(), "question": question, "mode": mode}
         if conversation_id:
             body["conversation_id"] = conversation_id
+        else:
+            body["new_conversation"] = True  # the answer's conversation_id enables follow-ups
         return await self._call("POST", "/rag/ask", json=body)
 
     async def aclose(self) -> None:

@@ -1,0 +1,52 @@
+[
+  {
+    "users": 50,
+    "duration_s": 30.0,
+    "wall_s": 30.2,
+    "requests": 3773,
+    "ok": 3773,
+    "errors": {},
+    "error_rate": 0.0,
+    "throughput_rps": 125.1,
+    "latency_ms": {
+      "p50": 213.4,
+      "p95": 1329.0,
+      "p99": 2468.5
+    },
+    "cache_hit_rate": 0.957
+  },
+  {
+    "users": 200,
+    "duration_s": 30.0,
+    "wall_s": 31.0,
+    "requests": 3438,
+    "ok": 3438,
+    "errors": {},
+    "error_rate": 0.0,
+    "throughput_rps": 110.96,
+    "latency_ms": {
+      "p50": 1067.2,
+      "p95": 5667.5,
+      "p99": 9888.5
+    },
+    "cache_hit_rate": 1.0
+  },
+  {
+    "users": 500,
+    "duration_s": 30.0,
+    "wall_s": 32.5,
+    "requests": 3197,
+    "ok": 3194,
+    "errors": {
+      "ReadError": 3
+    },
+    "error_rate": 0.001,
+    "throughput_rps": 98.27,
+    "latency_ms": {
+      "p50": 4028.6,
+      "p95": 12149.1,
+      "p99": 15945.9
+    },
+    "cache_hit_rate": 1.0
+  }
+]

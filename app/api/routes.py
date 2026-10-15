@@ -60,8 +60,12 @@ class AskRequest(BaseModel):
                     "(plan → search → evaluate → rewrite, max 3 rounds)")
     conversation_id: str | None = Field(
         default=None,
-        description="Continue a conversation (last 5 turns are used to rewrite follow-ups); "
-                    "omit to start a new one. Requires an authenticated user.")
+        description="Continue a conversation (last 5 turns are used to rewrite follow-ups). "
+                    "Requires an authenticated user.")
+    new_conversation: bool = Field(
+        default=False,
+        description="Start a stored conversation for this question and return its id. Without "
+                    "it (and without conversation_id) the question is stateless: nothing is kept.")
 
 
 @router.post("/workflows/run", response_model=RunResponse, tags=["workflows"])
@@ -147,7 +151,8 @@ async def rag_ask(
     # Conversation memory: rewrite a follow-up into a standalone question first.
     memory_ctx = await memory.before(tenant=request.tenant, user_id=user["id"],
                                      conversation_id=request.conversation_id,
-                                     question=request.question, provider=provider)
+                                     question=request.question, provider=provider,
+                                     new_conversation=request.new_conversation)
     t0 = time.perf_counter()
     fast = request.mode != "agentic"
     # Semantic answer cache (fast mode): same meaning, same tenant -> same answer.

@@ -6,6 +6,11 @@ Only the last :data:`MAX_TURNS` turns are kept — enough to resolve follow-ups
 ("what about part-time staff?") without growing prompts or storing more
 personal data than needed. In-memory like the other stores; GDPR export and
 erasure cover it (:func:`export_user`, :func:`erase_user`).
+
+Bounded: a conversation untouched for ``CONVERSATION_TTL_HOURS`` expires, and a
+user keeps at most ``CONVERSATION_MAX_PER_USER`` per tenant (the least recently
+used is dropped). Conversations are only created when a client asks for one
+(see ``service.before``), not for every stateless question.
 """
 from __future__ import annotations
 
@@ -13,7 +18,10 @@ import uuid
 from collections import deque
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from datetime import timedelta
 from typing import Any
+
+from app.config import settings
 
 MAX_TURNS = 5
 
@@ -57,14 +65,35 @@ class Conversation:
 _conversations: dict[tuple[str, str, str], Conversation] = {}
 
 
+def _expired(conv: Conversation) -> bool:
+    return _now() - conv.updated_at > timedelta(hours=settings.conversation_ttl_hours)
+
+
+def prune() -> int:
+    """Drop expired conversations; returns how many."""
+    dead = [k for k, c in _conversations.items() if _expired(c)]
+    for k in dead:
+        del _conversations[k]
+    return len(dead)
+
+
 def create(tenant: str, user_id: str) -> Conversation:
+    prune()
+    mine = sorted((c for (t, u, _), c in _conversations.items() if t == tenant and u == user_id),
+                  key=lambda c: c.updated_at)
+    for old in mine[: max(0, len(mine) - settings.conversation_max_per_user + 1)]:
+        del _conversations[(tenant, user_id, old.id)]
     conv = Conversation(id=uuid.uuid4().hex[:16], tenant=tenant, user_id=user_id)
     _conversations[(tenant, user_id, conv.id)] = conv
     return conv
 
 
 def get(tenant: str, user_id: str, conversation_id: str) -> Conversation | None:
-    return _conversations.get((tenant, user_id, conversation_id))
+    conv = _conversations.get((tenant, user_id, conversation_id))
+    if conv is not None and _expired(conv):
+        del _conversations[(tenant, user_id, conversation_id)]
+        return None
+    return conv
 
 
 def get_or_create(tenant: str, user_id: str, conversation_id: str | None) -> Conversation:
@@ -88,6 +117,7 @@ def add_turn(conv: Conversation, turn: Turn) -> None:
 
 
 def list_conversations(tenant: str, user_id: str) -> list[Conversation]:
+    prune()
     convs = [c for (t, u, _), c in _conversations.items() if t == tenant and u == user_id]
     return sorted(convs, key=lambda c: c.updated_at, reverse=True)
 
@@ -105,6 +135,10 @@ def erase_user(user_id: str) -> int:
     for k in keys:
         del _conversations[k]
     return len(keys)
+
+
+def count() -> int:
+    return len(_conversations)
 
 
 def reset() -> None:
