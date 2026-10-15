@@ -35,6 +35,8 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 
+from app.observability import supabase_io
+
 
 class QueryLog(BaseModel):
     id:            str
@@ -140,32 +142,12 @@ def dashboard_stats(user_id: str | None = None) -> dict[str, Any]:
 
 # ── Supabase helpers ──────────────────────────────────────────────────────────
 
-def _sb():
-    try:
-        from app.config import settings
-        if not (settings.supabase_url and settings.supabase_key):
-            return None
-        from supabase import create_client  # type: ignore[import]
-        return create_client(settings.supabase_url, settings.supabase_key)
-    except Exception:
-        return None
-
+# Writes are queued for the shared background writer: a Supabase round trip
+# must never run inside a request (it blocked the event loop for every user).
 
 def _persist(entry: QueryLog) -> None:
-    try:
-        sb = _sb()
-        if not sb:
-            return
-        sb.table("query_logs").insert(entry.model_dump()).execute()
-    except Exception:
-        pass
+    supabase_io.insert("query_logs", entry.model_dump())
 
 
 def _update_rating_sb(query_id: str, user_id: str, rating: int) -> None:
-    try:
-        sb = _sb()
-        if not sb:
-            return
-        sb.table("query_logs").update({"rating": rating}).eq("id", query_id).eq("user_id", user_id).execute()
-    except Exception:
-        pass
+    supabase_io.update("query_logs", {"rating": rating}, id=query_id, user_id=user_id)

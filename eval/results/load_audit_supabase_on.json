@@ -1,0 +1,58 @@
+[
+  {
+    "users": 50,
+    "duration_s": 30.0,
+    "wall_s": 77.9,
+    "requests": 64,
+    "ok": 50,
+    "errors": {
+      "timeout": 9,
+      "ReadError": 5
+    },
+    "error_rate": 0.219,
+    "throughput_rps": 0.64,
+    "latency_ms": {
+      "p50": 60448.5,
+      "p95": 63719.5,
+      "p99": 63721.9
+    },
+    "cache_hit_rate": 0.14
+  },
+  {
+    "users": 200,
+    "duration_s": 30.0,
+    "wall_s": 74.2,
+    "requests": 200,
+    "ok": 44,
+    "errors": {
+      "timeout": 156
+    },
+    "error_rate": 0.78,
+    "throughput_rps": 0.59,
+    "latency_ms": {
+      "p50": 60889.5,
+      "p95": 74155.8,
+      "p99": 74162.8
+    },
+    "cache_hit_rate": 0.682
+  },
+  {
+    "users": 500,
+    "duration_s": 30.0,
+    "wall_s": 61.6,
+    "requests": 3278,
+    "ok": 0,
+    "errors": {
+      "ConnectError": 3077,
+      "timeout": 201
+    },
+    "error_rate": 1.0,
+    "throughput_rps": 0.0,
+    "latency_ms": {
+      "p50": 2984.6,
+      "p95": 61292.4,
+      "p99": 61464.8
+    },
+    "cache_hit_rate": null
+  }
+]

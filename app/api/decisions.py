@@ -60,24 +60,18 @@ def _audit_decision(
     confidence: float,
 ) -> None:
     """Log a decision record to Supabase; silent no-op when unconfigured."""
-    try:
-        from app.config import settings
-        if not (settings.supabase_url and settings.supabase_key):
-            return
-        from supabase import create_client  # type: ignore[import]
-        sb = create_client(settings.supabase_url, settings.supabase_key)
-        sb.table("audit_logs").insert({
-            "id":            str(uuid.uuid4()),
-            "user_id":       user_id,
-            "operation":     "decision",
-            "decision_tree": tree_name,
-            "decision_path": decision_path,
-            "outcome":       outcome,
-            "confidence":    confidence,
-            "created_at":    datetime.now(timezone.utc).isoformat(),
-        }).execute()
-    except Exception:  # noqa: BLE001
-        pass
+    from app.observability import supabase_io
+
+    supabase_io.insert("audit_logs", {
+        "id":            str(uuid.uuid4()),
+        "user_id":       user_id,
+        "operation":     "decision",
+        "decision_tree": tree_name,
+        "decision_path": decision_path,
+        "outcome":       outcome,
+        "confidence":    confidence,
+        "created_at":    datetime.now(timezone.utc).isoformat(),
+    })
 
 
 def _extract_path(run_result: Any) -> list[str]:

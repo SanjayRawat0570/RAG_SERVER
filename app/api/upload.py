@@ -15,8 +15,8 @@ from fastapi import APIRouter, BackgroundTasks, Depends, File, Form, HTTPExcepti
 
 from app.api.deps import get_current_user, require_tenant
 from app.api.pipelines import build_index_workflow
-from app.config import settings
 from app.engine.executor import WorkflowExecutor
+from app.observability import supabase_io
 from app.rag.ingestion.registry import PARSERS, detect_format
 
 router = APIRouter(prefix="/documents", tags=["documents"])
@@ -46,13 +46,6 @@ _execs: dict[str, dict[str, Any]] = {}
 def _set(exec_id: str, **kw: Any) -> None:
     if exec_id in _execs:
         _execs[exec_id].update(kw)
-
-
-def _sb():
-    if settings.supabase_url and settings.supabase_key:
-        from supabase import create_client  # type: ignore[import]
-        return create_client(settings.supabase_url, settings.supabase_key)
-    return None
 
 
 async def _process(
@@ -135,17 +128,15 @@ async def _process(
              message="Saving execution record…")
         await asyncio.sleep(0)
 
-        sb = _sb()
-        if sb:
-            sb.table("workflow_executions").insert({
-                "id":             exec_id,
-                "user_id":        user_id,
-                "tenant":         tenant,
-                "filename":       filename,
-                "status":         "completed",
-                "chunks_indexed": chunks,
-                "completed_at":   datetime.now(timezone.utc).isoformat(),
-            }).execute()
+        supabase_io.insert("workflow_executions", {
+            "id":             exec_id,
+            "user_id":        user_id,
+            "tenant":         tenant,
+            "filename":       filename,
+            "status":         "completed",
+            "chunks_indexed": chunks,
+            "completed_at":   datetime.now(timezone.utc).isoformat(),
+        })
 
         # ── Done ─────────────────────────────────────────────────────────────
         quality_note = f" ⚠ {quality.note}" if quality.action == "warn" else ""
@@ -164,19 +155,14 @@ async def _process(
     except Exception as exc:  # noqa: BLE001
         _set(exec_id, status="failed", progress=0,
              message=str(exc), step="error")
-        try:
-            sb = _sb()
-            if sb:
-                sb.table("workflow_executions").insert({
-                    "id":            exec_id,
-                    "user_id":       user_id,
-                    "tenant":        tenant,
-                    "filename":      filename,
-                    "status":        "failed",
-                    "error_message": str(exc),
-                }).execute()
-        except Exception:
-            pass
+        supabase_io.insert("workflow_executions", {
+            "id":            exec_id,
+            "user_id":       user_id,
+            "tenant":        tenant,
+            "filename":      filename,
+            "status":        "failed",
+            "error_message": str(exc),
+        })
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────

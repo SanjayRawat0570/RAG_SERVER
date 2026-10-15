@@ -62,11 +62,16 @@ class ChainRunRequest(BaseModel):
 # ── Supabase helper ────────────────────────────────────────────────────────────
 
 def _sb():
-    from app.config import settings
-    if settings.supabase_url and settings.supabase_key:
-        from supabase import create_client  # type: ignore[import]
-        return create_client(settings.supabase_url, settings.supabase_key)
-    return None
+    from app.observability import supabase_io
+
+    return supabase_io.client()
+
+
+async def _read(fn):
+    """A Supabase read, off the event loop."""
+    from app.observability import supabase_io
+
+    return await supabase_io.run(fn)
 
 
 # ── endpoints ──────────────────────────────────────────────────────────────────
@@ -263,14 +268,14 @@ async def chain_history(user: dict = Depends(get_current_user)) -> dict:
     if not sb:
         return {"executions": [], "note": "Supabase not configured — history unavailable offline"}
     try:
-        resp = (
+        resp = await _read(lambda sb: (
             sb.table("workflow_executions")
             .select("id, filename, status, completed_at, tenant")
             .eq("user_id", user["id"])
             .order("completed_at", desc=True)
             .limit(50)
             .execute()
-        )
+        ))
         return {"executions": resp.data}
     except Exception as exc:
         raise HTTPException(500, detail=str(exc)) from exc
@@ -286,14 +291,14 @@ async def chain_execution_detail(
     if not sb:
         raise HTTPException(503, detail="Supabase not configured")
     try:
-        resp = (
+        resp = await _read(lambda sb: (
             sb.table("workflow_executions")
             .select("*")
             .eq("id", exec_id)
             .eq("user_id", user["id"])
             .single()
             .execute()
-        )
+        ))
         if not resp.data:
             raise HTTPException(404, detail="Execution not found")
         return resp.data

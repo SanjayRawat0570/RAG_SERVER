@@ -46,23 +46,17 @@ _STRATEGY_DOCS: dict[str, str] = {
 
 def _audit(user_id: str, strategy: str, input_count: int, result_count: int) -> None:
     """Write a merge audit record to Supabase; silent no-op when unconfigured."""
-    try:
-        from app.config import settings
-        if not (settings.supabase_url and settings.supabase_key):
-            return
-        from supabase import create_client  # type: ignore[import]
-        sb = create_client(settings.supabase_url, settings.supabase_key)
-        sb.table("audit_logs").insert({
-            "id":           str(uuid.uuid4()),
-            "user_id":      user_id,
-            "operation":    "merge",
-            "merge_strategy": strategy,
-            "input_count":  input_count,
-            "result_count": result_count,
-            "created_at":   datetime.now(timezone.utc).isoformat(),
-        }).execute()
-    except Exception:  # noqa: BLE001
-        pass
+    from app.observability import supabase_io
+
+    supabase_io.insert("audit_logs", {
+        "id":           str(uuid.uuid4()),
+        "user_id":      user_id,
+        "operation":    "merge",
+        "merge_strategy": strategy,
+        "input_count":  input_count,
+        "result_count": result_count,
+        "created_at":   datetime.now(timezone.utc).isoformat(),
+    })
 
 
 # ── request models ─────────────────────────────────────────────────────────────

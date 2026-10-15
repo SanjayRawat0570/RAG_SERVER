@@ -29,6 +29,9 @@ class Settings(BaseSettings):
     # Demo mode: callers without credentials may *query* (never write) workspaces
     # that are not registered organisations. Off: no credentials -> 401.
     demo_mode: bool = False
+    # Max Supabase log/audit rows waiting for the background writer; beyond it new
+    # rows are dropped (and counted) instead of blocking requests or growing memory.
+    supabase_write_queue: int = 5000
     # Output PII guardrail (app/rag/security/guardrails.py): phone numbers, personal
     # emails and fields the sources mark confidential are withheld from answers.
     # Functional mailboxes with these local parts are published contacts and kept.

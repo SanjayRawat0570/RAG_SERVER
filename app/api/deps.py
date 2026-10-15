@@ -1,24 +1,21 @@
 """Shared FastAPI dependencies — reusable across all routes."""
 from __future__ import annotations
 
+import asyncio
 from typing import Annotated
 
 from fastapi import Depends, Header, HTTPException
 
 from app.config import settings
 
-_sb = None
 API_KEY_PREFIX = "sk-"
+_VERIFY_WITH_SUPABASE = object()  # _resolve_user: the token needs a Supabase round trip
 
 
 def _client():
-    global _sb
-    if _sb is not None:
-        return _sb
-    if settings.supabase_url and settings.supabase_key:
-        from supabase import create_client  # type: ignore[import]
-        _sb = create_client(settings.supabase_url, settings.supabase_key)
-    return _sb
+    from app.observability import supabase_io
+
+    return supabase_io.client()
 
 
 def _api_key_user(key: str) -> dict:
@@ -61,6 +58,9 @@ async def get_current_user(
     from app.rag.security.scope import set_principal
 
     user = _resolve_user(authorization, x_api_key)
+    if user is _VERIFY_WITH_SUPABASE:
+        # A blocking HTTPS call: run it in a thread so other requests keep flowing.
+        user = await asyncio.to_thread(_supabase_user, authorization[7:].strip())
     set_principal(user)
     return user
 
@@ -79,16 +79,18 @@ def _resolve_user(authorization: str, x_api_key: str) -> dict:
     if token == "dev" and settings.app_env in ("development", "test"):
         return {"id": "dev", "email": "dev@local", "username": "Dev User"}
 
-    sb = _client()
-    if not sb:
+    if not _client():
         # No Supabase configured: in development/test any bearer token is the dev
         # user; anywhere else user sign-in is unavailable and only API keys work.
         if settings.app_env in ("development", "test"):
             return {"id": "dev", "email": "dev@local", "username": "Dev User"}
         raise HTTPException(401, "User sign-in is not configured on this server; use an API key")
+    return _VERIFY_WITH_SUPABASE
 
+
+def _supabase_user(token: str) -> dict:
     try:
-        resp = sb.auth.get_user(token)
+        resp = _client().auth.get_user(token)
         u    = resp.user
         return {
             "id":       str(u.id),

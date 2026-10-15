@@ -33,6 +33,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 
 from app.api.deps import get_current_user, require_tenant
+from app.observability import supabase_io
 from app.api.pipelines import (
     STORE, DIM,
     build_ask_workflow,
@@ -56,34 +57,21 @@ router = APIRouter(prefix="/errors", tags=["errors"])
 # ── Supabase helper ────────────────────────────────────────────────────────────
 
 def _sb():
-    from app.config import settings
-    if settings.supabase_url and settings.supabase_key:
-        try:
-            from supabase import create_client  # type: ignore[import]
-            return create_client(settings.supabase_url, settings.supabase_key)
-        except Exception:
-            return None
-    return None
+    return supabase_io.client()
 
 
 def _log_error(user_id: str, error_type: str, detail: str, chain: str) -> None:
-    """Log a pure error event (all fallbacks exhausted) to Supabase."""
-    try:
-        sb = _sb()
-        if not sb:
-            return
-        sb.table("audit_logs").insert({
-            "id":            str(uuid.uuid4()),
-            "user_id":       user_id,
-            "operation":     "error",
-            "decision_tree": chain,
-            "decision_path": [error_type],
-            "outcome":       "none",
-            "confidence":    0.0,
-            "created_at":    datetime.now(timezone.utc).isoformat(),
-        }).execute()
-    except Exception:  # noqa: BLE001
-        pass
+    """Log a pure error event (all fallbacks exhausted) to Supabase (queued)."""
+    supabase_io.insert("audit_logs", {
+        "id":            str(uuid.uuid4()),
+        "user_id":       user_id,
+        "operation":     "error",
+        "decision_tree": chain,
+        "decision_path": [error_type],
+        "outcome":       "none",
+        "confidence":    0.0,
+        "created_at":    datetime.now(timezone.utc).isoformat(),
+    })
 
 
 # ── Request models ─────────────────────────────────────────────────────────────
@@ -472,7 +460,7 @@ async def error_history(
     if not sb:
         return {"events": [], "note": "Supabase not configured — history unavailable offline"}
     try:
-        resp = (
+        resp = await supabase_io.run(lambda sb: (
             sb.table("audit_logs")
             .select("id, user_id, operation, decision_tree, outcome, confidence, created_at")
             .eq("user_id", user["id"])
@@ -480,7 +468,7 @@ async def error_history(
             .order("created_at", desc=True)
             .limit(limit)
             .execute()
-        )
+        ))
         return {"events": resp.data, "count": len(resp.data)}
     except Exception as exc:
         raise HTTPException(500, detail=str(exc)) from exc
@@ -500,13 +488,13 @@ async def error_patterns(
     if not sb:
         return {"patterns": [], "note": "Supabase not configured"}
     try:
-        resp = (
+        resp = await supabase_io.run(lambda sb: (
             sb.table("audit_logs")
             .select("decision_tree, operation, outcome")
             .eq("user_id", user["id"])
             .in_("operation", ["fallback", "error"])
             .execute()
-        )
+        ))
         # Count by (decision_tree, operation) in Python (no GROUP BY in Supabase JS client)
         counts: dict[tuple[str, str], int] = {}
         for row in (resp.data or []):

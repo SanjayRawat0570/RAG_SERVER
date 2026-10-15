@@ -78,23 +78,18 @@ async def _persist(
     user_id: str | None,
 ) -> None:
     """Write execution record to Supabase; silent no-op when unconfigured."""
-    try:
-        from app.config import settings
-        if not (settings.supabase_url and settings.supabase_key):
-            return
-        from supabase import create_client  # type: ignore[import]
-        sb = create_client(settings.supabase_url, settings.supabase_key)
-        sb.table("workflow_executions").insert({
-            "id":           chain_id,
-            "user_id":      user_id or "anonymous",
-            "tenant":       result.final_output.get("tenant", "default"),
-            "filename":     chain_name,
-            "status":       result.status,
-            "completed_at": datetime.now(timezone.utc).isoformat(),
-            "step_outputs": result.model_dump(),
-        }).execute()
-    except Exception:  # noqa: BLE001 — observability must never break execution
-        pass
+    from app.observability import supabase_io
+
+    # Queued for the background writer — never a blocking call inside the request.
+    supabase_io.insert("workflow_executions", {
+        "id":           chain_id,
+        "user_id":      user_id or "anonymous",
+        "tenant":       result.final_output.get("tenant", "default"),
+        "filename":     chain_name,
+        "status":       result.status,
+        "completed_at": datetime.now(timezone.utc).isoformat(),
+        "step_outputs": result.model_dump(mode="json"),
+    })
 
 
 # ── executor ──────────────────────────────────────────────────────────────────

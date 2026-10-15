@@ -189,21 +189,15 @@ class FallbackExecutor:
 
 async def _persist(result: FallbackResult, user_id: str | None) -> None:
     """Write fallback/error event to Supabase audit_logs; silent no-op offline."""
-    try:
-        from app.config import settings
-        if not (settings.supabase_url and settings.supabase_key):
-            return
-        from supabase import create_client  # type: ignore[import]
-        sb = create_client(settings.supabase_url, settings.supabase_key)
-        sb.table("audit_logs").insert({
-            "id":            result.chain_id,
-            "user_id":       user_id or "anonymous",
-            "operation":     "fallback" if result.succeeded else "error",
-            "decision_tree": result.chain,
-            "decision_path": [a.option for a in result.attempts],
-            "outcome":       result.used_option,
-            "confidence":    float(not result.degraded),
-            "created_at":    datetime.now(timezone.utc).isoformat(),
-        }).execute()
-    except Exception:  # noqa: BLE001
-        pass
+    from app.observability import supabase_io
+
+    supabase_io.insert("audit_logs", {
+        "id":            result.chain_id,
+        "user_id":       user_id or "anonymous",
+        "operation":     "fallback" if result.succeeded else "error",
+        "decision_tree": result.chain,
+        "decision_path": [a.option for a in result.attempts],
+        "outcome":       result.used_option,
+        "confidence":    float(not result.degraded),
+        "created_at":    datetime.now(timezone.utc).isoformat(),
+    })
