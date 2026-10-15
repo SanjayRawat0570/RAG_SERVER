@@ -1,29 +1,64 @@
 # Enterprise RAG System — Orchestration Engine
 
-Production-grade workflow & orchestration engine. This phase implements the
-core of the system, **F1–F4**, on which the RAG pipeline (F9+) and observability
-(F8) will be layered.
+A FastAPI RAG service built on a DAG workflow engine: ingest → chunk → embed →
+hybrid search (dense + BM25, RRF) → rerank → augment → generate (Gemini with an
+offline extractive fallback), multi-tenant, with streaming, caching and an MCP
+server.
 
-| Feature | Status | What it does |
-|---------|--------|--------------|
-| **F1** Basic Workflow Execution | ✅ | JSON workflow → validated DAG, typed nodes, execution context, retry + fallback, **nested sub-workflows + loops** |
-| **F2** Graph Branching | ✅ | Edge conditions with AND/OR/NOT, numeric/string/array operators |
-| **F3** Chaining & Parallel Execution | ✅ | Topological execution, context passing, independent nodes run concurrently |
-| **F4** Merging Results | ✅ | `concat`, `voting`, `ranking`, `weighted`, `dedup`, `consensus` |
-| **F5** Conditional Logic & Decision Trees | ✅ | `switch` node for multi-way routing (first-match case → label) |
-| **F6** Streaming & Real-time | ✅ | `/workflows/stream` emits Server-Sent Events per node as it completes |
-| **F7** Error Handling & Fallbacks | ✅ | Per-node retry w/ backoff, static fallback, **circuit breaker** shared across runs |
-| **F8** Observability & Tracing | ✅ | OpenTelemetry spans (HTTP→workflow→node) to Jaeger, Prometheus metrics, trace-id in JSON logs, Grafana dashboard |
-| **F9** Document Ingestion | ✅ | Format detection + parsers (text/markdown/html/json/pdf/docx) behind lazy adapters, cleaning, metadata |
-| **F10** Advanced Chunking | ✅ | `fixed` (overlap), `recursive`, `semantic`, `structure` (markdown headings); chunks carry provenance + token estimates |
-| **F11** Multi-Model Embeddings | ✅ | Pluggable embedders (default: offline deterministic hash embedder), embedding cache; sentence-transformers/API as adapters |
-| **F12** Vector DB Ops | ✅ | In-process FLAT cosine index: upsert (update-or-insert), namespaces (multi-tenant), metadata filtering, delete, stats |
-| **F13** Query Processing & Search | ✅ | Query understanding (intent/entities/expansion), BM25 sparse search, hybrid dense+sparse via RRF fusion |
-| **F14** Reranking | ✅ | `cross_encoder` (semantic⊕lexical), `mmr` diversity, `recency` decay, `authority` weighting, `multi_factor` blend |
-| **F15** Context Augmentation | ✅ | Token-budgeted context with citations, prompt templates, chain-of-thought, chat `messages` output |
-| **F16** LLM Generation | ✅ | Pluggable providers: offline extractive stub (default) + Google Gemini adapter (free tier, opt-in via `GEMINI_API_KEY`) |
-| **F17** Caching & Performance | ✅ | TTL/LRU response cache + semantic answer cache (near-duplicate queries reuse answers), cache hit/miss metrics |
-| **F24** Cost & Token Counting | ✅ | Token counting, per-model pricing/cost estimation, per-tenant budgets with pre-spend enforcement |
+**Status reflects what was verified** — by the test suite (1184 tests), live
+drills against a running server, and the eval/benchmark scripts in `eval/`. The
+audit, measurements and fix history are in `PROJECT_REPORT.md` (workspace root).
+"Partial" means the code exists but is limited or not used by the answer
+pipeline; "not implemented" means it does not exist.
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| **F1–F4** Workflows, branching, chaining/parallel, merging | Working | `/workflows/run` (requires credentials) |
+| **F5** Decision trees | Partial | `switch` node works; the routing workflows return a label and do not route `/rag/ask` |
+| **F6** Streaming | Working | `/workflows/stream`, `/rag/stream/ask` (SSE, incl. the fallback answer), WebSocket |
+| **F7** Errors & fallbacks | Working | Retry, static fallback, circuit breaker; provider outage → extractive answer (UI banner) |
+| **F8** Observability | Partial | `/api/v1/metrics` and in-memory traces verified; Jaeger/Prometheus/Grafana export not verified |
+| **F9** Ingestion | Working | Markdown verified live; PDF/DOCX/HTML/JSON by tests |
+| **F10** Chunking | Working | `structure` strategy in the pipeline |
+| **F11** Embeddings | Working | bge-small (ONNX) by default; hash embedder fallback if the model is missing |
+| **F12** Vector store | Working | In-process FLAT store journalled to `DATA_DIR/vectors` (survives restarts); brute-force search (~0.26 s/query at 100k chunks) |
+| **F13** Query processing & hybrid search | Working | Incremental BM25 index per namespace (16 ms/query at 100k chunks) |
+| **F14** Reranking | Partial | The pipeline uses a heuristic (cosine + overlap). A neural ONNX cross-encoder is available with `RERANKER=onnx`; in a Gemini A/B it raised MRR but not accuracy, so it is off |
+| **F15** Context augmentation | Working | |
+| **F16** LLM generation | Working | Gemini (free tier) with structured output; offline extractive stub |
+| **F17** Caching | Working | Exact response cache + semantic answer cache on `/rag/ask` and the stream (tenant/provider scoped, invalidated on document changes; 67% paraphrase hits, 0/20 false hits measured) |
+| **F18** Multi-tenancy | Working | Every route that names a tenant/namespace checks the caller (route sweep test + live drill); organisations persist. Signed-in users may still use workspaces that are not registered organisations |
+| **F19** Incremental indexing | Working | Re-uploading a changed file replaces its chunks; background queue (`/indexing`) |
+| **F20** Hybrid weighting | Partial | Weight profiles on `/search/hybrid` only; `/rag/ask` uses plain RRF |
+| **F21** Knowledge graph | Partial | Per-tenant graph used by the agent's `lookup_entity`; in-memory (lost on restart) |
+| **F22** Personalization | Partial | Re-ranks when a profile exists; effect not measured |
+| **F23** Feedback | Partial | Ratings stored and summarised; not fed back into ranking |
+| **F24** Cost & budgets | Working | |
+| **F25** Security & compliance | Partial | RBAC, tenant-scoped API keys, no anonymous access (opt-in read-only `DEMO_MODE`), GDPR export/erase, output PII guardrail. No prompt-injection classifier; encryption is an endpoint, not at rest |
+
+| AI concept | Status | Notes |
+|---|---|---|
+| Structured output | Working | JSON answer validated, repaired once, extractive fallback |
+| Few-shot prompting | Working | Per-tenant examples; effect not re-measured |
+| Agentic tool calling | Working | Multihop accuracy 0.88 vs 0.32 in fast mode (gemini-3.1-flash-lite), ~5x latency |
+| Conversation memory | Working | Opt-in per chat (`new_conversation`), 7-day TTL, 50 per user |
+| MCP server | Tests only | In-process tests; not exercised with a real MCP client |
+| Vision ingestion | Tests only | Gemini is mocked in the tests |
+
+**Not implemented** (planned "v2" items): contextual retrieval, parent-child
+chunking, multi-query/HyDE, metadata pre-filters, graph communities, answer
+verification and confidence calibration, input guardrails / red-team suite,
+connectors (Google Drive), document-level ACLs, Qdrant, Redis workers,
+multi-provider failover, admin analytics and an eval dashboard.
+
+### Measured (methods and commands in `PROJECT_REPORT.md`)
+
+| | Value |
+|---|---|
+| Answer accuracy, 165 eval questions, gemini-3.5-flash-lite (audit) | 0.864 (recall@5 0.946, "I don't know" accuracy 1.00) |
+| Weakest category: multihop | 0.32 in fast mode, 0.88 in agentic mode (gemini-3.1-flash-lite, 25 q) |
+| Load, one worker, stub LLM, Supabase logging on, 50 users | 37.7 req/s, 0% errors |
+| BM25 / dense search per query at 100k chunks | 16 ms / 259 ms |
 
 ## Architecture
 
@@ -42,7 +77,20 @@ app/
     └── nodes/           input · processing · decision · merge · output (+ registry)
 ```
 
-## Run with Docker
+## Run locally (verified)
+
+```bash
+python -m venv .venv && .venv/Scripts/pip install -r requirements.txt   # Python 3.13
+python -m app.rag.embeddings.onnx_embed download        # bge-small, once (~64 MB)
+uvicorn app.main:app --port 8000
+pytest -q                                               # 1184 tests
+```
+
+Every data endpoint requires credentials. In development any bearer token is
+the dev user (`Authorization: Bearer dev`); in production use Supabase sign-in
+or a tenant-scoped API key.
+
+## Run with Docker (not verified in the latest audit)
 
 ```bash
 # Full stack: API + Jaeger + Prometheus + Grafana
@@ -68,7 +116,7 @@ docker compose --profile test run --rm tests
 
 ```bash
 curl -s -X POST http://localhost:8000/api/v1/workflows/run \
-  -H 'content-type: application/json' \
+  -H 'Authorization: Bearer dev' -H 'content-type: application/json' \
   -d @examples/f2_branching.json | python -m json.tool
 ```
 
@@ -109,7 +157,7 @@ parallel dense + sparse retrieval fused with Reciprocal Rank Fusion (F4 `rrf`).
 
 ```bash
 curl -sN -X POST http://localhost:8000/api/v1/workflows/stream \
-  -H 'content-type: application/json' -d @examples/f4_parallel_merge.json
+  -H 'Authorization: Bearer dev' -H 'content-type: application/json' -d @examples/f4_parallel_merge.json
 # event: workflow_start / node_complete (×N) / workflow_end  (SSE)
 ```
 
@@ -273,7 +321,7 @@ from `backend/`. To try it without a client, run `mcp dev app/mcp_server.py` (op
 | **Tool calling** | Three tools are exposed to the model as Gemini function declarations: `search_docs(query, filters?)` (hybrid search), `get_document(doc_id, page?)` and `lookup_entity(name)` (knowledge graph). The tenant is never a tool parameter: it comes from the server-side `ToolContext`, and any tenant-like argument the model sends is stripped and reported. | `app/rag/agent/tools.py`, `app/rag/llm/gemini.py` (`tools`, `tool_calls`), `app/rag/graph/store.py` (per-tenant graphs) |
 | **Agents** | `mode: "agentic"` on `/rag/ask` and `/rag/stream/ask` runs an explicit state machine — plan → search → evaluate → answer \| rewrite — inside the DAG engine's `loop` node (one iteration per tool round). Hard limits: 3 tool rounds, 45 s deadline (also bounds each model call), 8 000-token planning budget. Without a tool-capable model a heuristic planner takes over (search + entity lookup, then a bridge-entity rewrite for questions like "the team that owns X"). `fast` stays the default. | `app/rag/agent/planner.py`, `app/engine/nodes/agent.py`, `app/api/pipelines.py` (`build_agentic_workflow`), `tests/test_agentic.py` |
 | **Chain of thought** | The agent reasons before acting, but the reasoning stays internal: Gemini's thought parts are dropped, and the UI only receives the `steps` trace — tool calls, query rewrites, evidence coverage and why it stopped. | `app/rag/agent/planner.py` (`_step`), `app/rag/llm/gemini.py` |
-| **Conversation memory** | Short-term: the last 5 turns per conversation, keyed by tenant + user + `conversation_id`. Before retrieval a follow-up is rewritten into a standalone question ("what about part-time staff?" → "What is the leave policy for part-time staff?") by the LLM, or by a heuristic offline; the rewrite appears as a `memory_rewrite` step in the trace. Long-term: topics of the sources cited in each answer go into the user's history, and inferred interests feed the personalization boosts through a new `personalize` node. `/conversations` lists, opens and clears chats; GDPR export/erase include memory. Anonymous callers get no memory. | `app/rag/memory/` (`store.py`, `rewriter.py`, `service.py`), `app/engine/nodes/personalize.py`, `app/api/conversations.py`, `app/rag/security/gdpr.py`, `tests/test_memory.py` |
+| **Conversation memory** | Short-term: the last 5 turns per conversation, keyed by tenant + user + `conversation_id`. Before retrieval a follow-up is rewritten into a standalone question ("what about part-time staff?" → "What is the leave policy for part-time staff?") by the LLM, or by a heuristic offline; the rewrite appears as a `memory_rewrite` step in the trace. Long-term: topics of the sources cited in each answer go into the user's history, and inferred interests feed the personalization boosts through a new `personalize` node. `/conversations` lists, opens and clears chats; GDPR export/erase include memory. A conversation is stored only when the client continues one (`conversation_id`) or starts one (`new_conversation: true`); it expires after 7 days untouched, and a user keeps at most 50 per workspace. | `app/rag/memory/` (`store.py`, `rewriter.py`, `service.py`), `app/engine/nodes/personalize.py`, `app/api/conversations.py`, `app/rag/security/gdpr.py`, `tests/test_memory.py` |
 | **Few-shot prompting** | Two example question → cited-answer pairs (one answerable, one "I don't know") are rendered into the system prompt in the exact JSON shape the model must return. Examples are configurable per tenant (`GET/PUT /api/v1/tenant-settings/{tenant}`) and can be toggled per request (`few_shot: false`). `eval/run_eval.py --compare-fewshot` measures their effect. | `app/rag/tenants/ai_settings.py`, `app/rag/context/prompt.py` (`render_examples`), `app/api/tenant_settings.py`, `eval/results/fewshot_comparison_*.json`, `tests/test_few_shot.py` |
 | **Multimodal input** | Scanned PDF pages, embedded figures/charts and image uploads are sent to Gemini's vision input (inline image + JSON schema `{text, description}`). The output becomes ordinary chunks with `source_type: "vision"` and the page number, so citations point to the page. Opt-in per tenant (cost); skipped with a logged warning when there is no API key. | `app/rag/ingestion/vision.py`, `app/rag/ingestion/parsers.py` (per-page segments), `app/rag/chunking/strategies.py` (page-aware chunks), `app/api/upload.py`, `app/rag/llm/gateway.py` (image token budget), `tests/test_vision.py` |
 | **MCP** | An MCP server (official Python SDK, stdio) exposes `search_knowledge_base(query, top_k)` and `ask(question)`. It authenticates with an API key scoped to one tenant and role, and calls the REST API with it, so the same RBAC check (`rbac.authorize`) and tenant isolation apply. Keys are hashed and persisted so a key made in the web UI works for the MCP process. | `app/mcp_server.py`, `app/rag/security/rbac.py`, `app/rag/security/apikeys.py`, `app/api/deps.py` (`require_tenant`), `tests/test_mcp.py` |
@@ -282,64 +330,43 @@ from `backend/`. To try it without a client, run `mcp dev app/mcp_server.py` (op
 ## Evaluation
 
 ```bash
-python eval/run_eval.py --label my_run            # offline stub, deterministic
-python eval/run_eval.py --provider gemini --delay 7  # real model, free-tier friendly
+python eval/run_eval.py --label my_run                      # offline stub, deterministic
+python eval/run_eval.py --provider gemini --model gemini-3.5-flash-lite --delay 4
+python eval/run_eval.py --provider gemini --mode agentic --category multihop
+python eval/compare.py <label_a> <label_b>                  # per-category deltas
+python eval/benchmark.py                                    # retrieval / TTFT / total latency
+python eval/loadtest.py --url http://localhost:8000 --users 50 200 500   # HTTP load
+python eval/scale_bench.py --sizes 1000 10000 100000         # retrieval cost vs corpus size
+python eval/semantic_cache_bench.py                         # semantic cache hits / false hits
 ```
 
-Indexes `eval/corpus/` into an isolated tenant, asks the 28 questions in
-`eval/questions.jsonl` (answerable, multi-hop, unanswerable) and reports citation
-rate/precision, answer accuracy, "I don't know" accuracy and latency. Results are
-saved under `eval/results/`. `fallback_rate` counts answers that came from the
-extractive fallback because the provider failed; a real-provider run aborts after
-three consecutive fallbacks rather than saving stub numbers as model results.
+`run_eval.py` indexes `eval/corpus/` (23 documents + 92 generated look-alike
+distractors, 305 chunks) into an isolated tenant and asks the 165 questions in
+`eval/questions.jsonl` — factual, multihop, comparison, unanswerable, exact
+code/ID and follow-up (replayed through the real memory rewriter). It reports
+recall@5, MRR, context recall, answer accuracy (expected keywords), citation
+rate/precision, a lexical faithfulness proxy, "I don't know" accuracy and
+latency, overall and per category. `fallback_rate` counts answers from the
+extractive fallback; a real-provider run aborts after three consecutive
+fallbacks rather than saving stub numbers as model results.
 
-**Few-shot comparison** (`eval/results/fewshot_comparison_gemini.json`,
-`gemini-3.1-flash-lite`, 28 questions):
+Latest measured results (full tables, per category, in `PROJECT_REPORT.md`):
 
-| metric | without examples | with examples |
-|---|---|---|
-| citation rate | 0.85 | 0.80 |
-| citation precision | 1.00 | 1.00 |
-| answer accuracy | 0.80 | 0.80 |
-| "I don't know" accuracy | 1.00 | 1.00 |
-| false "I don't know" | 0.20 | 0.20 |
-| fallback rate | 0.07 | 0.00 |
+| Run | Accuracy | recall@5 | MRR | Notes |
+|---|---|---|---|---|
+| 165 q, gemini-3.5-flash-lite, fast | 0.864 | 0.946 | 0.944 | multihop 0.32, all other categories ≥ 0.92 |
+| 25 multihop, gemini-3.1-flash-lite, fast | 0.320 | 0.700 | 0.960 | |
+| 25 multihop, gemini-3.1-flash-lite, agentic | 0.880 | 0.720 | 0.927 | p50 latency 8.0 s vs 1.6 s |
 
-On this small set the examples made no measurable difference: the model already
-declines all unanswerable questions. The one behavioural change is format: without
-examples it once answered "I don't know" while still listing a citation (m03);
-with examples it returned `citations: []`, which is the whole citation-rate
-difference. The false "I don't know" answers are the multi-hop questions, which
-the single-pass fast mode cannot retrieve — see agentic mode. The free tier
-allows only 20 `gemini-2.5-flash` requests per day, so run comparisons on a lite
-model (`--model`).
-
-**Fast vs agentic** (offline stub, `eval/results/f3_*_stub.json`):
-
-| metric | fast | agentic |
-|---|---|---|
-| answer accuracy | 0.70 | 0.85 |
-| multi-hop accuracy | 0.00 | 1.00 |
-| citation precision | 1.00 | 1.00 |
-| "I don't know" accuracy | 1.00 | 1.00 |
-
-With Gemini (`gemini-3.1-flash-lite`) the model plans its own hops, e.g. for
-"In which office is the team that owns Project Beacon based?" it searched
-"Project Beacon owner team", then "Mobile team office location", and answered
-"Lisbon" citing both files.
+The free tier allows only ~20 `gemini-2.5-flash` requests a day; run evals on a
+lite model (`--model`), and expect the lite models' daily quota to run out after
+a few hundred requests.
 
 ## Roadmap
 
-**Done:** orchestration **F1–F8** + complete RAG pipeline **F9–F16**
-(ingest → chunk → embed → upsert → query → hybrid search → RRF → rerank →
-augment → generate). End-to-end, offline, with tracing/metrics on every node.
-
-**Also done:** F17 caching · F18 multi-tenancy · F19 incremental indexing ·
-F20 hybrid-search weighting · F21 knowledge graph · F22 personalization ·
-F23 feedback loop · F24 cost/token controls · F25 security & compliance.
-
-**AI concepts:** structured output · few-shot prompting · tool calling and an
-agentic mode (agents, chain of thought) · conversation memory · MCP server with
-tenant-scoped keys and RBAC · multimodal (vision) ingestion. See
-[Concepts demonstrated](#concepts-demonstrated).
+See the status table at the top for what is working, partial or not
+implemented. The largest open items: multihop questions in fast mode (0.32),
+dense search that scans every vector (no ANN index), the knowledge graph and
+conversations living in memory only, and the unimplemented v2 items listed
+above (document ACLs, input guardrails, connectors, Qdrant/Redis).
 # RAG_SERVER
