@@ -31,6 +31,7 @@ from app.rag.context import (
 from app.rag.cost.pricing import estimate_cost
 from app.rag.llm import LLMResponse
 from app.rag.llm.gateway import call_llm, stream_llm
+from app.rag.security.guardrails import StreamGuard, guard_answer
 from app.rag.llm.selector import model_catalogue, select_model
 from app.rag.models import estimate_tokens
 from app.rag.vectorstore import lookup_store
@@ -185,8 +186,9 @@ async def _run_pipeline(req: AskRequest) -> dict[str, Any]:
         tenant=req.namespace,
     )
 
-    # 6. Post-process
+    # 6. Post-process (and the output PII guardrail)
     answer, citations = _post_process(response.text)
+    answer, guardrail = guard_answer(answer, docs)
 
     # Cost estimate
     usage    = response.usage or {}
@@ -218,6 +220,7 @@ async def _run_pipeline(req: AskRequest) -> dict[str, Any]:
             "estimated_cost_usd": cost,
         },
         "finish_reason": response.finish_reason,
+        "guardrail":  guardrail,
         "cache_hit":  False,
         "cache_type": None,
     }
@@ -358,13 +361,18 @@ async def ask_stream(req: AskRequest, user: CurrentUser) -> StreamingResponse:
                            "provider": provider_name, "complexity": complexity["level"]})
         yield f"data: {meta}\n\n"
 
+        pii = StreamGuard(docs)  # releases redacted text a sentence at a time
         try:
             async for token in stream_llm(
                 provider_name,
                 {"messages": messages, "documents": docs, "query": req.query}, config,
                 tenant=req.namespace,
             ):
-                chunk = json.dumps({"event": "token", "text": token})
+                if text := pii.feed(token):
+                    chunk = json.dumps({"event": "token", "text": text})
+                    yield f"data: {chunk}\n\n"
+            if tail := pii.flush():
+                chunk = json.dumps({"event": "token", "text": tail})
                 yield f"data: {chunk}\n\n"
         except Exception as exc:
             err = json.dumps({"event": "error", "detail": str(exc)})

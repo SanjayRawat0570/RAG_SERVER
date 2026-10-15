@@ -41,6 +41,7 @@ from app.engine.nodes import get_node
 from app.models.workflow import NodeDef, NodeType
 from app.rag.cost import BudgetExceededError
 from app.rag.memory import service as memory
+from app.rag.security.guardrails import StreamGuard, guard_answer
 from app.rag.tenants.ai_settings import effective_examples
 from app.rag.llm.gateway import redact, stream_llm
 from app.rag.llm.structured import (
@@ -254,6 +255,8 @@ async def _rag_pipeline_events(
     llm_config = {"provider": provider_name, "max_tokens": 2048}
     stream_request = {**llm_request, "messages": with_instructions(llm_request["messages"])}
     extractor = AnswerStreamExtractor()
+    # PII guardrail on the stream: text is released a sentence at a time, redacted.
+    pii = StreamGuard(llm_request.get("documents") or [])
     raw_reply = ""
     streamed = ""
     token_count = 0
@@ -265,7 +268,7 @@ async def _rag_pipeline_events(
             if cancelled():
                 break
             raw_reply += chunk
-            delta = extractor.feed(chunk)
+            delta = pii.feed(extractor.feed(chunk) or "")
             if delta:
                 streamed += delta
                 token_count += 1
@@ -278,6 +281,11 @@ async def _rag_pipeline_events(
     if cancelled():
         yield {"event": "cancelled"}
         return
+    tail = pii.flush()
+    if tail and not stream_error:
+        streamed += tail
+        token_count += 1
+        yield {"event": "token", "token": tail}
 
     # Validate the streamed JSON; repair once or fall back to extractive.
     result = await generate_structured(
@@ -287,7 +295,7 @@ async def _rag_pipeline_events(
     if stream_error:
         result["structured"]["errors"].insert(0, f"stream error: {stream_error}")
     result.pop("response", None)
-    answer = result["answer"]
+    answer, guardrail = guard_answer(result["answer"], llm_request.get("documents") or [])
 
     yield {"event": "step", "step": "generate", "status": "done",
            "token_count": token_count}
@@ -303,6 +311,7 @@ async def _rag_pipeline_events(
         "confidence":    result["confidence"],
         "answerable":    result["answerable"],
         "structured":    result["structured"],
+        "guardrail":     guardrail,
     }
 
     # ── Complete ───────────────────────────────────────────────────────────────

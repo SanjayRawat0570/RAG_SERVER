@@ -29,6 +29,15 @@ class Settings(BaseSettings):
     # Demo mode: callers without credentials may *query* (never write) workspaces
     # that are not registered organisations. Off: no credentials -> 401.
     demo_mode: bool = False
+    # Output PII guardrail (app/rag/security/guardrails.py): phone numbers, personal
+    # emails and fields the sources mark confidential are withheld from answers.
+    # Functional mailboxes with these local parts are published contacts and kept.
+    pii_guardrail: bool = True
+    pii_allowed_email_prefixes: list[str] = [
+        "helpdesk", "support", "help", "security", "dpo", "privacy", "info", "contact", "hr",
+        "it", "sales", "legal", "compliance", "billing", "abuse", "noreply", "no-reply",
+        "careers", "jobs", "press", "admin", "office", "accounts", "finance", "procurement",
+    ]
 
     # LLM generation (F16). Default is the offline deterministic stub; the
     # Gemini adapter is used only when an API key is provided.

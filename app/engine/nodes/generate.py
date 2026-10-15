@@ -38,6 +38,7 @@ from app.observability.metrics import record_cache
 from app.rag.cache import SemanticCache, get_cache
 from app.rag.cache.cache import MISS
 from app.rag.cost import get_budget
+from app.rag.security.guardrails import guard_answer
 from app.rag.embeddings import DEFAULT_DIMENSION, embed_texts
 from app.rag.llm.gateway import call_llm
 from app.rag.llm.structured import generate_structured
@@ -103,6 +104,11 @@ class GenerateNode(Node):
         )
         result["cache_hit"] = False
         result["cache_type"] = None
+
+        # 5) Output guardrail: phone numbers, personal emails and fields the sources
+        #    mark confidential never leave the server (cached answers are guarded too).
+        result["answer"], result["guardrail"] = guard_answer(
+            str(result.get("answer", "")), request.get("documents") or [])
 
         # 6) Populate caches for next time — but never with the extractive fallback:
         #    a provider outage would otherwise keep serving fallback answers for the

@@ -28,6 +28,7 @@ ASK_OUTPUT: dict[str, Any] = {
     "confidence": "$.generate.confidence",
     "answerable": "$.generate.answerable",
     "cited_sources": "$.generate.cited_sources",
+    "guardrail": "$.generate.guardrail",
     "structured": "$.generate.structured",
     "provider": "$.generate.provider",
     "cost_usd": "$.generate.cost_usd",
