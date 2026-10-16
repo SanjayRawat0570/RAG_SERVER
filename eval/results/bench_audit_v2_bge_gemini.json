@@ -1,0 +1,269 @@
+{
+  "provider": "gemini",
+  "mode": "fast",
+  "questions": 30,
+  "errors": 0,
+  "index": {
+    "docs": 115,
+    "chunks": 305,
+    "ms_total": 5617.0,
+    "ms_per_doc": 48.8
+  },
+  "retrieval_ms": {
+    "p50": 24.2,
+    "p95": 38.9,
+    "mean": 26.7
+  },
+  "ttft_ms": {
+    "p50": 3167.0,
+    "p95": 9989.6,
+    "mean": 4515.6
+  },
+  "total_ms": {
+    "p50": 3315.6,
+    "p95": 10067.7,
+    "mean": 4607.4
+  },
+  "rows": [
+    {
+      "id": "f01",
+      "category": "factual",
+      "retrieval_ms": 18.410999968182296,
+      "ttft_ms": 1569.422799977474,
+      "total_ms": 1675.7994999643415,
+      "error": false
+    },
+    {
+      "id": "f02",
+      "category": "factual",
+      "retrieval_ms": 26.220800005830824,
+      "ttft_ms": 5357.384799979627,
+      "total_ms": 5445.147799968254,
+      "error": false
+    },
+    {
+      "id": "f03",
+      "category": "factual",
+      "retrieval_ms": 32.45269996114075,
+      "ttft_ms": 6603.405800007749,
+      "total_ms": 6704.365899960976,
+      "error": false
+    },
+    {
+      "id": "f04",
+      "category": "factual",
+      "retrieval_ms": 20.9795999689959,
+      "ttft_ms": 2849.2300999932922,
+      "total_ms": 2912.6412000041455,
+      "error": false
+    },
+    {
+      "id": "f05",
+      "category": "factual",
+      "retrieval_ms": 16.180400038138032,
+      "ttft_ms": 1225.6077000056393,
+      "total_ms": 1318.3163999929093,
+      "error": false
+    },
+    {
+      "id": "f06",
+      "category": "factual",
+      "retrieval_ms": 18.600700015667826,
+      "ttft_ms": 9989.56390004605,
+      "total_ms": 10067.7462000167,
+      "error": false
+    },
+    {
+      "id": "f07",
+      "category": "factual",
+      "retrieval_ms": 16.538200026843697,
+      "ttft_ms": 4607.527600019239,
+      "total_ms": 4609.8734000115655,
+      "error": false
+    },
+    {
+      "id": "f08",
+      "category": "factual",
+      "retrieval_ms": 27.89730002405122,
+      "ttft_ms": 1256.01320003625,
+      "total_ms": 1351.84440005105,
+      "error": false
+    },
+    {
+      "id": "f09",
+      "category": "factual",
+      "retrieval_ms": 19.24770005280152,
+      "ttft_ms": 1382.5491000316106,
+      "total_ms": 1465.038500027731,
+      "error": false
+    },
+    {
+      "id": "f10",
+      "category": "factual",
+      "retrieval_ms": 24.229499977082014,
+      "ttft_ms": 2130.6376000284217,
+      "total_ms": 2170.449400029611,
+      "error": false
+    },
+    {
+      "id": "f11",
+      "category": "factual",
+      "retrieval_ms": 23.853099963162094,
+      "ttft_ms": 1696.0060999845155,
+      "total_ms": 1764.1813000082038,
+      "error": false
+    },
+    {
+      "id": "f12",
+      "category": "factual",
+      "retrieval_ms": 16.76269999006763,
+      "ttft_ms": 1955.7612999924459,
+      "total_ms": 2047.2247000434436,
+      "error": false
+    },
+    {
+      "id": "f13",
+      "category": "factual",
+      "retrieval_ms": 19.3989000399597,
+      "ttft_ms": 1153.37900002487,
+      "total_ms": 1231.8770000129007,
+      "error": false
+    },
+    {
+      "id": "f14",
+      "category": "factual",
+      "retrieval_ms": 21.685300045646727,
+      "ttft_ms": 2491.862700029742,
+      "total_ms": 2611.1580000142567,
+      "error": false
+    },
+    {
+      "id": "f15",
+      "category": "factual",
+      "retrieval_ms": 44.71330001251772,
+      "ttft_ms": 5673.964200017508,
+      "total_ms": 5740.178600011859,
+      "error": false
+    },
+    {
+      "id": "f16",
+      "category": "factual",
+      "retrieval_ms": 21.159900003112853,
+      "ttft_ms": 1293.0234000086784,
+      "total_ms": 1361.7962999851443,
+      "error": false
+    },
+    {
+      "id": "f17",
+      "category": "factual",
+      "retrieval_ms": 19.712500041350722,
+      "ttft_ms": 4221.012599999085,
+      "total_ms": 4294.264500029385,
+      "error": false
+    },
+    {
+      "id": "f18",
+      "category": "factual",
+      "retrieval_ms": 18.40119995176792,
+      "ttft_ms": 6415.758699993603,
+      "total_ms": 6488.876199990045,
+      "error": false
+    },
+    {
+      "id": "f19",
+      "category": "factual",
+      "retrieval_ms": 23.579199973028153,
+      "ttft_ms": 1842.436800012365,
+      "total_ms": 1954.9324999679811,
+      "error": false
+    },
+    {
+      "id": "f20",
+      "category": "factual",
+      "retrieval_ms": 40.07190000265837,
+      "ttft_ms": 2433.642499963753,
+      "total_ms": 2508.9097999734804,
+      "error": false
+    },
+    {
+      "id": "f21",
+      "category": "factual",
+      "retrieval_ms": 28.502000030130148,
+      "ttft_ms": 3167.0288000022992,
+      "total_ms": 3315.5516000115313,
+      "error": false
+    },
+    {
+      "id": "f22",
+      "category": "factual",
+      "retrieval_ms": 30.668799998238683,
+      "ttft_ms": 11741.410799964797,
+      "total_ms": 11750.996899965685,
+      "error": false
+    },
+    {
+      "id": "f23",
+      "category": "factual",
+      "retrieval_ms": 34.72470003180206,
+      "ttft_ms": 6060.4478000313975,
+      "total_ms": 6126.7283000051975,
+      "error": false
+    },
+    {
+      "id": "f24",
+      "category": "factual",
+      "retrieval_ms": 38.901899999473244,
+      "ttft_ms": 8247.932699974626,
+      "total_ms": 8365.13869999908,
+      "error": false
+    },
+    {
+      "id": "f25",
+      "category": "factual",
+      "retrieval_ms": 29.693500022403896,
+      "ttft_ms": 7511.450500052888,
+      "total_ms": 7581.615300034173,
+      "error": false
+    },
+    {
+      "id": "f26",
+      "category": "factual",
+      "retrieval_ms": 37.875099980738014,
+      "ttft_ms": 10735.918799997307,
+      "total_ms": 11148.848899989389,
+      "error": false
+    },
+    {
+      "id": "f27",
+      "category": "factual",
+      "retrieval_ms": 33.59979996457696,
+      "ttft_ms": 5325.60049998574,
+      "total_ms": 5396.821399976034,
+      "error": false
+    },
+    {
+      "id": "f28",
+      "category": "factual",
+      "retrieval_ms": 25.40779998525977,
+      "ttft_ms": 6475.746400014032,
+      "total_ms": 6538.788800011389,
+      "error": false
+    },
+    {
+      "id": "f29",
+      "category": "factual",
+      "retrieval_ms": 35.52729997318238,
+      "ttft_ms": 2302.8863000217825,
+      "total_ms": 2478.587699995842,
+      "error": false
+    },
+    {
+      "id": "f30",
+      "category": "factual",
+      "retrieval_ms": 35.356400010641664,
+      "ttft_ms": 7751.9112000009045,
+      "total_ms": 7795.768100011628,
+      "error": false
+    }
+  ]
+}

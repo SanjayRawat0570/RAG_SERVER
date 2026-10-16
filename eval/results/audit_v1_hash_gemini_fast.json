@@ -1,0 +1,3821 @@
+{
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "mode": "fast",
+  "few_shot": null,
+  "chunks_indexed": 305,
+  "outage_retries": 0,
+  "metrics": {
+    "questions": 165,
+    "recall_at_5": 0.911,
+    "mrr": 0.884,
+    "context_recall": 0.851,
+    "answer_accuracy": 0.779,
+    "citation_rate": 0.814,
+    "citation_precision": 1.0,
+    "faithfulness": 0.956,
+    "idk_accuracy": 1.0,
+    "false_idk_rate": 0.186,
+    "fallback_rate": 0.0,
+    "latency_ms_p50": 3943.0,
+    "latency_ms_p95": 12702.0
+  },
+  "by_category": {
+    "factual": {
+      "questions": 45,
+      "recall_at_5": 0.978,
+      "mrr": 0.9,
+      "context_recall": 0.933,
+      "answer_accuracy": 0.933,
+      "citation_rate": 0.933,
+      "citation_precision": 1.0,
+      "faithfulness": 1.0,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.067,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 2075.6,
+      "latency_ms_p95": 5014.8
+    },
+    "multihop": {
+      "questions": 25,
+      "recall_at_5": 0.6,
+      "mrr": 0.791,
+      "context_recall": 0.473,
+      "answer_accuracy": 0.16,
+      "citation_rate": 0.32,
+      "citation_precision": 1.0,
+      "faithfulness": 0.875,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.68,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 3669.7,
+      "latency_ms_p95": 5544.9
+    },
+    "comparison": {
+      "questions": 25,
+      "recall_at_5": 0.94,
+      "mrr": 0.93,
+      "context_recall": 0.85,
+      "answer_accuracy": 0.76,
+      "citation_rate": 0.8,
+      "citation_precision": 1.0,
+      "faithfulness": 0.85,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.2,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 4346.7,
+      "latency_ms_p95": 9329.9
+    },
+    "unanswerable": {
+      "questions": 25,
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "answer_accuracy": null,
+      "citation_rate": null,
+      "citation_precision": null,
+      "faithfulness": null,
+      "idk_accuracy": 1.0,
+      "false_idk_rate": null,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 5239.3,
+      "latency_ms_p95": 11338.6
+    },
+    "exact_id": {
+      "questions": 25,
+      "recall_at_5": 1.0,
+      "mrr": 0.883,
+      "context_recall": 0.96,
+      "answer_accuracy": 0.96,
+      "citation_rate": 0.96,
+      "citation_precision": 1.0,
+      "faithfulness": 0.958,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.04,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 6600.6,
+      "latency_ms_p95": 11347.7
+    },
+    "followup": {
+      "questions": 20,
+      "recall_at_5": 1.0,
+      "mrr": 0.908,
+      "context_recall": 1.0,
+      "answer_accuracy": 1.0,
+      "citation_rate": 1.0,
+      "citation_precision": 1.0,
+      "faithfulness": 1.0,
+      "idk_accuracy": null,
+      "false_idk_rate": 0.0,
+      "fallback_rate": 0.0,
+      "latency_ms_p50": 7382.2,
+      "latency_ms_p95": 24333.3
+    }
+  },
+  "rows": [
+    {
+      "id": "f01",
+      "category": "factual",
+      "question": "How many days of annual leave do full-time employees get?",
+      "standalone_question": "How many days of annual leave do full-time employees get?",
+      "answer": "Full-time employees receive 25 days of paid annual leave per calendar year [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5614.7
+    },
+    {
+      "id": "f02",
+      "category": "factual",
+      "question": "How is annual leave calculated for part-time staff?",
+      "standalone_question": "How is annual leave calculated for part-time staff?",
+      "answer": "Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 16590.6
+    },
+    {
+      "id": "f03",
+      "category": "factual",
+      "question": "How many unused leave days can be carried over?",
+      "standalone_question": "How many unused leave days can be carried over?",
+      "answer": "Up to 5 unused leave days may be carried over into the next year [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1723.7
+    },
+    {
+      "id": "f04",
+      "category": "factual",
+      "question": "How many days of paid sick leave do employees receive?",
+      "standalone_question": "How many days of paid sick leave do employees receive?",
+      "answer": "Employees receive 10 days of paid sick leave per year [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1307.7
+    },
+    {
+      "id": "f05",
+      "category": "factual",
+      "question": "How long is parental leave for primary caregivers?",
+      "standalone_question": "How long is parental leave for primary caregivers?",
+      "answer": "Primary caregivers receive 16 weeks of fully paid parental leave [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2353.4
+    },
+    {
+      "id": "f06",
+      "category": "factual",
+      "question": "How is customer data encrypted at rest?",
+      "standalone_question": "How is customer data encrypted at rest?",
+      "answer": "All customer data is encrypted at rest with AES-256 [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2636.0
+    },
+    {
+      "id": "f07",
+      "category": "factual",
+      "question": "How often are encryption keys rotated?",
+      "standalone_question": "How often are encryption keys rotated?",
+      "answer": "Encryption keys are stored in the cloud key management service and rotated every 90 days [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1402.2
+    },
+    {
+      "id": "f08",
+      "category": "factual",
+      "question": "What is the minimum password length?",
+      "standalone_question": "What is the minimum password length?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "recall_at_5": 0.0,
+      "mrr": 0.0,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1954.2
+    },
+    {
+      "id": "f09",
+      "category": "factual",
+      "question": "Within how many hours must a security incident be reported?",
+      "standalone_question": "Within how many hours must a security incident be reported?",
+      "answer": "Suspected security incidents must be reported to security@example.com within 24 hours of discovery [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "security_policy.md"
+      ],
+      "expected_sources": [
+        "security_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2825.6
+    },
+    {
+      "id": "f10",
+      "category": "factual",
+      "question": "What is the current daily meal allowance when travelling?",
+      "standalone_question": "What is the current daily meal allowance when travelling?",
+      "answer": "The daily meal allowance while travelling is capped at 60 USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1304.5
+    },
+    {
+      "id": "f11",
+      "category": "factual",
+      "question": "Above what amount are receipts required for expenses?",
+      "standalone_question": "Above what amount are receipts required for expenses?",
+      "answer": "Receipts are required for every expense above 25 USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4636.1
+    },
+    {
+      "id": "f12",
+      "category": "factual",
+      "question": "Which expenses need approval from the Chief Financial Officer?",
+      "standalone_question": "Which expenses need approval from the Chief Financial Officer?",
+      "answer": "Expenses above 5,000 USD require approval from the Chief Financial Officer [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1610.2
+    },
+    {
+      "id": "f13",
+      "category": "factual",
+      "question": "How many days per week can employees work remotely?",
+      "standalone_question": "How many days per week can employees work remotely?",
+      "answer": "Employees may work remotely up to 3 days per week [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1443.2
+    },
+    {
+      "id": "f14",
+      "category": "factual",
+      "question": "How much is the home office stipend?",
+      "standalone_question": "How much is the home office stipend?",
+      "answer": "New employees receive a one-time home office stipend of 500 USD to buy a desk, chair or monitor [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3081.1
+    },
+    {
+      "id": "f15",
+      "category": "factual",
+      "question": "How often are company laptops refreshed?",
+      "standalone_question": "How often are company laptops refreshed?",
+      "answer": "Company laptops are refreshed every 3 years [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1462.8
+    },
+    {
+      "id": "f16",
+      "category": "factual",
+      "question": "Which team owns Project Atlas?",
+      "standalone_question": "Which team owns Project Atlas?",
+      "answer": "Project Atlas is owned by the Data Platform team [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1738.1
+    },
+    {
+      "id": "f17",
+      "category": "factual",
+      "question": "Who leads the Mobile team?",
+      "standalone_question": "Who leads the Mobile team?",
+      "answer": "The Mobile team is led by Tom Becker [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2422.4
+    },
+    {
+      "id": "f18",
+      "category": "factual",
+      "question": "After how many consecutive days of absence is a doctor's note required?",
+      "standalone_question": "After how many consecutive days of absence is a doctor's note required?",
+      "answer": "A doctor's note is required for absences longer than 3 consecutive days [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3943.0
+    },
+    {
+      "id": "f19",
+      "category": "factual",
+      "question": "By when must carried-over leave days be used?",
+      "standalone_question": "By when must carried-over leave days be used?",
+      "answer": "Carried-over days must be used before 31 March [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2765.9
+    },
+    {
+      "id": "f20",
+      "category": "factual",
+      "question": "What are the core collaboration hours for remote employees?",
+      "standalone_question": "What are the core collaboration hours for remote employees?",
+      "answer": "Core collaboration hours for remote employees are 10:00 to 15:00 local time [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5888.5
+    },
+    {
+      "id": "f21",
+      "category": "factual",
+      "question": "How much does the Plus health plan cost employees each month?",
+      "standalone_question": "How much does the Plus health plan cost employees each month?",
+      "answer": "The Plus plan costs employees 45 USD per month [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "benefits_health.md"
+      ],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2022.5
+    },
+    {
+      "id": "f22",
+      "category": "factual",
+      "question": "When does open enrollment for health insurance take place?",
+      "standalone_question": "When does open enrollment for health insurance take place?",
+      "answer": "Open enrollment runs from 1 November to 30 November each year [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "benefits_health.md"
+      ],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1208.0
+    },
+    {
+      "id": "f23",
+      "category": "factual",
+      "question": "How much is the monthly gym reimbursement?",
+      "standalone_question": "How much is the monthly gym reimbursement?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.25,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1409.2
+    },
+    {
+      "id": "f24",
+      "category": "factual",
+      "question": "What is the address of the Berlin office?",
+      "standalone_question": "What is the address of the Berlin office?",
+      "answer": "The Berlin office is located at Torstrasse 120, 10119 Berlin [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2675.2
+    },
+    {
+      "id": "f25",
+      "category": "factual",
+      "question": "Who is the office manager of the London office?",
+      "standalone_question": "Who is the office manager of the London office?",
+      "answer": "The office manager of the London office is Grace Hall [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1769.7
+    },
+    {
+      "id": "f26",
+      "category": "factual",
+      "question": "What are the opening hours of the offices?",
+      "standalone_question": "What are the opening hours of the offices?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.25,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1815.8
+    },
+    {
+      "id": "f27",
+      "category": "factual",
+      "question": "How large is the yearly learning budget per employee?",
+      "standalone_question": "How large is the yearly learning budget per employee?",
+      "answer": "Every employee has a learning budget of 1,000 USD per year for courses, books and conferences [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2308.8
+    },
+    {
+      "id": "f28",
+      "category": "factual",
+      "question": "How often is data protection training mandatory?",
+      "standalone_question": "How often is data protection training mandatory?",
+      "answer": "Data protection training is mandatory every 2 years [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1865.4
+    },
+    {
+      "id": "f29",
+      "category": "factual",
+      "question": "How long is the probation period?",
+      "standalone_question": "How long is the probation period?",
+      "answer": "The probation period is 6 months [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2075.6
+    },
+    {
+      "id": "f30",
+      "category": "factual",
+      "question": "Within how many days must new employees complete security awareness training?",
+      "standalone_question": "Within how many days must new employees complete security awareness training?",
+      "answer": "New employees must complete security awareness training within 14 days of their start date [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2157.0
+    },
+    {
+      "id": "f31",
+      "category": "factual",
+      "question": "How long are application logs kept?",
+      "standalone_question": "How long are application logs kept?",
+      "answer": "Application logs are kept for 30 days [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1825.2
+    },
+    {
+      "id": "f32",
+      "category": "factual",
+      "question": "Who is the data protection officer?",
+      "standalone_question": "Who is the data protection officer?",
+      "answer": "The data protection officer is Sofia Marin [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1673.7
+    },
+    {
+      "id": "f33",
+      "category": "factual",
+      "question": "What is the first response time for Premium support?",
+      "standalone_question": "What is the first response time for Premium support?",
+      "answer": "The first response time for Premium support is 1 hour [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1976.2
+    },
+    {
+      "id": "f34",
+      "category": "factual",
+      "question": "How much does Premium support cost?",
+      "standalone_question": "How much does Premium support cost?",
+      "answer": "Premium support costs 15% of the annual contract value [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2085.7
+    },
+    {
+      "id": "f35",
+      "category": "factual",
+      "question": "What is the rate limit of the Orders API v2?",
+      "standalone_question": "What is the rate limit of the Orders API v2?",
+      "answer": "The Orders API v2 allows 600 requests per minute per API key [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1694.0
+    },
+    {
+      "id": "f36",
+      "category": "factual",
+      "question": "How many times are webhook deliveries retried?",
+      "standalone_question": "How many times are webhook deliveries retried?",
+      "answer": "Webhook deliveries are retried up to 6 times over 24 hours with exponential backoff [1], whereas Catalog API webhooks are retried up to 8 times over 6 hours [2], and Customers API webhooks are retried up to 8 times over 12 hours [3].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md",
+        "api_catalog.md",
+        "api_customers.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5014.8
+    },
+    {
+      "id": "f37",
+      "category": "factual",
+      "question": "How many quotes are needed for purchases above 10,000 USD?",
+      "standalone_question": "How many quotes are needed for purchases above 10,000 USD?",
+      "answer": "Purchases above 10,000 USD require three competing quotes [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2541.5
+    },
+    {
+      "id": "f38",
+      "category": "factual",
+      "question": "What are the payment terms for vendor invoices?",
+      "standalone_question": "What are the payment terms for vendor invoices?",
+      "answer": "Vendor invoices are paid on net 45 day terms [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1524.8
+    },
+    {
+      "id": "f39",
+      "category": "factual",
+      "question": "What commission do sales representatives earn on new annual recurring revenue?",
+      "standalone_question": "What commission do sales representatives earn on new annual recurring revenue?",
+      "answer": "Sales representatives earn a commission of 8% of new annual recurring revenue, rising to 12% above quota [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1639.4
+    },
+    {
+      "id": "f40",
+      "category": "factual",
+      "question": "Who leads the EMEA sales region?",
+      "standalone_question": "Who leads the EMEA sales region?",
+      "answer": "The EMEA region is led by Sophie Laurent [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1908.6
+    },
+    {
+      "id": "f41",
+      "category": "factual",
+      "question": "How often is the status page updated during a SEV1 incident?",
+      "standalone_question": "How often is the status page updated during a SEV1 incident?",
+      "answer": "The status page is updated every 30 minutes during a SEV1 incident [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4100.1
+    },
+    {
+      "id": "f42",
+      "category": "factual",
+      "question": "Which client does the company VPN use?",
+      "standalone_question": "Which client does the company VPN use?",
+      "answer": "The company VPN uses the GlobalConnect client [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "vpn_guide.md"
+      ],
+      "expected_sources": [
+        "vpn_guide.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2382.7
+    },
+    {
+      "id": "f43",
+      "category": "factual",
+      "question": "What is the current nightly hotel cap for business travel?",
+      "standalone_question": "What is the current nightly hotel cap for business travel?",
+      "answer": "Hotel stays are capped at 200 USD per night [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3135.1
+    },
+    {
+      "id": "f44",
+      "category": "factual",
+      "question": "Who is the Chief Executive Officer?",
+      "standalone_question": "Who is the Chief Executive Officer?",
+      "answer": "The Chief Executive Officer is Elena Rossi [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "org_structure.md"
+      ],
+      "expected_sources": [
+        "org_structure.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3138.1
+    },
+    {
+      "id": "f45",
+      "category": "factual",
+      "question": "What was the daily meal allowance under the 2023 travel policy?",
+      "standalone_question": "What was the daily meal allowance under the 2023 travel policy?",
+      "answer": "Under the 2023 travel policy, the daily meal allowance was 45 USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "travel_policy_2023.md"
+      ],
+      "expected_sources": [
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2863.4
+    },
+    {
+      "id": "m01",
+      "category": "multihop",
+      "question": "Who leads the team that owns Project Atlas?",
+      "standalone_question": "Who leads the team that owns Project Atlas?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3361.4
+    },
+    {
+      "id": "m02",
+      "category": "multihop",
+      "question": "In which office is the team that owns Project Beacon based?",
+      "standalone_question": "In which office is the team that owns Project Beacon based?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 0.25,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1898.3
+    },
+    {
+      "id": "m03",
+      "category": "multihop",
+      "question": "Who leads the team responsible for Project Cedar?",
+      "standalone_question": "Who leads the team responsible for Project Cedar?",
+      "answer": "Project Cedar is owned by the Payments team [2].",
+      "provider": "gemini",
+      "confidence": "medium",
+      "cited_sources": [
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 0.5,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2086.0
+    },
+    {
+      "id": "m04",
+      "category": "multihop",
+      "question": "Who leads the team that owns Project Delta?",
+      "standalone_question": "Who leads the team that owns Project Delta?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3567.6
+    },
+    {
+      "id": "m05",
+      "category": "multihop",
+      "question": "In which office is the team that owns Project Delta based?",
+      "standalone_question": "In which office is the team that owns Project Delta based?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 0.25,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 4364.5
+    },
+    {
+      "id": "m06",
+      "category": "multihop",
+      "question": "What is the street address of the office where the Mobile team is based?",
+      "standalone_question": "What is the street address of the office where the Mobile team is based?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "offices.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1743.1
+    },
+    {
+      "id": "m07",
+      "category": "multihop",
+      "question": "Who is the office manager where the Payments team is based?",
+      "standalone_question": "Who is the office manager where the Payments team is based?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "offices.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 10331.4
+    },
+    {
+      "id": "m08",
+      "category": "multihop",
+      "question": "How many desks does the office of the team that owns Project Atlas have?",
+      "standalone_question": "How many desks does the office of the team that owns Project Atlas have?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "offices.md",
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.667,
+      "mrr": 0.25,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 4083.5
+    },
+    {
+      "id": "m09",
+      "category": "multihop",
+      "question": "What is the name of the person who must approve expenses above 5,000 USD?",
+      "standalone_question": "What is the name of the person who must approve expenses above 5,000 USD?",
+      "answer": "Expenses above 5,000 USD require approval from the Chief Financial Officer [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "expenses_policy.md"
+      ],
+      "expected_sources": [
+        "expenses_policy.md",
+        "org_structure.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1623.3
+    },
+    {
+      "id": "m10",
+      "category": "multihop",
+      "question": "Who heads the department that the Mobile team belongs to?",
+      "standalone_question": "Who heads the department that the Mobile team belongs to?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "org_structure.md",
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3593.6
+    },
+    {
+      "id": "m11",
+      "category": "multihop",
+      "question": "Who leads the team that reviews access to production systems?",
+      "standalone_question": "Who leads the team that reviews access to production systems?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "security_policy.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 4477.5
+    },
+    {
+      "id": "m12",
+      "category": "multihop",
+      "question": "Which internal phone extension should I call to report a lost laptop?",
+      "standalone_question": "Which internal phone extension should I call to report a lost laptop?",
+      "answer": "You can reach the helpdesk on internal extension 4357 [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "org_structure.md"
+      ],
+      "expected_sources": [
+        "org_structure.md",
+        "remote_work.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 0.5,
+      "context_recall": 0.5,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4295.7
+    },
+    {
+      "id": "m13",
+      "category": "multihop",
+      "question": "How much does the laptop that new engineers receive cost?",
+      "standalone_question": "How much does the laptop that new engineers receive cost?",
+      "answer": "Engineers receive the LAP-14-PRO laptop [1], which costs 1,450 USD [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md",
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "onboarding.md",
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5544.9
+    },
+    {
+      "id": "m14",
+      "category": "multihop",
+      "question": "What is the price of the laptop given to new employees who are not engineers?",
+      "standalone_question": "What is the price of the laptop given to new employees who are not engineers?",
+      "answer": "New employees who are not engineers receive the LAP-13-AIR laptop [2], which costs 1,100 USD [3].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md",
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "onboarding.md",
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4445.6
+    },
+    {
+      "id": "m15",
+      "category": "multihop",
+      "question": "Who leads the team that led the response to incident INC-2024-031?",
+      "standalone_question": "Who leads the team that led the response to incident INC-2024-031?",
+      "answer": "The Payments team led the response to incident INC-2024-031 [1], but the provided context does not state who leads the Payments team.",
+      "provider": "gemini",
+      "confidence": "medium",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 0.0,
+      "unsupported_claims": [
+        "The Payments team led the response to incident INC-2024-031 , but the provided context does not state who leads the Payments team."
+      ],
+      "idk": false,
+      "latency_ms": 5420.1
+    },
+    {
+      "id": "m16",
+      "category": "multihop",
+      "question": "Which release fixed the defect behind incident INC-2024-058?",
+      "standalone_question": "Which release fixed the defect behind incident INC-2024-058?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "incident_runbook.md",
+        "release_notes.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 4601.2
+    },
+    {
+      "id": "m17",
+      "category": "multihop",
+      "question": "Which team owns the project that the analytics dashboard from version 2.4.0 is built on?",
+      "standalone_question": "Which team owns the project that the analytics dashboard from version 2.4.0 is built on?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "release_notes.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 6042.9
+    },
+    {
+      "id": "m18",
+      "category": "multihop",
+      "question": "Who leads the team that performs security reviews of vendors that process customer data?",
+      "standalone_question": "Who leads the team that performs security reviews of vendors that process customer data?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "procurement.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3669.7
+    },
+    {
+      "id": "m19",
+      "category": "multihop",
+      "question": "Which team owns the project that the 2025 Objective 2 says to launch?",
+      "standalone_question": "Which team owns the project that the 2025 Objective 2 says to launch?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "okrs_2025.md",
+        "projects.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1545.9
+    },
+    {
+      "id": "m20",
+      "category": "multihop",
+      "question": "What is the budget of the project owned by the team that Tom Becker leads?",
+      "standalone_question": "What is the budget of the project owned by the team that Tom Becker leads?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 2936.0
+    },
+    {
+      "id": "m21",
+      "category": "multihop",
+      "question": "When is the project owned by the London-based engineering team scheduled to launch?",
+      "standalone_question": "When is the project owned by the London-based engineering team scheduled to launch?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 0.2,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 4821.5
+    },
+    {
+      "id": "m22",
+      "category": "multihop",
+      "question": "Who is the office manager of the office where Nadia Ivanova's team is based?",
+      "standalone_question": "Who is the office manager of the office where Nadia Ivanova's team is based?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "offices.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1690.3
+    },
+    {
+      "id": "m23",
+      "category": "multihop",
+      "question": "Which executive heads the department of the team that owns Project Delta?",
+      "standalone_question": "Which executive heads the department of the team that owns Project Delta?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "org_structure.md",
+        "projects.md",
+        "teams.md"
+      ],
+      "recall_at_5": 0.333,
+      "mrr": 0.333,
+      "context_recall": 0.333,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1892.2
+    },
+    {
+      "id": "m24",
+      "category": "multihop",
+      "question": "What device do new employees collect on their first day that every VPN connection requires?",
+      "standalone_question": "What device do new employees collect on their first day that every VPN connection requires?",
+      "answer": "New employees collect a YubiKey on their first day [1, 2], which is a hardware security key required for every VPN connection [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "vpn_guide.md",
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md",
+        "vpn_guide.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3519.3
+    },
+    {
+      "id": "m25",
+      "category": "multihop",
+      "question": "Which version deprecated the API version that allowed only 120 requests per minute?",
+      "standalone_question": "Which version deprecated the API version that allowed only 120 requests per minute?",
+      "answer": "Orders API v2 deprecated the legacy Orders API v1, which allowed only 120 requests per minute [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md",
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4533.3
+    },
+    {
+      "id": "c01",
+      "category": "comparison",
+      "question": "Which health plan has the lower annual deductible, Essential or Plus?",
+      "standalone_question": "Which health plan has the lower annual deductible, Essential or Plus?",
+      "answer": "The Plus plan has the lower annual deductible at 400 USD, compared to the Essential plan's deductible of 1,200 USD [1, 2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "benefits_health.md",
+        "benefits_health.md"
+      ],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 0.0,
+      "unsupported_claims": [
+        "The Plus plan has the lower annual deductible at 400 USD, compared to the Essential plan's deductible of 1,200 USD [1, 2]."
+      ],
+      "idk": false,
+      "latency_ms": 4001.7
+    },
+    {
+      "id": "c02",
+      "category": "comparison",
+      "question": "Does the Essential plan or the Plus plan include vision coverage?",
+      "standalone_question": "Does the Essential plan or the Plus plan include vision coverage?",
+      "answer": "The Plus plan includes vision coverage of up to 200 USD per year for glasses or contact lenses [2], whereas the Essential plan does not include vision coverage [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "benefits_health.md",
+        "benefits_health.md"
+      ],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3818.2
+    },
+    {
+      "id": "c03",
+      "category": "comparison",
+      "question": "Which office has more desks, Berlin or London?",
+      "standalone_question": "Which office has more desks, Berlin or London?",
+      "answer": "Berlin has more desks with 180 desks [1], while London has 140 desks [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "offices.md",
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4318.7
+    },
+    {
+      "id": "c04",
+      "category": "comparison",
+      "question": "Which office opened earlier, Lisbon or London?",
+      "standalone_question": "Which office opened earlier, Lisbon or London?",
+      "answer": "The London office opened earlier in 2017 [2], whereas the Lisbon office opened in 2021 [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "offices.md",
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 6756.0
+    },
+    {
+      "id": "c05",
+      "category": "comparison",
+      "question": "How does parental leave for primary caregivers compare with secondary caregivers?",
+      "standalone_question": "How does parental leave for primary caregivers compare with secondary caregivers?",
+      "answer": "Primary caregivers receive 16 weeks of fully paid parental leave, whereas secondary caregivers receive 4 weeks of fully paid parental leave [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5557.5
+    },
+    {
+      "id": "c06",
+      "category": "comparison",
+      "question": "How did the daily meal allowance change from the 2023 travel policy to the current policy?",
+      "standalone_question": "How did the daily meal allowance change from the 2023 travel policy to the current policy?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "expenses_policy.md",
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 0.5,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 4330.5
+    },
+    {
+      "id": "c07",
+      "category": "comparison",
+      "question": "How did the hotel cap per night change between the 2023 travel policy and the current one?",
+      "standalone_question": "How did the hotel cap per night change between the 2023 travel policy and the current one?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "expenses_policy.md",
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 4761.3
+    },
+    {
+      "id": "c08",
+      "category": "comparison",
+      "question": "How did the flight length that requires economy class change from 2023 to now?",
+      "standalone_question": "How did the flight length that requires economy class change from 2023 to now?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "expenses_policy.md",
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.5,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 9329.9
+    },
+    {
+      "id": "c09",
+      "category": "comparison",
+      "question": "How does the rate limit of the Orders API v2 compare with v1?",
+      "standalone_question": "How does the rate limit of the Orders API v2 compare with v1?",
+      "answer": "The Orders API v2 allows 600 requests per minute per API key, whereas the legacy Orders API v1 allowed only 120 requests per minute [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 7765.1
+    },
+    {
+      "id": "c10",
+      "category": "comparison",
+      "question": "Which support tier has the faster first response time, Standard or Premium?",
+      "standalone_question": "Which support tier has the faster first response time, Standard or Premium?",
+      "answer": "Premium support has a faster first response time of 1 hour, whereas Standard support has a first response time of 8 business hours [1, 2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "support_sla.md",
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3746.9
+    },
+    {
+      "id": "c11",
+      "category": "comparison",
+      "question": "Compare the uptime commitments of Standard and Premium support.",
+      "standalone_question": "Compare the uptime commitments of Standard and Premium support.",
+      "answer": "Premium support offers an uptime commitment of 99.9% [1], while Standard support provides an uptime commitment of 99.5% [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "support_sla.md",
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4491.8
+    },
+    {
+      "id": "c12",
+      "category": "comparison",
+      "question": "Which sales region has the highest 2025 revenue target?",
+      "standalone_question": "Which sales region has the highest 2025 revenue target?",
+      "answer": "The Americas region has the highest 2025 revenue target of 31 million USD [3].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3567.9
+    },
+    {
+      "id": "c13",
+      "category": "comparison",
+      "question": "Which sales region has the smallest 2025 revenue target?",
+      "standalone_question": "Which sales region has the smallest 2025 revenue target?",
+      "answer": "The APAC region has the smallest 2025 revenue target of 9 million USD [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 9609.5
+    },
+    {
+      "id": "c14",
+      "category": "comparison",
+      "question": "Which are kept longer, application logs or security audit logs?",
+      "standalone_question": "Which are kept longer, application logs or security audit logs?",
+      "answer": "Security audit logs are kept for 1 year, while application logs are kept for 30 days, meaning security audit logs are kept longer [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 12702.0
+    },
+    {
+      "id": "c15",
+      "category": "comparison",
+      "question": "Are invoices or employee records kept longer?",
+      "standalone_question": "Are invoices or employee records kept longer?",
+      "answer": "Invoices are kept longer (10 years) compared to employee records (6 years) [1, 2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md",
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 0.0,
+      "unsupported_claims": [
+        "Invoices are kept longer (10 years) compared to employee records (6 years) [1, 2]."
+      ],
+      "idk": false,
+      "latency_ms": 4346.7
+    },
+    {
+      "id": "c16",
+      "category": "comparison",
+      "question": "Which monitor costs more, the MON-27-4K or the MON-24-FHD?",
+      "standalone_question": "Which monitor costs more, the MON-27-4K or the MON-24-FHD?",
+      "answer": "The MON-27-4K monitor costs 420 USD, while the MON-24-FHD monitor costs 180 USD, making the MON-27-4K more expensive [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 6250.5
+    },
+    {
+      "id": "c17",
+      "category": "comparison",
+      "question": "How much more does the engineer laptop cost than the standard laptop for other roles?",
+      "standalone_question": "How much more does the engineer laptop cost than the standard laptop for other roles?",
+      "answer": "The engineer laptop (LAP-14-PRO) costs 1,450 USD [1], and the standard laptop for other roles (LAP-13-AIR) costs 1,100 USD [1], meaning the engineer laptop costs 350 USD more [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4708.5
+    },
+    {
+      "id": "c18",
+      "category": "comparison",
+      "question": "Which team has more engineers, Data Platform or Payments?",
+      "standalone_question": "Which team has more engineers, Data Platform or Payments?",
+      "answer": "The Data Platform team has 14 engineers [1], while the Payments team has 11 engineers [2]. Therefore, the Data Platform team has more engineers.",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "teams.md",
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 6973.3
+    },
+    {
+      "id": "c19",
+      "category": "comparison",
+      "question": "Which project has the largest budget: Atlas, Beacon, Cedar or Delta?",
+      "standalone_question": "Which project has the largest budget: Atlas, Beacon, Cedar or Delta?",
+      "answer": "Project Beacon has a budget of 800,000 USD [1], Project Cedar has 450,000 USD [2], and Project Delta has 300,000 USD [3]. Therefore, Project Beacon has the largest budget among the options provided.",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "projects.md",
+        "projects.md",
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 0.75,
+      "keywords_ok": false,
+      "faithfulness": 0.5,
+      "unsupported_claims": [
+        "Therefore, Project Beacon has the largest budget among the options provided."
+      ],
+      "idk": false,
+      "latency_ms": 2309.0
+    },
+    {
+      "id": "c20",
+      "category": "comparison",
+      "question": "Which launches first, Project Cedar or Project Beacon?",
+      "standalone_question": "Which launches first, Project Cedar or Project Beacon?",
+      "answer": "Project Cedar launches first in Q4 2025 [1], while Project Beacon is scheduled to launch in Q1 2026 [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "projects.md",
+        "projects.md"
+      ],
+      "expected_sources": [
+        "projects.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4812.2
+    },
+    {
+      "id": "c21",
+      "category": "comparison",
+      "question": "How do the required response times for SEV1 and SEV2 incidents differ?",
+      "standalone_question": "How do the required response times for SEV1 and SEV2 incidents differ?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 0.0,
+      "mrr": 0.0,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3482.5
+    },
+    {
+      "id": "c22",
+      "category": "comparison",
+      "question": "Which is required more often, anti-bribery training or data protection training?",
+      "standalone_question": "Which is required more often, anti-bribery training or data protection training?",
+      "answer": "Anti-bribery training is mandatory every year, whereas data protection training is mandatory every 2 years [1]. Therefore, anti-bribery training is required more often.",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 0.5,
+      "unsupported_claims": [
+        "Therefore, anti-bribery training is required more often."
+      ],
+      "idk": false,
+      "latency_ms": 2135.3
+    },
+    {
+      "id": "c23",
+      "category": "comparison",
+      "question": "Is the home office stipend enough to buy the 27-inch 4K monitor?",
+      "standalone_question": "Is the home office stipend enough to buy the 27-inch 4K monitor?",
+      "answer": "Yes, the home office stipend is 500 USD [2], and the 27-inch 4K monitor costs 420 USD [1], which is less than the 500 USD stipend.",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md",
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md",
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1921.2
+    },
+    {
+      "id": "c24",
+      "category": "comparison",
+      "question": "How does the sales commission rate above quota compare with the rate below quota?",
+      "standalone_question": "How does the sales commission rate above quota compare with the rate below quota?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.25,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 2665.0
+    },
+    {
+      "id": "c25",
+      "category": "comparison",
+      "question": "Which office is bigger, Lisbon or Berlin?",
+      "standalone_question": "Which office is bigger, Lisbon or Berlin?",
+      "answer": "The Berlin office is bigger with 180 desks [2], compared to the Lisbon office which has 90 desks [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "offices.md",
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3256.5
+    },
+    {
+      "id": "u01",
+      "category": "unanswerable",
+      "question": "What is the parking fee at the Berlin office?",
+      "standalone_question": "What is the parking fee at the Berlin office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 2144.7
+    },
+    {
+      "id": "u02",
+      "category": "unanswerable",
+      "question": "Which company provides our dental insurance?",
+      "standalone_question": "Which company provides our dental insurance?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 2285.7
+    },
+    {
+      "id": "u03",
+      "category": "unanswerable",
+      "question": "Are pets allowed in the office?",
+      "standalone_question": "Are pets allowed in the office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 10210.0
+    },
+    {
+      "id": "u04",
+      "category": "unanswerable",
+      "question": "How large is the annual performance bonus?",
+      "standalone_question": "How large is the annual performance bonus?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1488.2
+    },
+    {
+      "id": "u05",
+      "category": "unanswerable",
+      "question": "What is on the cafeteria menu on Fridays?",
+      "standalone_question": "What is on the cafeteria menu on Fridays?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 12380.2
+    },
+    {
+      "id": "u06",
+      "category": "unanswerable",
+      "question": "Who won the 2022 company hackathon?",
+      "standalone_question": "Who won the 2022 company hackathon?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 1814.2
+    },
+    {
+      "id": "u07",
+      "category": "unanswerable",
+      "question": "What is the company's stock ticker symbol?",
+      "standalone_question": "What is the company's stock ticker symbol?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 10529.3
+    },
+    {
+      "id": "u08",
+      "category": "unanswerable",
+      "question": "How many vacation days do contractors in Japan receive?",
+      "standalone_question": "How many vacation days do contractors in Japan receive?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3063.0
+    },
+    {
+      "id": "u09",
+      "category": "unanswerable",
+      "question": "What is the dental coverage limit on the Plus plan?",
+      "standalone_question": "What is the dental coverage limit on the Plus plan?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 10023.8
+    },
+    {
+      "id": "u10",
+      "category": "unanswerable",
+      "question": "How many desks does the Madrid office have?",
+      "standalone_question": "How many desks does the Madrid office have?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3688.2
+    },
+    {
+      "id": "u11",
+      "category": "unanswerable",
+      "question": "What does error code E-9999 mean?",
+      "standalone_question": "What does error code E-9999 mean?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 6516.5
+    },
+    {
+      "id": "u12",
+      "category": "unanswerable",
+      "question": "What is the rate limit of the Orders API v3?",
+      "standalone_question": "What is the rate limit of the Orders API v3?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3876.9
+    },
+    {
+      "id": "u13",
+      "category": "unanswerable",
+      "question": "Who leads the APAC marketing team?",
+      "standalone_question": "Who leads the APAC marketing team?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 13353.1
+    },
+    {
+      "id": "u14",
+      "category": "unanswerable",
+      "question": "What is the budget of Project Echo?",
+      "standalone_question": "What is the budget of Project Echo?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 4935.5
+    },
+    {
+      "id": "u15",
+      "category": "unanswerable",
+      "question": "What was the root cause of incident INC-2024-099?",
+      "standalone_question": "What was the root cause of incident INC-2024-099?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 2438.6
+    },
+    {
+      "id": "u16",
+      "category": "unanswerable",
+      "question": "Which vendor has the ID VND-0500?",
+      "standalone_question": "Which vendor has the ID VND-0500?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 5636.7
+    },
+    {
+      "id": "u17",
+      "category": "unanswerable",
+      "question": "What is the deductible of the Premium health plan?",
+      "standalone_question": "What is the deductible of the Premium health plan?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 7689.3
+    },
+    {
+      "id": "u18",
+      "category": "unanswerable",
+      "question": "How many days of bereavement leave do employees get?",
+      "standalone_question": "How many days of bereavement leave do employees get?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3437.3
+    },
+    {
+      "id": "u19",
+      "category": "unanswerable",
+      "question": "What is the Wi-Fi password in the Lisbon office?",
+      "standalone_question": "What is the Wi-Fi password in the Lisbon office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 11338.6
+    },
+    {
+      "id": "u20",
+      "category": "unanswerable",
+      "question": "When was version 3.0 released?",
+      "standalone_question": "When was version 3.0 released?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 5239.3
+    },
+    {
+      "id": "u21",
+      "category": "unanswerable",
+      "question": "What is the company's revenue target for 2026?",
+      "standalone_question": "What is the company's revenue target for 2026?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 5458.2
+    },
+    {
+      "id": "u22",
+      "category": "unanswerable",
+      "question": "Who is the office manager of the Paris office?",
+      "standalone_question": "Who is the office manager of the Paris office?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 3725.6
+    },
+    {
+      "id": "u23",
+      "category": "unanswerable",
+      "question": "How much does the company pay towards mobile phone plans?",
+      "standalone_question": "How much does the company pay towards mobile phone plans?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 10602.0
+    },
+    {
+      "id": "u24",
+      "category": "unanswerable",
+      "question": "How many employees does the company have in total?",
+      "standalone_question": "How many employees does the company have in total?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 2476.9
+    },
+    {
+      "id": "u25",
+      "category": "unanswerable",
+      "question": "Which programming language is the mobile app written in?",
+      "standalone_question": "Which programming language is the mobile app written in?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [],
+      "recall_at_5": null,
+      "mrr": null,
+      "context_recall": null,
+      "keywords_ok": true,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 9489.2
+    },
+    {
+      "id": "x01",
+      "category": "exact_id",
+      "question": "What does error code E-4012 mean?",
+      "standalone_question": "What does error code E-4012 mean?",
+      "answer": "Error E-4012 means the VPN certificate has expired [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2245.5
+    },
+    {
+      "id": "x02",
+      "category": "exact_id",
+      "question": "What does error E-4021 mean?",
+      "standalone_question": "What does error E-4021 mean?",
+      "answer": "Error E-4021 means the VPN account is locked after 5 failed login attempts [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4894.7
+    },
+    {
+      "id": "x03",
+      "category": "exact_id",
+      "question": "How do I fix error E-4102?",
+      "standalone_question": "How do I fix error E-4102?",
+      "answer": "Error E-4102 means the hardware security key was not detected. Reconnect the key and restart the GlobalConnect client [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2664.0
+    },
+    {
+      "id": "x04",
+      "category": "exact_id",
+      "question": "What should I do about error E-5003?",
+      "standalone_question": "What should I do about error E-5003?",
+      "answer": "Error E-5003 means the SSO token does not match the session, and you should clear the browser cookies and sign in again [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3275.6
+    },
+    {
+      "id": "x05",
+      "category": "exact_id",
+      "question": "What does error E-5030 mean and what should I do?",
+      "standalone_question": "What does error E-5030 mean and what should I do?",
+      "answer": "Error E-5030 means the identity provider timed out [1]. You should wait 5 minutes and retry; if it persists, check the status page [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 9004.3
+    },
+    {
+      "id": "x06",
+      "category": "exact_id",
+      "question": "What does E-6007 indicate?",
+      "standalone_question": "What does E-6007 indicate?",
+      "answer": "Error E-6007 means the mailbox quota of 50 GB has been exceeded [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4621.3
+    },
+    {
+      "id": "x07",
+      "category": "exact_id",
+      "question": "What does printer error E-7110 mean?",
+      "standalone_question": "What does printer error E-7110 mean?",
+      "answer": "Error E-7110 means the printer driver is outdated [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5585.7
+    },
+    {
+      "id": "x08",
+      "category": "exact_id",
+      "question": "What does E-7101 mean?",
+      "standalone_question": "What does E-7101 mean?",
+      "answer": "Error E-7101 means the printer is offline [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 11825.3
+    },
+    {
+      "id": "x09",
+      "category": "exact_id",
+      "question": "Which product is SKU MON-27-4K?",
+      "standalone_question": "Which product is SKU MON-27-4K?",
+      "answer": "SKU MON-27-4K is the 27-inch 4K monitor [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4589.1
+    },
+    {
+      "id": "x10",
+      "category": "exact_id",
+      "question": "How much does SKU DCK-USB-C cost?",
+      "standalone_question": "How much does SKU DCK-USB-C cost?",
+      "answer": "SKU DCK-USB-C costs 210 USD [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 8272.3
+    },
+    {
+      "id": "x11",
+      "category": "exact_id",
+      "question": "What is SKU HDS-BT-200?",
+      "standalone_question": "What is SKU HDS-BT-200?",
+      "answer": "SKU HDS-BT-200 is the Bluetooth headset and costs 95 USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 12660.1
+    },
+    {
+      "id": "x12",
+      "category": "exact_id",
+      "question": "How much does LAP-13-AIR cost?",
+      "standalone_question": "How much does LAP-13-AIR cost?",
+      "answer": "SKU LAP-13-AIR costs 1,100 USD [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 7267.1
+    },
+    {
+      "id": "x13",
+      "category": "exact_id",
+      "question": "What does ERR_ORDER_LOCKED mean?",
+      "standalone_question": "What does ERR_ORDER_LOCKED mean?",
+      "answer": "I don't know based on the provided context.",
+      "provider": "gemini",
+      "confidence": "low",
+      "cited_sources": [],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.25,
+      "context_recall": 0.0,
+      "keywords_ok": false,
+      "faithfulness": null,
+      "unsupported_claims": [],
+      "idk": true,
+      "latency_ms": 8949.9
+    },
+    {
+      "id": "x14",
+      "category": "exact_id",
+      "question": "What causes ERR_TOKEN_EXPIRED?",
+      "standalone_question": "What causes ERR_TOKEN_EXPIRED?",
+      "answer": "ERR_TOKEN_EXPIRED means the API token is older than 90 days and must be rotated [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 8311.8
+    },
+    {
+      "id": "x15",
+      "category": "exact_id",
+      "question": "What does DELETE /v2/orders/{order_id} do?",
+      "standalone_question": "What does DELETE /v2/orders/{order_id} do?",
+      "answer": "DELETE /v2/orders/{order_id} cancels an order that has not shipped yet [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1198.1
+    },
+    {
+      "id": "x16",
+      "category": "exact_id",
+      "question": "Which vendor is VND-0042?",
+      "standalone_question": "Which vendor is VND-0042?",
+      "answer": "VND-0042 is CloudNorth, the hosting provider [3].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 7150.6
+    },
+    {
+      "id": "x17",
+      "category": "exact_id",
+      "question": "What does vendor VND-0230 provide?",
+      "standalone_question": "What does vendor VND-0230 provide?",
+      "answer": "Vendor VND-0230 is ShieldSec, which is the penetration testing firm [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2288.6
+    },
+    {
+      "id": "x18",
+      "category": "exact_id",
+      "question": "Which release fixed BUG-1893?",
+      "standalone_question": "Which release fixed BUG-1893?",
+      "answer": "Version 2.3.1 fixed bug BUG-1893 [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4686.0
+    },
+    {
+      "id": "x19",
+      "category": "exact_id",
+      "question": "Which version patched CVE-2025-1182?",
+      "standalone_question": "Which version patched CVE-2025-1182?",
+      "answer": "Version 2.4.1 patched CVE-2025-1182 [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5946.0
+    },
+    {
+      "id": "x20",
+      "category": "exact_id",
+      "question": "What was the root cause of INC-2024-031?",
+      "standalone_question": "What was the root cause of INC-2024-031?",
+      "answer": "The root cause of INC-2024-031 was an expired TLS certificate on the payment gateway [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 6649.1
+    },
+    {
+      "id": "x21",
+      "category": "exact_id",
+      "question": "How long did CSV exports time out during INC-2024-058?",
+      "standalone_question": "How long did CSV exports time out during INC-2024-058?",
+      "answer": "During INC-2024-058, CSV exports timed out for 6 hours [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 7328.1
+    },
+    {
+      "id": "x22",
+      "category": "exact_id",
+      "question": "What format do purchase order numbers use?",
+      "standalone_question": "What format do purchase order numbers use?",
+      "answer": "Purchase order numbers use the format PO-YYYY-NNNNN, for example PO-2025-00418 [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 6600.6
+    },
+    {
+      "id": "x23",
+      "category": "exact_id",
+      "question": "Which header authenticates requests to the Orders API v2?",
+      "standalone_question": "Which header authenticates requests to the Orders API v2?",
+      "answer": "Requests to the Orders API v2 are authenticated with the X-Api-Token header [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 11347.7
+    },
+    {
+      "id": "x24",
+      "category": "exact_id",
+      "question": "Which server address does the VPN client connect to?",
+      "standalone_question": "Which server address does the VPN client connect to?",
+      "answer": "The VPN client connects to the server vpn.example.com [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "vpn_guide.md"
+      ],
+      "expected_sources": [
+        "vpn_guide.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5938.6
+    },
+    {
+      "id": "x25",
+      "category": "exact_id",
+      "question": "What is the IT helpdesk email address?",
+      "standalone_question": "What is the IT helpdesk email address?",
+      "answer": "The IT helpdesk can be reached at helpdesk@example.com [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "org_structure.md"
+      ],
+      "expected_sources": [
+        "org_structure.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 0.0,
+      "unsupported_claims": [
+        "The IT helpdesk can be reached at helpdesk@example.com ."
+      ],
+      "idk": false,
+      "latency_ms": 9492.8
+    },
+    {
+      "id": "fu01",
+      "category": "followup",
+      "question": "What about part-time staff?",
+      "standalone_question": "How many days of annual leave do part-time staff get?",
+      "answer": "Part-time staff receive annual leave pro rata, calculated from their contracted weekly hours, such as 15 days for a part-time employee working 3 days a week [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3744.6
+    },
+    {
+      "id": "fu02",
+      "category": "followup",
+      "question": "And for secondary caregivers?",
+      "standalone_question": "How long is parental leave for secondary caregivers?",
+      "answer": "Secondary caregivers receive 4 weeks of fully paid parental leave [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "hr_leave_policy.md"
+      ],
+      "expected_sources": [
+        "hr_leave_policy.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 11604.1
+    },
+    {
+      "id": "fu03",
+      "category": "followup",
+      "question": "Where is that team based?",
+      "standalone_question": "Where is the Mobile team based?",
+      "answer": "The Mobile team is based in the Lisbon office [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 17814.9
+    },
+    {
+      "id": "fu04",
+      "category": "followup",
+      "question": "Who leads that team?",
+      "standalone_question": "Who leads the Payments team?",
+      "answer": "The Payments team is led by Amara Okafor [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "teams.md"
+      ],
+      "expected_sources": [
+        "teams.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3277.7
+    },
+    {
+      "id": "fu05",
+      "category": "followup",
+      "question": "What happens if I exceed it?",
+      "standalone_question": "What happens if I exceed the rate limit of the Orders API v2?",
+      "answer": "When the rate limit of the Orders API v2 is exceeded, the API returns HTTP 429 with a Retry-After header [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "api_reference.md"
+      ],
+      "expected_sources": [
+        "api_reference.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 7382.2
+    },
+    {
+      "id": "fu06",
+      "category": "followup",
+      "question": "What is its deductible?",
+      "standalone_question": "What is the deductible of the Plus health plan?",
+      "answer": "The annual deductible for the Plus plan is 400 USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "benefits_health.md"
+      ],
+      "expected_sources": [
+        "benefits_health.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 10568.0
+    },
+    {
+      "id": "fu07",
+      "category": "followup",
+      "question": "How do I fix it?",
+      "standalone_question": "How do I fix error E-4012?",
+      "answer": "Error E-4012 means the VPN certificate has expired, and you can fix it by re-enrolling the device in the VPN portal to get a new certificate [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "it_error_codes.md"
+      ],
+      "expected_sources": [
+        "it_error_codes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 22542.3
+    },
+    {
+      "id": "fu08",
+      "category": "followup",
+      "question": "What is the contact email for that role?",
+      "standalone_question": "What is the contact email for the data protection officer?",
+      "answer": "The contact email for the data protection officer, Sofia Marin, is dpo@example.com [3].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 6526.8
+    },
+    {
+      "id": "fu09",
+      "category": "followup",
+      "question": "What was it under the 2023 policy?",
+      "standalone_question": "What was the daily meal allowance under the 2023 policy?",
+      "answer": "Under the 2023 travel policy, the daily meal allowance was 45 USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "travel_policy_2023.md"
+      ],
+      "expected_sources": [
+        "travel_policy_2023.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 8983.5
+    },
+    {
+      "id": "fu10",
+      "category": "followup",
+      "question": "Who manages it?",
+      "standalone_question": "Who manages the Berlin office?",
+      "answer": "The Berlin office is managed by Lena Vogel [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "offices.md"
+      ],
+      "expected_sources": [
+        "offices.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 19144.3
+    },
+    {
+      "id": "fu11",
+      "category": "followup",
+      "question": "And what uptime does it commit to?",
+      "standalone_question": "What uptime does Premium support commit to?",
+      "answer": "Premium customers get an uptime commitment of 99.9% [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "support_sla.md"
+      ],
+      "expected_sources": [
+        "support_sla.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 3935.6
+    },
+    {
+      "id": "fu12",
+      "category": "followup",
+      "question": "What about security audit logs?",
+      "standalone_question": "How long are security audit logs kept?",
+      "answer": "Security audit logs are kept for 1 year [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "data_retention.md"
+      ],
+      "expected_sources": [
+        "data_retention.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 23344.9
+    },
+    {
+      "id": "fu13",
+      "category": "followup",
+      "question": "What is that region's 2025 revenue target?",
+      "standalone_question": "What is the 2025 revenue target for the EMEA sales region?",
+      "answer": "The 2025 revenue target for the EMEA sales region is 24 million USD [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "sales_regions.md"
+      ],
+      "expected_sources": [
+        "sales_regions.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 24333.3
+    },
+    {
+      "id": "fu14",
+      "category": "followup",
+      "question": "How much does it cost?",
+      "standalone_question": "How much does SKU LAP-14-PRO cost?",
+      "answer": "SKU LAP-14-PRO costs 1,450 USD [2].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "product_catalog.md"
+      ],
+      "expected_sources": [
+        "product_catalog.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.5,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2629.7
+    },
+    {
+      "id": "fu15",
+      "category": "followup",
+      "question": "How long did it last?",
+      "standalone_question": "How long did incident INC-2024-031 last?",
+      "answer": "Incident INC-2024-031 lasted 47 minutes [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "incident_runbook.md"
+      ],
+      "expected_sources": [
+        "incident_runbook.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 4757.6
+    },
+    {
+      "id": "fu16",
+      "category": "followup",
+      "question": "What did it add?",
+      "standalone_question": "What did version 2.4.0 add?",
+      "answer": "Version 2.4.0 added the new analytics dashboard, which is built on Project Atlas, and increased webhook retries to 6 attempts [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "release_notes.md"
+      ],
+      "expected_sources": [
+        "release_notes.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 27419.0
+    },
+    {
+      "id": "fu17",
+      "category": "followup",
+      "question": "On what payment terms are vendor invoices like theirs paid?",
+      "standalone_question": "On what payment terms are vendor invoices like theirs paid?",
+      "answer": "Vendor invoices are paid on net 45 day terms [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "procurement.md"
+      ],
+      "expected_sources": [
+        "procurement.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 1785.9
+    },
+    {
+      "id": "fu18",
+      "category": "followup",
+      "question": "Are language courses covered too?",
+      "standalone_question": "Are language courses covered too?",
+      "answer": "Yes, language courses are covered up to 300 USD per year [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "training_program.md"
+      ],
+      "expected_sources": [
+        "training_program.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 2106.3
+    },
+    {
+      "id": "fu19",
+      "category": "followup",
+      "question": "What are the core hours then?",
+      "standalone_question": "What are the core hours then?",
+      "answer": "Core collaboration hours are 10:00 to 15:00 local time [3].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "remote_work.md"
+      ],
+      "expected_sources": [
+        "remote_work.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 0.333,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 5087.2
+    },
+    {
+      "id": "fu20",
+      "category": "followup",
+      "question": "What is the notice period during it?",
+      "standalone_question": "What is the notice period during the probation period?",
+      "answer": "The notice period during probation is 2 weeks [1].",
+      "provider": "gemini",
+      "confidence": "high",
+      "cited_sources": [
+        "onboarding.md"
+      ],
+      "expected_sources": [
+        "onboarding.md"
+      ],
+      "recall_at_5": 1.0,
+      "mrr": 1.0,
+      "context_recall": 1.0,
+      "keywords_ok": true,
+      "faithfulness": 1.0,
+      "unsupported_claims": [],
+      "idk": false,
+      "latency_ms": 15374.4
+    }
+  ]
+}
