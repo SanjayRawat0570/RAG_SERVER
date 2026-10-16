@@ -52,9 +52,14 @@ def os_trust_store():
     proxy re-signs HTTPS only trust that root in the OS store. Verification
     stays on — against the roots the OS trusts.
     """
+    der = ssl.create_default_context().get_ca_certs(binary_form=True)
+    if not der:
+        # Linux loads OS roots lazily from a directory, so none are listed here;
+        # an empty bundle would fail every download. Keep the default CA list.
+        yield
+        return
     pem = Path(settings.models_dir) / ".os_roots.pem"
     pem.parent.mkdir(parents=True, exist_ok=True)
-    der = ssl.create_default_context().get_ca_certs(binary_form=True)
     pem.write_text("".join(ssl.DER_cert_to_PEM_cert(c) for c in der), encoding="ascii")
     saved = {k: os.environ.get(k) for k in ("SSL_CERT_FILE", "REQUESTS_CA_BUNDLE")}
     os.environ.update(SSL_CERT_FILE=str(pem), REQUESTS_CA_BUNDLE=str(pem))

@@ -1,8 +1,12 @@
-# Railway deployment — FastAPI backend
+# Railway deployment — FastAPI backend (Railpack Python build, no Dockerfile)
 [build]
-dockerfilePath = "Dockerfile"
+builder = "RAILPACK"
+# Download the local ONNX models (bge-small embeddings + MiniLM reranker, ~150 MB)
+# at build time so the server starts without fetching them.
+buildCommand = "python -m app.rag.embeddings.onnx_embed download && python -c \"from app.rag.rerank.onnx_cross_encoder import available; assert available()\""
 
 [deploy]
+startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
 healthcheckPath = "/health"
 healthcheckTimeout = 60
 restartPolicyType = "ON_FAILURE"
